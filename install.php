@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
   <meta charset="utf-8">
-  <title>Instalacja</title>
+  <title>Installation</title>
   <link rel="stylesheet">
 </head>
 <body>
