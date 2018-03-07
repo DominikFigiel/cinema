@@ -6,5 +6,5 @@
         public static $FirstName = 'FirstName';
         public static $LastName = 'LastName';
         public static $BirthDate = 'BirthDate';
-        //aktor
+        //akto
     }
