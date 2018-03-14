@@ -15,7 +15,7 @@ class Movie extends View {
         if(isset($data['movies']))
             $this->set('movies' , $data['movies']);
 
-        $this->render('MovieGetAll');
+        $this->render('movieGetAll');
     }
 
     public function getOne($id , $data = null){
@@ -27,8 +27,8 @@ class Movie extends View {
 
         $model = $this->getModel('Movie');
         $data = $model->getOne($id);
-        if(isset($data['movies']))
-            $this->set('movies' , $data['movies']);
+        if(isset($data['movie']))
+            $this->set('movie' , $data['movie']);
 
         $data = $model->getGenreForMovie($id);
         if(isset($data['genres']))
@@ -42,7 +42,7 @@ class Movie extends View {
         if(isset($data['productions']))
             $this->set('productions' , $data['productions']);
 
-        $this->render('MovieGetOne');
+        $this->render('movieGetOne');
     }
 
 }

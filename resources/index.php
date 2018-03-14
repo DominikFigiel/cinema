@@ -8,11 +8,11 @@ Config\Database\DBConnection::setDBConnection(
     DB::$hostname, DB::$databaseType, DB::$port);
 
 \Tools\Session::initialize();
-
+//Kontroler/akcja/parametr_id
 if(isset($_GET['controller']))
     $controller = $_GET['controller'];
 else
-    $controller = 'Movie';
+    $controller = 'Showing';
 if(isset($_GET['action']))
     $action = $_GET['action'];
 else
@@ -26,7 +26,8 @@ else
 $controller = 'Controllers\\'.$controller;
 
 //tworzymy kontroler
-$myController = new $controller();
-$myController->$action($id);
+$mojkontroler = new $kontroler();
+//wykonujemy akcję dla kontrolera
+$mojkontroler->$action($id);			
 
 

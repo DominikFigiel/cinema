@@ -5,14 +5,18 @@ RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 
+#Movie
+RewriteRule ^Movie/?$ index.php?controller=Movie&action=getAll [L]
+RewriteRule ^Movie/Details/(\d+)/?$ index.php?controller=Movie&action=getOne&id=$1 [L]
+
 #Showing
-RewriteRule ^Seans/?$ index.php?controller=Showing&action=getAll [L]
-RewriteRule ^Seans/Dodaj/?$ index.php?controller=Showing&action=addform [L]
-RewriteRule ^Seans/Wstaw/?$ index.php?controller=Showing&action=add [L]
-RewriteRule ^Seans/Aktualizuj/?$ index.php?controller=Showing&action=update [L]
-RewriteRule ^Seans/Edytuj/(\d+)/?$ index.php?controller=Showing&action=editform&id=$1 [L]
-RewriteRule ^Seans/Usun/(\d+)/?$ index.php?controller=Showing&action=delete&id=$1 [L]
-RewriteRule ^Seans/Szczegoly/(\d+)/?$ index.php?controller=Showing&action=showone&id=$1 [L]
+#RewriteRule ^Seans/?$ index.php?controller=Showing&action=getAll [L]
+#RewriteRule ^Seans/Dodaj/?$ index.php?controller=Showing&action=addform [L]
+#RewriteRule ^Seans/Wstaw/?$ index.php?controller=Showing&action=add [L]
+#RewriteRule ^Seans/Aktualizuj/?$ index.php?controller=Showing&action=update [L]
+#RewriteRule ^Seans/Edytuj/(\d+)/?$ index.php?controller=Showing&action=editform&id=$1 [L]
+#RewriteRule ^Seans/Usun/(\d+)/?$ index.php?controller=Showing&action=delete&id=$1 [L]
+#RewriteRule ^Seans/Szczegoly/(\d+)/?$ index.php?controller=Showing&action=showone&id=$1 [L]
 
 #RewriteRule ^(\w+)/(\w+)/(\w+)/?$ index.php [L]
 #RewriteRule ^(\w+)/(\w+)/?$ index.php [L]
