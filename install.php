@@ -280,7 +280,7 @@
         'ReleaseDate' => '2015-05-22',
         'DurationTime' => '120',
         'Age' => '15',
-        'Cover' => '',
+        'Cover' => '1',
         'Description' => '');
     $movies[] = array(
         'IDGatunek' => '3',
@@ -289,7 +289,7 @@
         'ReleaseDate' => '2009-09-12',
         'DurationTime' => '141',
         'Age' => '15',
-        'Cover' => '',
+        'Cover' => '2',
         'Description' => 'Stoosiemnastoletni Nemo Nobody to ostatni śmiertelny człowiek w czasach, gdy ludzkość osiągnęła nieśmiertelność. Na łożu śmierci bohater rozważa, jak mogło potoczyć się jego życie.');
     $movies[] = array(
         'IDGatunek' => '9',
@@ -298,7 +298,7 @@
         'ReleaseDate' => '2004-01-22',
         'DurationTime' => '113',
         'Age' => '15',
-        'Cover' => '',
+        'Cover' => '3',
         'Description' => 'Evan, który potrafi podróżować w czasie, przekona się, że nawet najdrobniejsza zmiana w przeszłości ma kolosalny wpływ na teraźniejszość.');
     $movies[] = array(
         'IDGatunek' => '1',
@@ -307,7 +307,7 @@
         'ReleaseDate' => '2015-04-10',
         'DurationTime' => '140',
         'Age' => '15',
-        'Cover' => '',
+        'Cover' => '4',
         'Description' => 'Toretto i jego ekipa mierzą się z pałającym żądzą krwi najemnikiem Deckardem Shawem.');
     $movies[] = array(
         'IDGatunek' => '2',
@@ -316,7 +316,7 @@
         'ReleaseDate' => '2010-10-15',
         'DurationTime' => '120',
         'Age' => '15',
-        'Cover' => '',
+        'Cover' => '5',
         'Description' => 'Historia powstania Facebooka. Komputerowy geniusz z Harvardu zakłada stronę thefacebook.com, która nieoczekiwanie bije rekordy popularności.');
     $movies[] = array(
         'IDGatunek' => '1',
@@ -325,7 +325,7 @@
         'ReleaseDate' => '2008-08-21',
         'DurationTime' => '111',
         'Age' => '15',
-        'Cover' => '',
+        'Cover' => '6',
         'Description' => 'Były kierowca rajdowy odsiaduje wyrok w więzieniu, którego naczelniczka organizuje krwawe wyścigi samochodowe. ');
     $movies[] = array(
         'IDGatunek' => '1',
@@ -334,7 +334,7 @@
         'ReleaseDate' => '2006-08-31',
         'DurationTime' => '87',
         'Age' => '15',
-        'Cover' => '',
+        'Cover' => '7',
         'Description' => 'Pewnego ranka Chev Chelios dowiaduje się, że został otruty. Jedyną rzeczą, która może utrzymać go przy życiu jest produkowana przez organizm adrenalina. ');
     $movies[] = array(
         'IDGatunek' => '9',
@@ -343,7 +343,7 @@
         'ReleaseDate' => '2004-07-15',
         'DurationTime' => '115',
         'Age' => '15',
-        'Cover' => '',
+        'Cover' => '8',
         'Description' => 'W roku 2035 roboty pomagają ludziom w codziennym życiu. Gdy ginie twórca zaawansowanego modelu, detektyw podejrzewa, że zabiła go maszyna.');
 
     // Wstawianie

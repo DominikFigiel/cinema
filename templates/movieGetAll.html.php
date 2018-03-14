@@ -15,7 +15,7 @@
     {foreach $movies as $movie}
     <div class="row">
         <div class="col-lg-2 col-md-3 col-sm-6 col-6">
-            <img src="resources/images/covers/black-panther.jpg" class="img-fluid" alt="Responsive image">
+            <img src="resources/images/covers/{$movie[\Config\Database\DBConfig\Movie::$Cover]}.jpg" class="img-fluid" alt="Responsive image">
         </div>
         <div class="col-lg-6 col-md-5 col-sm-6 col-6">
             <p><strong><a class="text-dark" href="http://{$smarty.server.HTTP_HOST}{$subdir}index.php?controller=Movie&action=getOne&id={$movie[\Config\Database\DBConfig\Movie::$IdMovie]}"><u>{$movie[\Config\Database\DBConfig\Movie::$Title]}</u></a></strong> (2D, Dubbing)</p>
