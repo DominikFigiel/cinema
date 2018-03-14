@@ -274,16 +274,16 @@ catch(PDOException $e)
 // Table Movie
 $movies = array();
 $movies[] = array(
-    'IDGatunek' => '1',
+    'IdGatunek' => '1',
     'Title' => 'Mad Max: Na drodze gniewu',
     'Produkcja' => 'USA',
     'ReleaseDate' => '2015-05-22',
     'DurationTime' => '120',
     'Age' => '15',
     'Cover' => '',
-    'Description' => '');
+    'Description' => 'Max przyłącza się do grupy uciekinierek z Cytadeli - osady rządzonej przez Wiecznego Joe. Tyran wraz ze swoją bandą rusza za nimi w pościg.');
 $movies[] = array(
-    'IDGatunek' => '3',
+    'IdGatunek' => '3',
     'Title' => 'Mr Nobody',
     'Produkcja' => 'Belgia',
     'ReleaseDate' => '2009-09-12',
@@ -292,7 +292,7 @@ $movies[] = array(
     'Cover' => '',
     'Description' => 'Stoosiemnastoletni Nemo Nobody to ostatni śmiertelny człowiek w czasach, gdy ludzkość osiągnęła nieśmiertelność. Na łożu śmierci bohater rozważa, jak mogło potoczyć się jego życie.');
 $movies[] = array(
-    'IDGatunek' => '9',
+    'IdGatunek' => '9',
     'Title' => 'Efekt motyla',
     'Produkcja' => 'USA',
     'ReleaseDate' => '2004-01-22',
@@ -301,7 +301,7 @@ $movies[] = array(
     'Cover' => '',
     'Description' => 'Evan, który potrafi podróżować w czasie, przekona się, że nawet najdrobniejsza zmiana w przeszłości ma kolosalny wpływ na teraźniejszość.');
 $movies[] = array(
-    'IDGatunek' => '1',
+    'IdGatunek' => '1',
     'Title' => 'Szybcy i wściekli 7',
     'Produkcja' => 'USA',
     'ReleaseDate' => '2015-04-10',
@@ -310,7 +310,7 @@ $movies[] = array(
     'Cover' => '',
     'Description' => 'Toretto i jego ekipa mierzą się z pałającym żądzą krwi najemnikiem Deckardem Shawem.');
 $movies[] = array(
-    'IDGatunek' => '2',
+    'IdGatunek' => '2',
     'Title' => 'The social network',
     'Produkcja' => 'USA',
     'ReleaseDate' => '2010-10-15',
@@ -319,7 +319,7 @@ $movies[] = array(
     'Cover' => '',
     'Description' => 'Historia powstania Facebooka. Komputerowy geniusz z Harvardu zakłada stronę thefacebook.com, która nieoczekiwanie bije rekordy popularności.');
 $movies[] = array(
-    'IDGatunek' => '1',
+    'IdGatunek' => '1',
     'Title' => 'Death Race: Wyścig śmierci',
     'Produkcja' => 'USA',
     'ReleaseDate' => '2008-08-21',
@@ -328,7 +328,7 @@ $movies[] = array(
     'Cover' => '',
     'Description' => 'Były kierowca rajdowy odsiaduje wyrok w więzieniu, którego naczelniczka organizuje krwawe wyścigi samochodowe. ');
 $movies[] = array(
-    'IDGatunek' => '1',
+    'IdGatunek' => '1',
     'Title' => 'Adrenalina',
     'Produkcja' => 'USA',
     'ReleaseDate' => '2006-08-31',
@@ -337,7 +337,7 @@ $movies[] = array(
     'Cover' => '',
     'Description' => 'Pewnego ranka Chev Chelios dowiaduje się, że został otruty. Jedyną rzeczą, która może utrzymać go przy życiu jest produkowana przez organizm adrenalina. ');
 $movies[] = array(
-    'IDGatunek' => '9',
+    'IdGatunek' => '9',
     'Title' => 'Ja , Robot',
     'Produkcja' => 'USA',
     'ReleaseDate' => '2004-07-15',
@@ -515,6 +515,111 @@ catch(PDOException $e)
     echo \Config\Database\DBErrorName::$noadd;
 }
 
+
+// Table Actor
+$actors = array();
+$actors[] = [
+    'FirstName' => 'Tom',
+    'LastName' => 'Hardy',
+    'BirthDate' => '1977-09-15'];
+$actors[] = array(
+    'FirstName' => 'Charlize',
+    'LastName' => 'Theron',
+    'BirthDate' => '1975-08-07');
+$actors[] = array(
+    'FirstName' => 'Vin',
+    'LastName' => 'Diesel',
+    'BirthDate' => '1967-07-18');
+$actors[] = array(
+    'FirstName' => 'Jason',
+    'LastName' => 'Statham',
+    'BirthDate' => '1967-07-26');
+$actors[] = array(
+    'FirstName' => 'Michelle',
+    'LastName' => 'Rodriguez',
+    'BirthDate' => '1978-07-12');
+$actors[] = array(
+    'FirstName' => 'Jesse',
+    'LastName' => 'Eisenberg',
+    'BirthDate' => '1983-10-05');
+$actors[] = array(
+    'FirstName' => 'Andrew',
+    'LastName' => 'Garfield',
+    'BirthDate' => '1983-08-20');
+$actors[] = array(
+    'FirstName' => 'Ashton',
+    'LastName' => 'Kutcher',
+    'BirthDate' => '1978-02-07');
+
+// Wstawianie
+try
+{
+    $stmt = $pdo -> prepare('INSERT INTO `'.DB::$tableActor.'` (`'.DB\Actor::$FirstName.'`, `'.DB\Actor::$LastName.'`, `'.DB\Actor::$BirthDate.'`) VALUES(:FirstName, :LastName, :BirthDate)');
+    foreach($actors as $actor)
+    {
+        $stmt -> bindValue(':FirstName', $actor['FirstName'], PDO::PARAM_STR);
+        $stmt -> bindValue(':LastName', $actor['LastName'], PDO::PARAM_STR);
+        $stmt -> bindValue(':BirthDate', $actor['BirthDate'], PDO::PARAM_STR);
+        $stmt -> execute();
+    }
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$noadd;
+}
+
+
+// Table Cast
+$casts = array();
+$casts[] = array(
+    'IdActor' => '1',
+    'IdMovie' => '1',
+    'Role' => 'Max Rockatansky');
+$casts[] = array(
+    'IdActor' => '2',
+    'IdMovie' => '1',
+    'Role' => 'Cesarzowa Furiosa');
+$casts[] = array(
+    'IdActor' => '3',
+    'IdMovie' => '4',
+    'Role' => 'Dominic Toretto');
+$casts[] = array(
+    'IdActor' => '4',
+    'IdMovie' => '4',
+    'Role' => 'Deckard Shaw');
+$casts[] = array(
+    'IdActor' => '5',
+    'IdMovie' => '4',
+    'Role' => '	Letty');
+$casts[] = array(
+    'IdActor' => '6',
+    'IdMovie' => '5',
+    'Role' => 'Mark Zuckerberg');
+$casts[] = array(
+    'IdActor' => '7',
+    'IdMovie' => '5',
+    'Role' => 'Eduardo Saverin');
+$casts[] = array(
+    'IdActor' => '8',
+    'IdMovie' => '3',
+    'Role' => 'Evan Treborn');
+
+// Wstawianie
+try
+{
+    $stmt = $pdo -> prepare('INSERT INTO `'.DB::$tableCast.'` (`'.DB\Cast::$IdActor.'`, `'.DB\Cast::$IdMovie.'`, `'.DB\Cast::$Role.'`) VALUES(:IdActor, :IdMovie, :Role)');
+    foreach($casts as $cast)
+    {
+        $stmt -> bindValue(':IdActor', $cast['IdActor'], PDO::PARAM_INT);
+        $stmt -> bindValue(':IdMovie', $cast['IdMovie'], PDO::PARAM_INT);
+        $stmt -> bindValue(':Role', $cast['Role'], PDO::PARAM_STR);
+        $stmt -> execute();
+    }
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$noadd;
+}
 
 
 echo "<b>Instalacja aplikacji zakończona!</b>"
