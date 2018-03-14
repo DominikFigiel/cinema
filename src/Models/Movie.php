@@ -48,7 +48,7 @@ class Movie extends Model {
             $movies = $stmt->fetchAll();
             $stmt->closeCursor();
             if($movies && !empty($movies))
-                $data['movies'] = $movies;
+                $data['movie'] = $movies[0];
             else
                 $data['error'] = \Config\Database\DBErrorName::$nomatch;
         }
@@ -75,10 +75,10 @@ class Movie extends Model {
                 INNER JOIN `'.\Config\Database\DBConfig::$tableMovieGenre.'` 
                 ON `'.\Config\Database\DBConfig::$tableMovie.'`.`'.\Config\Database\DBConfig\Movie::$IdMovie.'` 
                  = `'.\Config\Database\DBConfig::$tableMovieGenre.'`.`'.\Config\Database\DBConfig\MovieGenre::$IdMovie.'`
-                INNER JOIN `'.\Config\Database\DBConfig::$tableGenre.'` 
+                 INNER JOIN `'.\Config\Database\DBConfig::$tableGenre.'` 
                 ON `'.\Config\Database\DBConfig::$tableGenre.'`.`'.\Config\Database\DBConfig\Genre::$IdGenre.'` 
                  = `'.\Config\Database\DBConfig::$tableMovieGenre.'`.`'.\Config\Database\DBConfig\MovieGenre::$IdGenre.'`
-                WHERE  `'.\Config\Database\DBConfig\Movie::$IdMovie.'`=:id');
+                WHERE  `'.\Config\Database\DBConfig::$tableMovie.'`.`'.\Config\Database\DBConfig\Movie::$IdMovie.'`=:id');
             $stmt->bindValue(':id' , $id , PDO::PARAM_INT);
             $result = $stmt->execute();
             $genres = $stmt->fetchAll();
@@ -114,7 +114,7 @@ class Movie extends Model {
                 INNER JOIN `'.\Config\Database\DBConfig::$tableActor.'` 
                 ON `'.\Config\Database\DBConfig::$tableActor.'`.`'.\Config\Database\DBConfig\Actor::$IdActor.'` 
                  = `'.\Config\Database\DBConfig::$tableCast.'`.`'.\Config\Database\DBConfig\Cast::$IdActor.'`
-                WHERE  `'.\Config\Database\DBConfig\Movie::$IdMovie.'`=:id');
+                WHERE  `'.\Config\Database\DBConfig::$tableMovie.'`.`'.\Config\Database\DBConfig\Movie::$IdMovie.'`=:id');
             $stmt->bindValue(':id' , $id , PDO::PARAM_INT);
             $result = $stmt->execute();
             $actors = $stmt->fetchAll();
@@ -150,7 +150,7 @@ class Movie extends Model {
                 INNER JOIN `'.\Config\Database\DBConfig::$tableProduction.'` 
                 ON `'.\Config\Database\DBConfig::$tableProduction.'`.`'.\Config\Database\DBConfig\Production::$IdProduction.'` 
                  = `'.\Config\Database\DBConfig::$tableMovieProduction.'`.`'.\Config\Database\DBConfig\MovieProduction::$IdProduction.'`
-                WHERE  `'.\Config\Database\DBConfig\Movie::$IdMovie.'`=:id');
+                WHERE  `'.\Config\Database\DBConfig::$tableMovie.'`.`'.\Config\Database\DBConfig\Movie::$IdMovie.'`=:id');
             $stmt->bindValue(':id' , $id , PDO::PARAM_INT);
             $result = $stmt->execute();
             $productions = $stmt->fetchAll();

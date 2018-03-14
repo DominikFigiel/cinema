@@ -10,7 +10,7 @@
 		}
 
 		public function getModel($name){
-			$name = 'Model\\'.$name;
+			$name = 'Models\\'.$name;
 			return new $name();
 		}
 
