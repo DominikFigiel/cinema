@@ -9,6 +9,9 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^Movie/?$ index.php?controller=Movie&action=getAll [L]
 RewriteRule ^Movie/Details/(\d+)/?$ index.php?controller=Movie&action=getOne&id=$1 [L]
 
+#Contact
+RewriteRule ^Contact/?$ index.php?controller=Contact&action=get [L]
+
 #Showing
 #RewriteRule ^Seans/?$ index.php?controller=Showing&action=getAll [L]
 #RewriteRule ^Seans/Dodaj/?$ index.php?controller=Showing&action=addform [L]

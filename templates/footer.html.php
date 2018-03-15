@@ -5,8 +5,8 @@
 
 
     <!-- Bootstrap core JavaScript -->
-    <script src="resources/js/jquery.min.js"></script>
-    <script src="resources/js/bootstrap.bundle.min.js"></script>
+    <script src="http://{$smarty.server.HTTP_HOST}{$subdir}resources/js/jquery.min.js"></script>
+    <script src="http://{$smarty.server.HTTP_HOST}{$subdir}resources/js/bootstrap.bundle.min.js"></script>
 
 </body>
 
