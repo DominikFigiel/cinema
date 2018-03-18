@@ -15,7 +15,7 @@
     <!-- Opis -->
     <div class="row">
         <div class="col-lg-4 col-md-4 col-sm-12 col-12">
-            <img src="resources/images/covers/{$movie[\Config\Database\DBConfig\Movie::$Cover]}.jpg" class="img-fluid" alt="Responsive image">
+            <img src="http://{$smarty.server.HTTP_HOST}{$subdir}resources/images/covers/{$movie[\Config\Database\DBConfig\Movie::$Cover]}.jpg" class="img-fluid" alt="Responsive image">
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-12 pb-5 mt-3 mt-md-0">
             <p><strong>Gatunek:</strong> {foreach $genres as $genre}{$genre[\Config\Database\DBConfig\Genre::$GenreName]} {/foreach}</p>
@@ -32,7 +32,7 @@
 
     <!-- Aktualny repertuar - link -->
     <div class="text-center pb-4">
-        <a href="index.php"><button type="button" class="btn btn-primary btn-lg">Zobacz aktualny repertuar</button></a>
+        <a href="http://{$smarty.server.HTTP_HOST}{$subdir}Movie"><button type="button" class="btn btn-primary btn-lg">Zobacz aktualny repertuar</button></a>
     </div>
 
 </div>
