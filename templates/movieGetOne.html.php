@@ -22,7 +22,7 @@
             <p><strong>Od lat:</strong> {$movie[\Config\Database\DBConfig\Movie::$Age]}</p>
             <p><strong>Czas trwania:</strong> {$movie[\Config\Database\DBConfig\Movie::$DurationTime]} minut</p>
             <p><strong>Produkcja:</strong> {if $productions}{foreach from=$productions key=$k item=$production}{$production[\Config\Database\DBConfig\Production::$Country]} {if $k < $productions|count-1}, {else}{/if}{/foreach}{else} Brak informacji{/if}</p>
-            <p><strong>Obsada:</strong> {if $actors}{foreach from=$actors key=$k item=$actor}{$actor[\Config\Database\DBConfig\Actor::$FirstName]} {$actor[\Config\Database\DBConfig\Actor::$LastName]} {if $k < $actors|count-1}, {else}{/if}{/foreach}{else} Brak informacji{/if}</p>
+            <p><strong>Obsada:</strong> {if $actors}{foreach from=$actors key=$k item=$actor}{$actor[\Config\Database\DBConfig\Actor::$FirstName]} {$actor[\Config\Database\DBConfig\Actor::$LastName]} ({$actor[\Config\Database\DBConfig\Cast::$Role]}) {if $k < $actors|count-1}, {else}{/if}{/foreach}{else} Brak informacji{/if}</p>
             <p><strong>Opis filmu:</strong></p>
             <p>{$movie[\Config\Database\DBConfig\Movie::$Description]}</p>
         </div>
