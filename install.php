@@ -397,7 +397,7 @@ $query = 'CREATE TABLE IF NOT EXISTS `'.DB::$tableShowing.'` (
                                 `'.DB\Showing::$IdMovieType.'` INT NOT NULL,
                                 `'.DB\Showing::$IdCinemaHall.'` INT NOT NULL,
                                 `'.DB\Showing::$DateTime.'` DATETIME NOT NULL,
-                                `'.DB\Showing::$Dubbing.'` BIT NOT NULL,
+                                `'.DB\Showing::$Dubbing.'` BOOLEAN NOT NULL,
                                 `'.DB\Showing::$IdLanguageVersion.'` INT NOT NULL,
                                 PRIMARY KEY ('.DB\Showing::$IdShowing.'),
                                 FOREIGN KEY ('.DB\Showing::$IdMovieType.') REFERENCES '.DB::$tableMovieType.'('.DB\MovieType::$IdMovieType.') ON DELETE CASCADE,
@@ -912,10 +912,10 @@ catch(PDOException $e)
 $pricings = array();
 // Ceny 2D
 $pricings[] = array(
-        'price' => 23,
-        'workingDay' => 1,
-        'idPricingCategory' => 5,
-        'idType' => 1
+    'price' => 23,
+    'workingDay' => 1,
+    'idPricingCategory' => 5,
+    'idType' => 1
 );
 $pricings[] = array(
     'price' => 25,
