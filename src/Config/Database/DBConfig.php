@@ -23,4 +23,6 @@
         public static $tableMovieType = "MovieType";
         public static $tableShowing = "Showing";
         public static $tableType = "Type";
+        public static $tablePricingCategory = "PricingCategory";
+        public static $tablePricing = "Pricing";
 	}
