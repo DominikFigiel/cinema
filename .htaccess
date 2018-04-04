@@ -12,6 +12,9 @@ RewriteRule ^Movie/Details/(\d+)/?$ index.php?controller=Movie&action=getOne&id=
 #Contact
 RewriteRule ^Contact/?$ index.php?controller=Contact&action=get [L]
 
+#Cennik
+RewriteRule ^Cennik/?$ index.php?controller=Pricing&action=getAll [L]
+
 #Showing
 #RewriteRule ^Seans/?$ index.php?controller=Showing&action=getAll [L]
 #RewriteRule ^Seans/Dodaj/?$ index.php?controller=Showing&action=addform [L]

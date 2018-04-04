@@ -21,6 +21,27 @@ try {
     exit(1);
 }
 
+//Table Pricing
+$query = 'DROP TABLE IF EXISTS `'.DB::$tablePricing.'`';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$delete_table.DB::$tablePricing;
+}
+
+//Table PricingCategory
+$query = 'DROP TABLE IF EXISTS `'.DB::$tablePricingCategory.'`';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$delete_table.DB::$tablePricingCategory;
+}
 
 // Table Showing
 $query = 'DROP TABLE IF EXISTS `'.DB::$tableShowing.'`';
@@ -168,6 +189,55 @@ catch(PDOException $e)
     echo \Config\Database\DBErrorName::$create_table.DB::$tableGenre;
 }
 
+// Create table Type
+$query = 'CREATE TABLE IF NOT EXISTS `'.DB::$tableType.'` (
+                                `'.DB\Type::$IdType.'` INT NOT NULL AUTO_INCREMENT,
+                                `'.DB\Type::$Type.'` VARCHAR(2) NOT NULL,
+                                PRIMARY KEY ('.DB\Type::$IdType.')
+                                ) ENGINE=InnoDB;';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$create_table.DB::$tableType;
+}
+
+// Create table PricingCategory
+$query = 'CREATE TABLE IF NOT EXISTS `'.DB::$tablePricingCategory.'` (
+        `'.DB\PricingCategory::$IdPricingCategory.'` INT NOT NULL AUTO_INCREMENT,
+        `'.DB\PricingCategory::$PricingCategoryName.'` VARCHAR(50) NOT NULL,
+        PRIMARY KEY ('.DB\PricingCategory::$IdPricingCategory.')) ENGINE=InnoDB;';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$create_table.DB::$tablePricingCategory;
+}
+
+//Create table Pricing
+$query = 'CREATE TABLE IF NOT EXISTS `'.DB::$tablePricing.'` (
+        `'.DB\Pricing::$IdPricing.'` INT NOT NULL AUTO_INCREMENT,
+        `'.DB\Pricing::$Price.'` DECIMAL(10,2) NOT NULL,
+        `'.DB\Pricing::$WorkingDay.'` BOOLEAN NOT NULL,
+        `'.DB\Pricing::$IdPricingCategory.'` INT NOT NULL,
+        `'.DB\Pricing::$IdType.'` INT NOT NULL,
+        PRIMARY KEY ('.DB\Pricing::$IdPricing.'),
+        FOREIGN KEY ('.DB\Pricing::$IdPricingCategory.') REFERENCES '.DB::$tablePricingCategory.'('.DB\PricingCategory::$IdPricingCategory.') ON DELETE CASCADE,
+        FOREIGN KEY ('.DB\Pricing::$IdType.') REFERENCES '.DB::$tableType.'('.DB\Type::$IdType.') ON DELETE CASCADE
+        ) ENGINE=InnoDB;';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$create_table.DB::$tablePricing;
+}
+
 // Create table Production
 $query = 'CREATE TABLE IF NOT EXISTS `'.DB::$tableProduction.'` (
             `'.DB\Production::$IdProduction.'` INT NOT NULL AUTO_INCREMENT,
@@ -303,21 +373,6 @@ catch(PDOException $e)
     echo \Config\Database\DBErrorName::$create_table.DB::$tableLanguageVersion;
 }
 
-// Create table Type
-$query = 'CREATE TABLE IF NOT EXISTS `'.DB::$tableType.'` (
-                                `'.DB\Type::$IdType.'` INT NOT NULL AUTO_INCREMENT,
-                                `'.DB\Type::$Type.'` VARCHAR(2) NOT NULL,
-                                PRIMARY KEY ('.DB\Type::$IdType.')
-                                ) ENGINE=InnoDB;';
-try
-{
-    $pdo->exec($query);
-}
-catch(PDOException $e)
-{
-    echo \Config\Database\DBErrorName::$create_table.DB::$tableType;
-}
-
 // Create table MovieType
 $query = 'CREATE TABLE IF NOT EXISTS `'.DB::$tableMovieType.'` (
                                 `'.DB\MovieType::$IdMovieType.'` INT NOT NULL AUTO_INCREMENT,
@@ -378,6 +433,27 @@ try
     foreach($genres as $genre)
     {
         $stmt -> bindValue(':genre', $genre, PDO::PARAM_STR);
+        $stmt -> execute();
+    }
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$noadd;
+}
+
+// Table PricingCategory
+$categoryNames = array();
+$categoryNames[] = 'Rodzinny';
+$categoryNames[] = 'Junior';
+$categoryNames[] = 'Senior';
+$categoryNames[] = 'Ulgowy';
+$categoryNames[] = 'Normalny';
+try
+{
+    $stmt = $pdo -> prepare('INSERT INTO `'.DB::$tablePricingCategory.'` (`'.DB\PricingCategory::$PricingCategoryName.'`) VALUES(:categoryName)');
+    foreach($categoryNames as $categoryName)
+    {
+        $stmt -> bindValue(':categoryName', $categoryName, PDO::PARAM_STR);
         $stmt -> execute();
     }
 }
@@ -824,6 +900,149 @@ try
     foreach($Types as $Type)
     {
         $stmt -> bindValue(':Type', $Type['Type'], PDO::PARAM_STR);
+        $stmt -> execute();
+    }
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$noadd;
+}
+
+// Table Pricing
+$pricings = array();
+// Ceny 2D
+$pricings[] = array(
+        'price' => 23,
+        'workingDay' => 1,
+        'idPricingCategory' => 5,
+        'idType' => 1
+);
+$pricings[] = array(
+    'price' => 25,
+    'workingDay' => 0,
+    'idPricingCategory' => 5,
+    'idType' => 1
+);
+$pricings[] = array(
+    'price' => 19,
+    'workingDay' => 1,
+    'idPricingCategory' => 4,
+    'idType' => 1
+);
+$pricings[] = array(
+    'price' => 21,
+    'workingDay' => 0,
+    'idPricingCategory' => 4,
+    'idType' => 1
+);
+$pricings[] = array(
+    'price' => 19,
+    'workingDay' => 1,
+    'idPricingCategory' => 3,
+    'idType' => 1
+);
+$pricings[] = array(
+    'price' => 21,
+    'workingDay' => 0,
+    'idPricingCategory' => 3,
+    'idType' => 1
+);
+$pricings[] = array(
+    'price' => 19,
+    'workingDay' => 1,
+    'idPricingCategory' => 2,
+    'idType' => 1
+);
+$pricings[] = array(
+    'price' => 21,
+    'workingDay' => 0,
+    'idPricingCategory' => 2,
+    'idType' => 1
+);
+$pricings[] = array(
+    'price' => 19,
+    'workingDay' => 1,
+    'idPricingCategory' => 1,
+    'idType' => 1
+);
+$pricings[] = array(
+    'price' => 21,
+    'workingDay' => 0,
+    'idPricingCategory' => 1,
+    'idType' => 1
+);
+
+//Ceny3D
+$pricings[] = array(
+    'price' => 25,
+    'workingDay' => 1,
+    'idPricingCategory' => 5,
+    'idType' => 2
+);
+$pricings[] = array(
+    'price' => 27,
+    'workingDay' => 0,
+    'idPricingCategory' => 5,
+    'idType' => 2
+);
+$pricings[] = array(
+    'price' => 21,
+    'workingDay' => 1,
+    'idPricingCategory' => 4,
+    'idType' => 2
+);
+$pricings[] = array(
+    'price' => 23,
+    'workingDay' => 0,
+    'idPricingCategory' => 4,
+    'idType' => 2
+);
+$pricings[] = array(
+    'price' => 21,
+    'workingDay' => 1,
+    'idPricingCategory' => 3,
+    'idType' => 2
+);
+$pricings[] = array(
+    'price' => 23,
+    'workingDay' => 0,
+    'idPricingCategory' => 3,
+    'idType' => 2
+);
+$pricings[] = array(
+    'price' => 21,
+    'workingDay' => 1,
+    'idPricingCategory' => 2,
+    'idType' => 2
+);
+$pricings[] = array(
+    'price' => 23,
+    'workingDay' => 0,
+    'idPricingCategory' => 2,
+    'idType' => 2
+);
+$pricings[] = array(
+    'price' => 21,
+    'workingDay' => 1,
+    'idPricingCategory' => 1,
+    'idType' => 2
+);
+$pricings[] = array(
+    'price' => 23,
+    'workingDay' => 0,
+    'idPricingCategory' => 1,
+    'idType' => 2
+);
+
+try
+{
+    $stmt = $pdo -> prepare('INSERT INTO `'.DB::$tablePricing.'` (`'.DB\Pricing::$Price.'` , `'.DB\Pricing::$WorkingDay.'` , `'.DB\Pricing::$IdPricingCategory.'` , `'.DB\Pricing::$IdType.'`) VALUES(:price , :workingDay , :idPricingCategory , :idType)');
+    foreach($pricings as $pricing)
+    {
+        $stmt -> bindValue(':price', $pricing['price'], PDO::PARAM_STR);
+        $stmt -> bindValue(':workingDay', $pricing['workingDay'], PDO::PARAM_BOOL);
+        $stmt -> bindValue(':idPricingCategory', $pricing['idPricingCategory'], PDO::PARAM_INT);
+        $stmt -> bindValue(':idType', $pricing['idType'], PDO::PARAM_INT);
         $stmt -> execute();
     }
 }
