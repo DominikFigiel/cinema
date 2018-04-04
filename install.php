@@ -21,6 +21,61 @@ try {
     exit(1);
 }
 
+//Table Pricing
+$query = 'DROP TABLE IF EXISTS `'.DB::$tablePricing.'`';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$delete_table.DB::$tablePricing;
+}
+
+//Table PricingCategory
+$query = 'DROP TABLE IF EXISTS `'.DB::$tablePricingCategory.'`';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$delete_table.DB::$tablePricingCategory;
+}
+
+// Table Showing
+$query = 'DROP TABLE IF EXISTS `'.DB::$tableShowing.'`';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$delete_table.DB::$tableShowing;
+}
+
+// Table MovieType
+$query = 'DROP TABLE IF EXISTS `'.DB::$tableMovieType.'`';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$delete_table.DB::$tableMovieType;
+}
+
+// Table Type
+$query = 'DROP TABLE IF EXISTS `'.DB::$tableType.'`';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$delete_table.DB::$tableType;
+}
+
 // Table MovieProduction
 $query = 'DROP TABLE IF EXISTS `'.DB::$tableMovieProduction.'`';
 try
@@ -98,6 +153,28 @@ catch(PDOException $e)
     echo \Config\Database\DBErrorName::$delete_table.DB::$tableProduction;
 }
 
+// Table CinemaHall
+$query = 'DROP TABLE IF EXISTS `'.DB::$tableCinemaHall.'`';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$delete_table.DB::$tableCinemaHall;
+}
+
+// Table LanguageVersion
+$query = 'DROP TABLE IF EXISTS `'.DB::$tableLanguageVersion.'`';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$delete_table.DB::$tableLanguageVersion;
+}
+
 // Create table Genre
 $query = 'CREATE TABLE IF NOT EXISTS `'.DB::$tableGenre.'` (
         `'.DB\Genre::$IdGenre.'` INT NOT NULL AUTO_INCREMENT,
@@ -110,6 +187,55 @@ try
 catch(PDOException $e)
 {
     echo \Config\Database\DBErrorName::$create_table.DB::$tableGenre;
+}
+
+// Create table Type
+$query = 'CREATE TABLE IF NOT EXISTS `'.DB::$tableType.'` (
+                                `'.DB\Type::$IdType.'` INT NOT NULL AUTO_INCREMENT,
+                                `'.DB\Type::$Type.'` VARCHAR(2) NOT NULL,
+                                PRIMARY KEY ('.DB\Type::$IdType.')
+                                ) ENGINE=InnoDB;';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$create_table.DB::$tableType;
+}
+
+// Create table PricingCategory
+$query = 'CREATE TABLE IF NOT EXISTS `'.DB::$tablePricingCategory.'` (
+        `'.DB\PricingCategory::$IdPricingCategory.'` INT NOT NULL AUTO_INCREMENT,
+        `'.DB\PricingCategory::$PricingCategoryName.'` VARCHAR(50) NOT NULL,
+        PRIMARY KEY ('.DB\PricingCategory::$IdPricingCategory.')) ENGINE=InnoDB;';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$create_table.DB::$tablePricingCategory;
+}
+
+//Create table Pricing
+$query = 'CREATE TABLE IF NOT EXISTS `'.DB::$tablePricing.'` (
+        `'.DB\Pricing::$IdPricing.'` INT NOT NULL AUTO_INCREMENT,
+        `'.DB\Pricing::$Price.'` DECIMAL(10,2) NOT NULL,
+        `'.DB\Pricing::$WorkingDay.'` BOOLEAN NOT NULL,
+        `'.DB\Pricing::$IdPricingCategory.'` INT NOT NULL,
+        `'.DB\Pricing::$IdType.'` INT NOT NULL,
+        PRIMARY KEY ('.DB\Pricing::$IdPricing.'),
+        FOREIGN KEY ('.DB\Pricing::$IdPricingCategory.') REFERENCES '.DB::$tablePricingCategory.'('.DB\PricingCategory::$IdPricingCategory.') ON DELETE CASCADE,
+        FOREIGN KEY ('.DB\Pricing::$IdType.') REFERENCES '.DB::$tableType.'('.DB\Type::$IdType.') ON DELETE CASCADE
+        ) ENGINE=InnoDB;';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$create_table.DB::$tablePricing;
 }
 
 // Create table Production
@@ -217,6 +343,76 @@ catch(PDOException $e)
     echo \Config\Database\DBErrorName::$create_table.DB::$tableCast;
 }
 
+// Create table CinemaHall
+$query = 'CREATE TABLE IF NOT EXISTS `'.DB::$tableCinemaHall.'` (
+                                `'.DB\CinemaHall::$IdCinemaHall.'` INT NOT NULL AUTO_INCREMENT,
+                                `'.DB\CinemaHall::$Name.'` VARCHAR(100) NOT NULL,
+                                PRIMARY KEY ('.DB\CinemaHall::$IdCinemaHall.')
+                                ) ENGINE=InnoDB;';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$create_table.DB::$tableCinemaHall;
+}
+
+// Create table LanguageVersion
+$query = 'CREATE TABLE IF NOT EXISTS `'.DB::$tableLanguageVersion.'` (
+                                `'.DB\LanguageVersion::$IdLanguageVersion.'` INT NOT NULL AUTO_INCREMENT,
+                                `'.DB\LanguageVersion::$Version.'` VARCHAR(40) NOT NULL,
+                                PRIMARY KEY ('.DB\LanguageVersion::$IdLanguageVersion.')
+                                ) ENGINE=InnoDB;';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$create_table.DB::$tableLanguageVersion;
+}
+
+// Create table MovieType
+$query = 'CREATE TABLE IF NOT EXISTS `'.DB::$tableMovieType.'` (
+                                `'.DB\MovieType::$IdMovieType.'` INT NOT NULL AUTO_INCREMENT,
+                                `'.DB\MovieType::$IdMovie.'` INT NOT NULL,
+                                `'.DB\MovieType::$IdType.'` INT NOT NULL,
+                                PRIMARY KEY ('.DB\MovieType::$IdMovieType.'),
+                                FOREIGN KEY ('.DB\MovieType::$IdMovie.') REFERENCES '.DB::$tableMovie.'('.DB\Movie::$IdMovie.') ON DELETE CASCADE,
+                                FOREIGN KEY ('.DB\MovieType::$IdType.') REFERENCES '.DB::$tableType.'('.DB\Type::$IdType.') ON DELETE CASCADE
+                                ) ENGINE=InnoDB;';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$create_table.DB::$tableMovieType;
+}
+
+// Create table Showing
+$query = 'CREATE TABLE IF NOT EXISTS `'.DB::$tableShowing.'` (
+                                `'.DB\Showing::$IdShowing.'` INT NOT NULL AUTO_INCREMENT,
+                                `'.DB\Showing::$IdMovieType.'` INT NOT NULL,
+                                `'.DB\Showing::$IdCinemaHall.'` INT NOT NULL,
+                                `'.DB\Showing::$DateTime.'` DATETIME NOT NULL,
+                                `'.DB\Showing::$Dubbing.'` BIT NOT NULL,
+                                `'.DB\Showing::$IdLanguageVersion.'` INT NOT NULL,
+                                PRIMARY KEY ('.DB\Showing::$IdShowing.'),
+                                FOREIGN KEY ('.DB\Showing::$IdMovieType.') REFERENCES '.DB::$tableMovieType.'('.DB\MovieType::$IdMovieType.') ON DELETE CASCADE,
+                                FOREIGN KEY ('.DB\Showing::$IdCinemaHall.') REFERENCES '.DB::$tableCinemaHall.'('.DB\CinemaHall::$IdCinemaHall.') ON DELETE CASCADE,
+                                FOREIGN KEY ('.DB\Showing::$IdLanguageVersion.') REFERENCES '.DB::$tableLanguageVersion.'('.DB\LanguageVersion::$IdLanguageVersion.') ON DELETE CASCADE
+                                ) ENGINE=InnoDB;';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$create_table.DB::$tableShowing;
+}
+
 
 
 // Table Genre
@@ -237,6 +433,27 @@ try
     foreach($genres as $genre)
     {
         $stmt -> bindValue(':genre', $genre, PDO::PARAM_STR);
+        $stmt -> execute();
+    }
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$noadd;
+}
+
+// Table PricingCategory
+$categoryNames = array();
+$categoryNames[] = 'Rodzinny';
+$categoryNames[] = 'Junior';
+$categoryNames[] = 'Senior';
+$categoryNames[] = 'Ulgowy';
+$categoryNames[] = 'Normalny';
+try
+{
+    $stmt = $pdo -> prepare('INSERT INTO `'.DB::$tablePricingCategory.'` (`'.DB\PricingCategory::$PricingCategoryName.'`) VALUES(:categoryName)');
+    foreach($categoryNames as $categoryName)
+    {
+        $stmt -> bindValue(':categoryName', $categoryName, PDO::PARAM_STR);
         $stmt -> execute();
     }
 }
@@ -613,6 +830,312 @@ try
         $stmt -> bindValue(':IdActor', $cast['IdActor'], PDO::PARAM_INT);
         $stmt -> bindValue(':IdMovie', $cast['IdMovie'], PDO::PARAM_INT);
         $stmt -> bindValue(':Role', $cast['Role'], PDO::PARAM_STR);
+        $stmt -> execute();
+    }
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$noadd;
+}
+
+
+//Table CinemaHall
+$CinemaHalls = array();
+$CinemaHalls[] = array(
+    'Name' => 'Glowna');
+$CinemaHalls[] = array(
+    'Name' => 'Druga');
+// Wstawianie
+try
+{
+    $stmt = $pdo -> prepare('INSERT INTO `'.DB::$tableCinemaHall.'` (`'.DB\CinemaHall::$Name.'`) VALUES(:Name)');
+    foreach($CinemaHalls as $CinemaHall)
+    {
+        $stmt -> bindValue(':Name', $CinemaHall['Name'], PDO::PARAM_STR);
+        $stmt -> execute();
+    }
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$noadd;
+}
+
+//Table LanguageVersion
+$LanguageVersions = array();
+$LanguageVersions[] = array(
+    'Version' => 'Polska');
+$LanguageVersions[] = array(
+    'Version' => 'Niemiecka');
+$LanguageVersions[] = array(
+    'Version' => 'Angielska');
+$LanguageVersions[] = array(
+    'Version' => 'Francuska');
+$LanguageVersions[] = array(
+    'Version' => 'Hiszpańska');
+// Wstawianie
+try
+{
+    $stmt = $pdo -> prepare('INSERT INTO `'.DB::$tableLanguageVersion.'` (`'.DB\LanguageVersion::$Version.'`) VALUES(:Version)');
+    foreach($LanguageVersions as $LanguageVersion)
+    {
+        $stmt -> bindValue(':Version', $LanguageVersion['Version'], PDO::PARAM_STR);
+        $stmt -> execute();
+    }
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$noadd;
+}
+
+//Table Type
+$Types = array();
+$Types[] = array(
+    'Type' => '2D');
+$Types[] = array(
+    'Type' => '3D');
+// Wstawianie
+try
+{
+    $stmt = $pdo -> prepare('INSERT INTO `'.DB::$tableType.'` (`'.DB\Type::$Type.'`) VALUES(:Type)');
+    foreach($Types as $Type)
+    {
+        $stmt -> bindValue(':Type', $Type['Type'], PDO::PARAM_STR);
+        $stmt -> execute();
+    }
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$noadd;
+}
+
+// Table Pricing
+$pricings = array();
+// Ceny 2D
+$pricings[] = array(
+        'price' => 23,
+        'workingDay' => 1,
+        'idPricingCategory' => 5,
+        'idType' => 1
+);
+$pricings[] = array(
+    'price' => 25,
+    'workingDay' => 0,
+    'idPricingCategory' => 5,
+    'idType' => 1
+);
+$pricings[] = array(
+    'price' => 19,
+    'workingDay' => 1,
+    'idPricingCategory' => 4,
+    'idType' => 1
+);
+$pricings[] = array(
+    'price' => 21,
+    'workingDay' => 0,
+    'idPricingCategory' => 4,
+    'idType' => 1
+);
+$pricings[] = array(
+    'price' => 19,
+    'workingDay' => 1,
+    'idPricingCategory' => 3,
+    'idType' => 1
+);
+$pricings[] = array(
+    'price' => 21,
+    'workingDay' => 0,
+    'idPricingCategory' => 3,
+    'idType' => 1
+);
+$pricings[] = array(
+    'price' => 19,
+    'workingDay' => 1,
+    'idPricingCategory' => 2,
+    'idType' => 1
+);
+$pricings[] = array(
+    'price' => 21,
+    'workingDay' => 0,
+    'idPricingCategory' => 2,
+    'idType' => 1
+);
+$pricings[] = array(
+    'price' => 19,
+    'workingDay' => 1,
+    'idPricingCategory' => 1,
+    'idType' => 1
+);
+$pricings[] = array(
+    'price' => 21,
+    'workingDay' => 0,
+    'idPricingCategory' => 1,
+    'idType' => 1
+);
+
+//Ceny3D
+$pricings[] = array(
+    'price' => 25,
+    'workingDay' => 1,
+    'idPricingCategory' => 5,
+    'idType' => 2
+);
+$pricings[] = array(
+    'price' => 27,
+    'workingDay' => 0,
+    'idPricingCategory' => 5,
+    'idType' => 2
+);
+$pricings[] = array(
+    'price' => 21,
+    'workingDay' => 1,
+    'idPricingCategory' => 4,
+    'idType' => 2
+);
+$pricings[] = array(
+    'price' => 23,
+    'workingDay' => 0,
+    'idPricingCategory' => 4,
+    'idType' => 2
+);
+$pricings[] = array(
+    'price' => 21,
+    'workingDay' => 1,
+    'idPricingCategory' => 3,
+    'idType' => 2
+);
+$pricings[] = array(
+    'price' => 23,
+    'workingDay' => 0,
+    'idPricingCategory' => 3,
+    'idType' => 2
+);
+$pricings[] = array(
+    'price' => 21,
+    'workingDay' => 1,
+    'idPricingCategory' => 2,
+    'idType' => 2
+);
+$pricings[] = array(
+    'price' => 23,
+    'workingDay' => 0,
+    'idPricingCategory' => 2,
+    'idType' => 2
+);
+$pricings[] = array(
+    'price' => 21,
+    'workingDay' => 1,
+    'idPricingCategory' => 1,
+    'idType' => 2
+);
+$pricings[] = array(
+    'price' => 23,
+    'workingDay' => 0,
+    'idPricingCategory' => 1,
+    'idType' => 2
+);
+
+try
+{
+    $stmt = $pdo -> prepare('INSERT INTO `'.DB::$tablePricing.'` (`'.DB\Pricing::$Price.'` , `'.DB\Pricing::$WorkingDay.'` , `'.DB\Pricing::$IdPricingCategory.'` , `'.DB\Pricing::$IdType.'`) VALUES(:price , :workingDay , :idPricingCategory , :idType)');
+    foreach($pricings as $pricing)
+    {
+        $stmt -> bindValue(':price', $pricing['price'], PDO::PARAM_STR);
+        $stmt -> bindValue(':workingDay', $pricing['workingDay'], PDO::PARAM_BOOL);
+        $stmt -> bindValue(':idPricingCategory', $pricing['idPricingCategory'], PDO::PARAM_INT);
+        $stmt -> bindValue(':idType', $pricing['idType'], PDO::PARAM_INT);
+        $stmt -> execute();
+    }
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$noadd;
+}
+
+//Table MovieType
+$MovieTypes = array();
+$MovieTypes[] = array(
+    'IdMovie' => '1',
+    'IdType' => '1');
+$MovieTypes[] = array(
+    'IdMovie' => '1',
+    'IdType' => '2');
+$MovieTypes[] = array(
+    'IdMovie' => '2',
+    'IdType' => '1');
+$MovieTypes[] = array(
+    'IdMovie' => '2',
+    'IdType' => '2');
+$MovieTypes[] = array(
+    'IdMovie' => '3',
+    'IdType' => '1');
+$MovieTypes[] = array(
+    'IdMovie' => '3',
+    'IdType' => '2');
+$MovieTypes[] = array(
+    'IdMovie' => '4',
+    'IdType' => '1');
+$MovieTypes[] = array(
+    'IdMovie' => '4',
+    'IdType' => '2');
+$MovieTypes[] = array(
+    'IdMovie' => '5',
+    'IdType' => '1');
+$MovieTypes[] = array(
+    'IdMovie' => '5',
+    'IdType' => '2');
+$MovieTypes[] = array(
+    'IdMovie' => '6',
+    'IdType' => '1');
+$MovieTypes[] = array(
+    'IdMovie' => '6',
+    'IdType' => '2');
+$MovieTypes[] = array(
+    'IdMovie' => '7',
+    'IdType' => '1');
+$MovieTypes[] = array(
+    'IdMovie' => '7',
+    'IdType' => '2');
+$MovieTypes[] = array(
+    'IdMovie' => '8',
+    'IdType' => '1');
+$MovieTypes[] = array(
+    'IdMovie' => '8',
+    'IdType' => '2');
+// Wstawianie
+try
+{
+    $stmt = $pdo -> prepare('INSERT INTO `'.DB::$tableMovieType.'` (`'.DB\MovieType::$IdMovie.'` , `'.DB\MovieType::$IdType.'`) VALUES(:IdMovie , :IdType)');
+    foreach($MovieTypes as $MovieType)
+    {
+        $stmt -> bindValue(':IdMovie', $MovieType['IdMovie'], PDO::PARAM_STR);
+        $stmt -> bindValue(':IdType', $MovieType['IdType'], PDO::PARAM_STR);
+        $stmt -> execute();
+    }
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$noadd;
+}
+
+//Table Showing
+$Showings = array();
+$Showings[] = array(
+    'IdMovieType' => '1',
+    'IdCinemaHall' => '1',
+    'DateTime' => '2018-04-18 20:00:00',
+    'Dubbing' => '1',
+    'IdLanguageVersion' => '1');
+// Wstawianie
+try
+{
+    $stmt = $pdo -> prepare('INSERT INTO `'.DB::$tableShowing.'` (`'.DB\Showing::$IdMovieType.'`,`'.DB\Showing::$IdCinemaHall.'`,`'.DB\Showing::$DateTime.'`,`'.DB\Showing::$Dubbing.'`,`'.DB\Showing::$IdLanguageVersion.'`) VALUES(:IdMovieType, :IdCinemaHall , :DateTime, :Dubbing, :IdLanguageVersion)');
+    foreach($Showings as $showing)
+    {
+        $stmt -> bindValue(':IdMovieType', $showing['IdMovieType'], PDO::PARAM_INT);
+        $stmt -> bindValue(':IdCinemaHall', $showing['IdCinemaHall'], PDO::PARAM_INT);
+        $stmt -> bindValue(':DateTime', $showing['DateTime'], PDO::PARAM_STR);
+        $stmt -> bindValue(':Dubbing', $showing['Dubbing'], PDO::PARAM_BOOL);
+        $stmt -> bindValue(':IdLanguageVersion', $showing['IdLanguageVersion'], PDO::PARAM_INT);
         $stmt -> execute();
     }
 }

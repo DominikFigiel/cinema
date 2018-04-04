@@ -18,4 +18,11 @@
         public static $tableMovieProduction = 'MovieProduction';
         public static $tableActor = 'Actor';
         public static $tableCast = 'Cast';
+        public static $tableCinemaHall = "CinemaHall";
+        public static $tableLanguageVersion = "LanguageVersion";
+        public static $tableMovieType = "MovieType";
+        public static $tableShowing = "Showing";
+        public static $tableType = "Type";
+        public static $tablePricingCategory = "PricingCategory";
+        public static $tablePricing = "Pricing";
 	}

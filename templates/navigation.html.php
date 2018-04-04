@@ -16,7 +16,7 @@
                     <a class="nav-link" href="#">Wkrótce w kinie</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Cennik</a>
+                    <a class="nav-link" href="http://{$smarty.server.HTTP_HOST}{$subdir}Cennik">Cennik</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="http://{$smarty.server.HTTP_HOST}{$subdir}Contact">Kontakt</a>
