@@ -13,14 +13,22 @@ class Pricing extends View {
         $model = $this->getModel('Pricing');
 
         //Get 2D pricing list.
-        $data = $model->getType("2D");
+        $data = $model->getAllForWorkingDaysByType("2D");
         if(isset($data['pricings']))
-            $this->set('pricings2D' , $data['pricings']);
+            $this->set('pricings2DWorkingDays' , $data['pricings']);
+
+        $data = $model->getAllForWeekendsByType("2D");
+        if(isset($data['pricings']))
+            $this->set('pricings2DWeekends' , $data['pricings']);
 
         //Get 3D pricing list.
-        $data = $model->getType("3D");
+        $data = $model->getAllForWorkingDaysByType("3D");
         if(isset($data['pricings']))
-            $this->set('pricings3D' , $data['pricings']);
+            $this->set('pricings3DWorkingDays' , $data['pricings']);
+
+        $data = $model->getAllForWeekendsByType("3D");
+        if(isset($data['pricings']))
+            $this->set('pricings3DWeekends' , $data['pricings']);
 
         $this->render('pricingGetAll');
     }

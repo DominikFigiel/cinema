@@ -10,10 +10,10 @@ class Movie extends View {
         if(isset($data['error']))
             $this->set('error' , $data['error']);
 
-        $model = $this->getModel('Movie');
+        $model = $this->getModel('Showing');
         $data = $model->getAll();
-        if(isset($data['movies']))
-            $this->set('movies' , $data['movies']);
+        if(isset($data['showings']))
+            $this->set('showings' , $data['showings']);
 
         $this->render('movieGetAll');
     }

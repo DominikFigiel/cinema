@@ -397,7 +397,7 @@ $query = 'CREATE TABLE IF NOT EXISTS `'.DB::$tableShowing.'` (
                                 `'.DB\Showing::$IdMovieType.'` INT NOT NULL,
                                 `'.DB\Showing::$IdCinemaHall.'` INT NOT NULL,
                                 `'.DB\Showing::$DateTime.'` DATETIME NOT NULL,
-                                `'.DB\Showing::$Dubbing.'` BIT NOT NULL,
+                                `'.DB\Showing::$Dubbing.'` BOOLEAN NOT NULL,
                                 `'.DB\Showing::$IdLanguageVersion.'` INT NOT NULL,
                                 PRIMARY KEY ('.DB\Showing::$IdShowing.'),
                                 FOREIGN KEY ('.DB\Showing::$IdMovieType.') REFERENCES '.DB::$tableMovieType.'('.DB\MovieType::$IdMovieType.') ON DELETE CASCADE,
