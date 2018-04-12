@@ -3,81 +3,12 @@ namespace Models;
 use \PDO;
 class Showing extends Model {
 
-    public function getAll(){
+    public function getAll($date = null , $type = null){
         if($this->pdo === null){
             $data['error'] = \Config\Database\DBErrorName::$connection;
             return $data;
         }
-        $data = array();
-        $showings = $this->getAllShowing();
-        if(isset($showings['error'])){
-            $data['error'] = $showings['error'];
-            return $data;
-        }
-        if(isset($showings['showings']))
-            $data['showings'] = $showings['showings'];
-        else{
-            $data['error'] = \Config\Database\DBErrorName::$empty;
-            return $data;
-        }
-        /*foreach ($data['showings'] as $showing){
-            $types = $this->getTypesForShowing($showing[\Config\Database\DBConfig\Showing::$IdShowing]);
-            if(isset($types['error'])){
-                $data['error'] = $types['error'];
-                return $data;
-            }
-            if(!isset($types['types'])){
-                $data['error'] = \Config\Database\DBErrorName::$empty;
-                return $data;
-            }
-            $data['showings'][$showing[\Config\Database\DBConfig\Showing::$IdShowing]]['types'] = $types['types'];
-        }*/
-        return $data;
-    }
-
-    public function getTypesForShowing($id){
-        if($this->pdo === null){
-            $data['error'] = \Config\Database\DBErrorName::$connection;
-            return $data;
-        }
-        if($id === null){
-            $data['error'] = \Config\Database\DBErrorName::$empty;
-            return $data;
-        }
-        $data = array();
-        $data['types'] = array();
-        try{
-            $query = '
-                    SELECT * 
-                    FROM `'.\Config\Database\DBConfig::$tableShowing.'`
-                    INNER JOIN `'.\Config\Database\DBConfig::$tableMovieType.'`
-                    ON `'.\Config\Database\DBConfig::$tableMovieType.'`.`'.\Config\Database\DBConfig\MovieType::$IdMovieType.'`
-                    = `'.\Config\Database\DBConfig::$tableShowing.'`.`'.\Config\Database\DBConfig\Showing::$IdMovieType.'`
-                    INNER JOIN `'.\Config\Database\DBConfig::$tableType.'`
-                    ON `'.\Config\Database\DBConfig::$tableType.'`.`'.\Config\Database\DBConfig\Type::$IdType.'`
-                    = `'.\Config\Database\DBConfig::$tableMovieType.'`.`'.\Config\Database\DBConfig\MovieType::$IdType.'`
-                    WHERE `'.\Config\Database\DBConfig::$tableShowing.'`.`'.\Config\Database\DBConfig\Showing::$IdShowing.'` = :id
-            ';
-            $stmt = $this->pdo->prepare($query);
-            $stmt->bindValue(':id' , $id , PDO::PARAM_INT);
-            $stmt->execute();
-            $types = $stmt->fetchAll();
-            $stmt->closeCursor();
-
-            if($types && !empty($types))
-                $data['types'] = $types;
-        }
-        catch(\PDOException $e){
-            $data['error'] = \Config\Database\DBErrorName::$query;
-        }
-        return $data;
-    }
-
-    public function getAllShowing(){
-        if($this->pdo === null){
-            $data['error'] = \Config\Database\DBErrorName::$connection;
-            return $data;
-        }
+        $type = '2D';
         $data = array();
         $data['showings'] = array();
         try{
@@ -97,14 +28,28 @@ class Showing extends Model {
                     ON `'.\Config\Database\DBConfig::$tableMovie.'`.`'.\Config\Database\DBConfig\Movie::$IdMovie.'`
                     = `'.\Config\Database\DBConfig::$tableMovieType.'`.`'.\Config\Database\DBConfig\MovieType::$IdMovie.'`
             ';
-            $stmt = $this->pdo->query($query);
+            if($type != null)
+                $query .= '
+                    WHERE `'.\Config\Database\DBConfig::$tableType.'`.`'.\Config\Database\DBConfig\Type::$Type.'` = :type
+                ';
+            $query .= "ORDER BY `".\Config\Database\DBConfig::$tableMovie."`.`".\Config\Database\DBConfig\Movie::$Title."` ,
+                                `".\Config\Database\DBConfig::$tableType."`.`".\Config\Database\DBConfig\Type::$Type."` ,
+                                `".\Config\Database\DBConfig::$tableShowing."`.`".\Config\Database\DBConfig\Showing::$DateTime."` ASC";
+            if($type != null){
+                $stmt = $this->pdo->prepare($query);
+                $stmt->bindValue(':type' , $type , PDO::PARAM_STR);
+                $stmt->execute();
+            }
+            else
+                $stmt = $this->pdo->query($query);
             $showings = $stmt->fetchAll();
             $stmt->closeCursor();
             $data['showings'] = array();
             if($showings && !empty($showings)) {
-                //$data['showings'] = $showings;
                 foreach ($showings as $showing){
-                    $data['showings'][$showing[\Config\Database\DBConfig\Showing::$IdShowing]] = $showing;
+                    if(!isset($data['showings'][$showing[\Config\Database\DBConfig\Movie::$IdMovie]][$showing[\Config\Database\DBConfig\Type::$Type]][$showing[\Config\Database\DBConfig\Showing::$Dubbing]]))
+                        $data['showings'][$showing[\Config\Database\DBConfig\Movie::$IdMovie]][$showing[\Config\Database\DBConfig\Type::$Type]][$showing[\Config\Database\DBConfig\Showing::$Dubbing]] = $showing;
+                    $data['showings'][$showing[\Config\Database\DBConfig\Movie::$IdMovie]][$showing[\Config\Database\DBConfig\Type::$Type]][$showing[\Config\Database\DBConfig\Showing::$Dubbing]]['hours'][] = $showing[\Config\Database\DBConfig\Showing::$DateTime];
                 }
             }
         }

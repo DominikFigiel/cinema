@@ -12,7 +12,9 @@
     </div>
 
     <!-- Filmy -->
-    {foreach $showings as $movie}
+    {foreach $showings as $types}
+    {foreach $types as $dubbings}
+    {foreach $dubbings as $movie}
     <div class="row">
         <div class="col-lg-2 col-md-3 col-sm-6 col-6">
             <img src="http://{$smarty.server.HTTP_HOST}{$subdir}resources/images/covers/{$movie[\Config\Database\DBConfig\Movie::$Cover]}.jpg" class="img-fluid" alt="Responsive image">
@@ -24,11 +26,15 @@
         </div>
         <div class="col-lg-4 col-md-4 col-sm-12 col-12 mt-sm-3 mt-sm-3 mt-md-0">
             <div class="text-center text-md-left">
-                <button type="button" class="btn btn-outline-primary m-1 mt-3 mt-md-1">{$movie[\Config\Database\DBConfig\Showing::$DateTime]|date_format:'%H:%M'}</button>
+                {foreach $movie['hours'] as $hour}
+                <button type="button" class="btn btn-outline-primary m-1 mt-3 mt-md-1">{$hour|date_format:'%H:%M'}</button>
+                {/foreach}
             </div>
         </div>
     </div>
     <hr/>
+    {/foreach}
+    {/foreach}
     {/foreach}
 
 </div>
