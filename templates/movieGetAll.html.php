@@ -3,16 +3,28 @@
 <!-- Treść strony -->
 <div class="container mb-5">
 
-    <!-- Naglowek -->
+    <!-- Kalendarz -->
     <div class="row">
         <div class="col-lg-12 text-center">
             <h1 class="mt-5">Repertuar</h1>
+            {if isset($calendar)}
+            <p class="lead">Kalendarz</p>
+            {foreach from=$calendar key=$i item=$day}
+            {if $day|date_format:"%Y-%m-%d" == $setDate|date_format:"%Y-%m-%d"}
+            <a href="http://{$smarty.server.HTTP_HOST}{$subdir}Movie/{$i}" class="btn btn-primary mb-1">{($day|date_format:"%A")}</br>{($day|date_format:"%e %B")}</a>
+            {else}
+            <a href="http://{$smarty.server.HTTP_HOST}{$subdir}Movie/{$i}" class="btn btn-secondary mb-1">{($day|date_format:"%A")}</br>{($day|date_format:"%e %B")}</a>
+            {/if}
+            {/foreach}
+            {/if}
             <hr/>
         </div>
     </div>
 
     <!-- Filmy -->
-    {foreach $showings as $movie}
+    {foreach $showings as $types}
+    {foreach $types as $dubbings}
+    {foreach $dubbings as $movie}
     <div class="row">
         <div class="col-lg-2 col-md-3 col-sm-6 col-6">
             <img src="http://{$smarty.server.HTTP_HOST}{$subdir}resources/images/covers/{$movie[\Config\Database\DBConfig\Movie::$Cover]}.jpg" class="img-fluid" alt="Responsive image">
@@ -24,12 +36,22 @@
         </div>
         <div class="col-lg-4 col-md-4 col-sm-12 col-12 mt-sm-3 mt-sm-3 mt-md-0">
             <div class="text-center text-md-left">
-                <button type="button" class="btn btn-outline-primary m-1 mt-3 mt-md-1">{$movie[\Config\Database\DBConfig\Showing::$DateTime]|date_format:'%H:%M'}</button>
+                {foreach $movie['hours'] as $hour}
+                <button type="button" class="btn btn-outline-primary m-1 mt-3 mt-md-1">{$hour|date_format:'%H:%M'}</button>
+                {/foreach}
             </div>
         </div>
     </div>
     <hr/>
     {/foreach}
+    {/foreach}
+    {/foreach}
+
+    {if isset($error)}
+    <div>
+        <h4 class="h4">{$error}</h4>
+    </div>
+    {/if}
 
 </div>
 {/block}

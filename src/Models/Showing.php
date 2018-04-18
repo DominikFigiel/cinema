@@ -3,81 +3,31 @@ namespace Models;
 use \PDO;
 class Showing extends Model {
 
-    public function getAll(){
+    public function getAll($date = null , $type = null){
         if($this->pdo === null){
             $data['error'] = \Config\Database\DBErrorName::$connection;
             return $data;
         }
-        $data = array();
-        $showings = $this->getAllShowing();
-        if(isset($showings['error'])){
-            $data['error'] = $showings['error'];
-            return $data;
-        }
-        if(isset($showings['showings']))
-            $data['showings'] = $showings['showings'];
-        else{
-            $data['error'] = \Config\Database\DBErrorName::$empty;
-            return $data;
-        }
-        /*foreach ($data['showings'] as $showing){
-            $types = $this->getTypesForShowing($showing[\Config\Database\DBConfig\Showing::$IdShowing]);
-            if(isset($types['error'])){
-                $data['error'] = $types['error'];
-                return $data;
+        if($date == null)
+            $date = date('Y-m-d h:i:s', time());
+        //$date = date('Y-m-d h:i:s', time());
+        if($date != null){
+            //Jeśli data nie jest datą, tylko liczbą, to pobieramy dzisiejszą datę i dodajemy liczbę jako dni
+            if(is_numeric($date)){
+                $date = date('Y-m-d h:i:s', strtotime( date('Y-m-d h:i:s', time()). ' + '.$date.' days'));
             }
-            if(!isset($types['types'])){
-                $data['error'] = \Config\Database\DBErrorName::$empty;
-                return $data;
-            }
-            $data['showings'][$showing[\Config\Database\DBConfig\Showing::$IdShowing]]['types'] = $types['types'];
-        }*/
-        return $data;
-    }
 
-    public function getTypesForShowing($id){
-        if($this->pdo === null){
-            $data['error'] = \Config\Database\DBErrorName::$connection;
-            return $data;
-        }
-        if($id === null){
-            $data['error'] = \Config\Database\DBErrorName::$empty;
-            return $data;
-        }
-        $data = array();
-        $data['types'] = array();
-        try{
-            $query = '
-                    SELECT * 
-                    FROM `'.\Config\Database\DBConfig::$tableShowing.'`
-                    INNER JOIN `'.\Config\Database\DBConfig::$tableMovieType.'`
-                    ON `'.\Config\Database\DBConfig::$tableMovieType.'`.`'.\Config\Database\DBConfig\MovieType::$IdMovieType.'`
-                    = `'.\Config\Database\DBConfig::$tableShowing.'`.`'.\Config\Database\DBConfig\Showing::$IdMovieType.'`
-                    INNER JOIN `'.\Config\Database\DBConfig::$tableType.'`
-                    ON `'.\Config\Database\DBConfig::$tableType.'`.`'.\Config\Database\DBConfig\Type::$IdType.'`
-                    = `'.\Config\Database\DBConfig::$tableMovieType.'`.`'.\Config\Database\DBConfig\MovieType::$IdType.'`
-                    WHERE `'.\Config\Database\DBConfig::$tableShowing.'`.`'.\Config\Database\DBConfig\Showing::$IdShowing.'` = :id
-            ';
-            $stmt = $this->pdo->prepare($query);
-            $stmt->bindValue(':id' , $id , PDO::PARAM_INT);
-            $stmt->execute();
-            $types = $stmt->fetchAll();
-            $stmt->closeCursor();
+            //Ustawienie pierwszej daty
+            $date1 = date_create($date);
+            date_time_set($date1, 00, 00, 00, 00);
+            $date1 = date_format($date1 , 'Y-m-d H:i:s');
 
-            if($types && !empty($types))
-                $data['types'] = $types;
+            //Ustawienie drugiej daty
+            $date2 = date_create($date);
+            date_time_set($date2, 23, 59 ,59, 59);
+            $date2 = date_format($date2 , 'Y-m-d H:i:s');
         }
-        catch(\PDOException $e){
-            $data['error'] = \Config\Database\DBErrorName::$query;
-        }
-        return $data;
-    }
-
-    public function getAllShowing(){
-        if($this->pdo === null){
-            $data['error'] = \Config\Database\DBErrorName::$connection;
-            return $data;
-        }
+        //$type = '3D';
         $data = array();
         $data['showings'] = array();
         try{
@@ -97,14 +47,48 @@ class Showing extends Model {
                     ON `'.\Config\Database\DBConfig::$tableMovie.'`.`'.\Config\Database\DBConfig\Movie::$IdMovie.'`
                     = `'.\Config\Database\DBConfig::$tableMovieType.'`.`'.\Config\Database\DBConfig\MovieType::$IdMovie.'`
             ';
-            $stmt = $this->pdo->query($query);
+            if($type != null || $date != null) {
+                if ($type != null && $date != null) {
+                    $query .= '
+                        WHERE `' . \Config\Database\DBConfig::$tableType . '`.`' . \Config\Database\DBConfig\Type::$Type . '` = :type
+                        AND `' . \Config\Database\DBConfig::$tableShowing . '`.`' . \Config\Database\DBConfig\Showing::$DateTime . '` 
+                        BETWEEN :date1 AND :date2
+                    ';
+                }
+                else if ($date != null){
+                    $query .= '
+                        WHERE `' . \Config\Database\DBConfig::$tableShowing . '`.`' . \Config\Database\DBConfig\Showing::$DateTime . '` 
+                        BETWEEN :date1 AND :date2
+                    ';
+                }
+                else if($type != null){
+                    $query .= '
+                        WHERE `' . \Config\Database\DBConfig::$tableType . '`.`' . \Config\Database\DBConfig\Type::$Type . '` = :type
+                    ';
+                }
+            }
+
+            $query .= "ORDER BY `".\Config\Database\DBConfig::$tableMovie."`.`".\Config\Database\DBConfig\Movie::$Title."` ,
+                                `".\Config\Database\DBConfig::$tableType."`.`".\Config\Database\DBConfig\Type::$Type."` ,
+                                `".\Config\Database\DBConfig::$tableShowing."`.`".\Config\Database\DBConfig\Showing::$DateTime."` ASC";
+            $stmt = $this->pdo->prepare($query);
+            if($type != null){
+                $stmt->bindValue(':type' , $type , PDO::PARAM_STR);
+            }
+            if($date !== null){
+                $stmt->bindValue(':date1' , $date1 , PDO::PARAM_STR);
+                $stmt->bindValue(':date2' , $date2 , PDO::PARAM_STR);
+            }
+            $stmt->execute();
             $showings = $stmt->fetchAll();
             $stmt->closeCursor();
+
             $data['showings'] = array();
             if($showings && !empty($showings)) {
-                //$data['showings'] = $showings;
                 foreach ($showings as $showing){
-                    $data['showings'][$showing[\Config\Database\DBConfig\Showing::$IdShowing]] = $showing;
+                    if(!isset($data['showings'][$showing[\Config\Database\DBConfig\Movie::$IdMovie]][$showing[\Config\Database\DBConfig\Type::$Type]][$showing[\Config\Database\DBConfig\Showing::$Dubbing]]))
+                        $data['showings'][$showing[\Config\Database\DBConfig\Movie::$IdMovie]][$showing[\Config\Database\DBConfig\Type::$Type]][$showing[\Config\Database\DBConfig\Showing::$Dubbing]] = $showing;
+                    $data['showings'][$showing[\Config\Database\DBConfig\Movie::$IdMovie]][$showing[\Config\Database\DBConfig\Type::$Type]][$showing[\Config\Database\DBConfig\Showing::$Dubbing]]['hours'][] = $showing[\Config\Database\DBConfig\Showing::$DateTime];
                 }
             }
         }
