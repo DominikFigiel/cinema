@@ -3,10 +3,20 @@
 <!-- Treść strony -->
 <div class="container mb-5">
 
-    <!-- Naglowek -->
+    <!-- Kalendarz -->
     <div class="row">
         <div class="col-lg-12 text-center">
             <h1 class="mt-5">Repertuar</h1>
+            {if isset($calendar)}
+            <p class="lead">Kalendarz</p>
+            {foreach from=$calendar key=$i item=$day}
+            {if $day|date_format:"%Y-%m-%d" == $setDate|date_format:"%Y-%m-%d"}
+            <a href="http://{$smarty.server.HTTP_HOST}{$subdir}Movie/{$i}" class="btn btn-primary mb-1">{($day|date_format:"%A")}</br>{($day|date_format:"%e %B")}</a>
+            {else}
+            <a href="http://{$smarty.server.HTTP_HOST}{$subdir}Movie/{$i}" class="btn btn-secondary mb-1">{($day|date_format:"%A")}</br>{($day|date_format:"%e %B")}</a>
+            {/if}
+            {/foreach}
+            {/if}
             <hr/>
         </div>
     </div>
@@ -36,6 +46,12 @@
     {/foreach}
     {/foreach}
     {/foreach}
+
+    {if isset($error)}
+    <div>
+        <h4 class="h4">{$error}</h4>
+    </div>
+    {/if}
 
 </div>
 {/block}

@@ -4,16 +4,36 @@ namespace Views;
 class Movie extends View {
 
     public function getAll($data = null){
-
         if(isset($data['message']))
             $this->set('message' , $data['message']);
         if(isset($data['error']))
             $this->set('error' , $data['error']);
 
+        $date = null;
+        if(isset($data['date'])) {
+            $date = $data['date'];
+            if(is_numeric($date))
+                $this->set('setDate', date('Y-m-d h:i:s', strtotime(date('Y-m-d h:i:s', time()). ' + '.$date.' days')));
+            else
+                $this->set('setDate', $date);
+        }
+        else $this->set('setDate', date('Y-m-d h:i:s', time()));
+
         $model = $this->getModel('Showing');
-        $data = $model->getAll();
+        $data = $model->getAll($date , null);
+        if(isset($data['message']))
+            $this->set('message' , $data['message']);
+        if(isset($data['error']))
+            $this->set('error' , $data['error']);
         if(isset($data['showings']))
             $this->set('showings' , $data['showings']);
+
+        $calendar = array();
+        $date = date('Y-m-d h:i:s', time());
+        for($i = 0; $i < 7; $i++){
+            $calendar[$i] = date('Y-m-d h:i:s', strtotime($date. ' + '.$i.' days'));
+        }
+        $this->set('calendar' , $calendar);
 
         $this->render('movieGetAll');
     }
