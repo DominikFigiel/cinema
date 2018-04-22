@@ -21,6 +21,17 @@ try {
     exit(1);
 }
 
+//Table Admin
+$query = 'DROP TABLE IF EXISTS `'.DB::$tableAdmin.'`';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$delete_table.DB::$tableAdmin;
+}
+
 //Table Pricing
 $query = 'DROP TABLE IF EXISTS `'.DB::$tablePricing.'`';
 try
@@ -173,6 +184,23 @@ try
 catch(PDOException $e)
 {
     echo \Config\Database\DBErrorName::$delete_table.DB::$tableLanguageVersion;
+}
+
+// Create table Admin
+$query = 'CREATE TABLE IF NOT EXISTS `'.DB::$tableAdmin.'` (
+        `'.DB\Admin::$idAdmin.'` INT NOT NULL AUTO_INCREMENT,
+        `'.DB\Admin::$login.'` VARCHAR(100) NOT NULL UNIQUE,
+        `'.DB\Admin::$password.'` VARCHAR(100) NOT NULL,
+        `'.DB\Admin::$firstName.'` VARCHAR(100) NOT NULL,
+        `'.DB\Admin::$lastName.'` VARCHAR(100) NOT NULL,
+        PRIMARY KEY ('.DB\Admin::$idAdmin.')) ENGINE=InnoDB;';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$create_table.DB::$tableAdmin;
 }
 
 // Create table Genre
@@ -413,6 +441,52 @@ catch(PDOException $e)
     echo \Config\Database\DBErrorName::$create_table.DB::$tableShowing;
 }
 
+
+
+//Table Admin
+$admins = array();
+$admins[] = array(
+    'login' => 'Marcin',
+    'password' => 'Admin1',
+    'firstName' => 'Marcin',
+    'lastName' => 'Rubach');
+$admins[] = array(
+    'login' => 'Martin',
+    'password' => 'Admin1',
+    'firstName' => 'Martin',
+    'lastName' => 'Haładyn');
+$admins[] = array(
+    'login' => 'Michał',
+    'password' => 'Admin1',
+    'firstName' => 'Michał',
+    'lastName' => 'Andrzejewski');
+$admins[] = array(
+    'login' => 'Dominik',
+    'password' => 'Admin1',
+    'firstName' => 'Dominik',
+    'lastName' => 'Figiel');
+$admins[] = array(
+    'login' => 'Krystian',
+    'password' => 'Admin1',
+    'firstName' => 'Krystian',
+    'lastName' => 'Janczak');
+
+try
+{
+    $stmt = $pdo -> prepare('INSERT INTO `'.DB::$tableAdmin.'` (`'.DB\Admin::$login.'`, `'.DB\Admin::$password.'`, `'.DB\Admin::$firstName.'`, `'.DB\Admin::$lastName.'`) VALUES(:login, :password, :firstName, :lastName)');
+    foreach($admins as $admin)
+    {
+        $stmt -> bindValue(':login', $admin['login'], PDO::PARAM_STR);
+        $stmt -> bindValue(':password', $admin['password'], PDO::PARAM_STR);
+        $stmt -> bindValue(':firstName', $admin['firstName'], PDO::PARAM_STR);
+        $stmt -> bindValue(':lastName', $admin['lastName'], PDO::PARAM_STR);
+        $stmt -> execute();
+    }
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$noadd;
+}
 
 
 // Table Genre

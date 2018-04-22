@@ -11,6 +11,7 @@
         public static $user = 'root';
         public static $password = '';
 
+        public static $tableAdmin = "Admin";
 		public static $tableGenre = 'Genre';
         public static $tableMovie = 'Movie';
         public static $tableMovieGenre = 'MovieGenre';
