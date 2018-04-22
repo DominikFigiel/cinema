@@ -15,6 +15,7 @@ else if(\Tools\Access::islogin())
     $controller = "AdminPanel";
 else
     $controller = 'Movie';
+
 if(isset($_GET['action']))
     $action = $_GET['action'];
 else if(\Tools\Access::islogin())
@@ -29,7 +30,6 @@ else
 
 $controller = 'Controllers\\'.$controller;
 
-//tworzymy kontroler
 $myController = new $controller();
 $myController->$action($id);
 
