@@ -16,4 +16,7 @@
     <!-- Global styles -->
     <link href="http://{$smarty.server.HTTP_HOST}{$subdir}resources/css/global.css" rel="stylesheet">
 
+    <!-- JS -->
+    <script src="http://{$smarty.server.HTTP_HOST}{$subdir}resources/js/global.js"></script>
+
 </head>

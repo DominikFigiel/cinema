@@ -38,6 +38,24 @@ class Movie extends View {
         $this->render('movieGetAll');
     }
 
+    public function getAllAdmin($data = null){
+        if(isset($data['message']))
+            $this->set('message' , $data['message']);
+        if(isset($data['error']))
+            $this->set('error' , $data['error']);
+
+        $this->render('adminShowings');
+    }
+
+    public function addShowingFormAdmin($data = null, $date = null , $idCinemaHall = 1){
+        if(isset($data['message']))
+            $this->set('message' , $data['message']);
+        if(isset($data['error']))
+            $this->set('error' , $data['error']);
+
+        $this->render('adminShowingAdd');
+    }
+
     public function getOne($id , $data = null){
 
         if(isset($data['message']))

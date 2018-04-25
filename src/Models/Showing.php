@@ -14,6 +14,8 @@ class Showing extends Model {
         if($date != null){
             //Jeśli data nie jest datą, tylko liczbą, to pobieramy dzisiejszą datę i dodajemy liczbę jako dni
             if(is_numeric($date)){
+                if(count($date) > 5)
+                    $date = 5;
                 $date = date('Y-m-d h:i:s', strtotime( date('Y-m-d h:i:s', time()). ' + '.$date.' days'));
             }
 
@@ -91,6 +93,40 @@ class Showing extends Model {
                     $data['showings'][$showing[\Config\Database\DBConfig\Movie::$IdMovie]][$showing[\Config\Database\DBConfig\Type::$Type]][$showing[\Config\Database\DBConfig\Showing::$Dubbing]]['hours'][] = $showing[\Config\Database\DBConfig\Showing::$DateTime];
                 }
             }
+        }
+        catch(\PDOException $e){
+            $data['error'] = \Config\Database\DBErrorName::$query;
+        }
+        return $data;
+    }
+
+    public function addForm($date , $cinemaHall){
+        if($this->pdo === null){
+            $data['error'] = \Config\Database\DBErrorName::$connection;
+            return $data;
+        }
+        $data = array();
+        if($cinemaHall === null)
+            $cinemaHall = 1;
+        if($date === null)
+            $date = date('Y-m-d h:i:s', time());
+        try{
+            $query = '
+                    SELECT * 
+                    FROM `'.\Config\Database\DBConfig::$tableShowing.'`
+                    INNER JOIN `'.\Config\Database\DBConfig::$tableLanguageVersion.'`
+                    ON `'.\Config\Database\DBConfig::$tableShowing.'`.`'.\Config\Database\DBConfig\Showing::$IdLanguageVersion.'`
+                    = `'.\Config\Database\DBConfig::$tableLanguageVersion.'`.`'.\Config\Database\DBConfig\LanguageVersion::$IdLanguageVersion.'`
+                    INNER JOIN `'.\Config\Database\DBConfig::$tableMovieType.'`
+                    ON `'.\Config\Database\DBConfig::$tableMovieType.'`.`'.\Config\Database\DBConfig\MovieType::$IdMovieType.'`
+                    = `'.\Config\Database\DBConfig::$tableShowing.'`.`'.\Config\Database\DBConfig\Showing::$IdMovieType.'`
+                    INNER JOIN `'.\Config\Database\DBConfig::$tableType.'`
+                    ON `'.\Config\Database\DBConfig::$tableMovieType.'`.`'.\Config\Database\DBConfig\MovieType::$IdType.'`
+                    = `'.\Config\Database\DBConfig::$tableType.'`.`'.\Config\Database\DBConfig\Type::$IdType.'`
+                    INNER JOIN `'.\Config\Database\DBConfig::$tableMovie.'`
+                    ON `'.\Config\Database\DBConfig::$tableMovie.'`.`'.\Config\Database\DBConfig\Movie::$IdMovie.'`
+                    = `'.\Config\Database\DBConfig::$tableMovieType.'`.`'.\Config\Database\DBConfig\MovieType::$IdMovie.'`
+            ';
         }
         catch(\PDOException $e){
             $data['error'] = \Config\Database\DBErrorName::$query;
