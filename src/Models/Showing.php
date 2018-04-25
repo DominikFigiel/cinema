@@ -16,6 +16,8 @@ class Showing extends Model {
             if(is_numeric($date)){
                 if(count($date) > 5)
                     $date = 5;
+                elseif (count($date) < 0)
+                    $date = 0;
                 $date = date('Y-m-d h:i:s', strtotime( date('Y-m-d h:i:s', time()). ' + '.$date.' days'));
             }
 
@@ -100,16 +102,37 @@ class Showing extends Model {
         return $data;
     }
 
-    public function addForm($date , $cinemaHall){
+    public function freeHoursForAdd($date , $idCinemaHall, $idShowing){
         if($this->pdo === null){
             $data['error'] = \Config\Database\DBErrorName::$connection;
             return $data;
         }
         $data = array();
-        if($cinemaHall === null)
-            $cinemaHall = 1;
+        if($idShowing === null || $idCinemaHall === null){
+            $data['error'] = \Config\Database\DBErrorName::$empty;
+            return $data;
+        }
         if($date === null)
             $date = date('Y-m-d h:i:s', time());
+        if($date !== null){
+            //Jeśli data nie jest datą, tylko liczbą, to pobieramy dzisiejszą datę i dodajemy liczbę jako dni
+            if(is_numeric($date)){
+                if(count($date) < 0)
+                    $date = 0;
+                $date = date('Y-m-d h:i:s', strtotime( date('Y-m-d h:i:s', time()). ' + '.$date.' days'));
+            }
+
+            //Ustawienie pierwszej daty
+            $date1 = date_create($date);
+            date_time_set($date1, 00, 00, 00, 00);
+            $date1 = date_format($date1 , 'Y-m-d H:i:s');
+
+            //Ustawienie drugiej daty
+            $date2 = date_create($date);
+            date_time_set($date2, 23, 59 ,59, 59);
+            $date2 = date_format($date2 , 'Y-m-d H:i:s');
+        }
+        $data['hours'] = array();
         try{
             $query = '
                     SELECT * 
@@ -126,7 +149,212 @@ class Showing extends Model {
                     INNER JOIN `'.\Config\Database\DBConfig::$tableMovie.'`
                     ON `'.\Config\Database\DBConfig::$tableMovie.'`.`'.\Config\Database\DBConfig\Movie::$IdMovie.'`
                     = `'.\Config\Database\DBConfig::$tableMovieType.'`.`'.\Config\Database\DBConfig\MovieType::$IdMovie.'`
+                    INNER JOIN `'.\Config\Database\DBConfig::$tableCinemaHall.'`
+                    ON `'.\Config\Database\DBConfig::$tableShowing.'`.`'.\Config\Database\DBConfig\Showing::$IdCinemaHall.'`
+                    = `'.\Config\Database\DBConfig::$tableCinemaHall.'`.`'.\Config\Database\DBConfig\CinemaHall::$IdCinemaHall.'`
+                    WHERE `'.\Config\Database\DBConfig::$tableCinemaHall.'`.`'.\Config\Database\DBConfig\CinemaHall::$IdCinemaHall.'` = :idCinemaHall
+                    AND `' . \Config\Database\DBConfig::$tableShowing . '`.`' . \Config\Database\DBConfig\Showing::$DateTime . '` BETWEEN :date1 AND :date2
             ';
+            $stmt = $this->pdo->prepare($query);
+            $stmt->bindValue(':idCinemaHall' , $idCinemaHall , PDO::PARAM_INT);
+            $stmt->bindValue(':date1' , $date1 , PDO::PARAM_STR);
+            $stmt->bindValue(':date2' , $date2 , PDO::PARAM_STR);
+            $stmt->execute();
+            $hours = $stmt->fetchAll();
+            $stmt->closeCursor();
+        }
+        catch(\PDOException $e){
+            $data['error'] = \Config\Database\DBErrorName::$query;
+        }
+        return $data;
+    }
+
+    public function getCinemaHalls(){
+        if($this->pdo === null){
+            $data['error'] = \Config\Database\DBErrorName::$connection;
+            return $data;
+        }
+        $data = array();
+        $data['cinemaHalls'] = array();
+        try{
+            $query = '
+                    SELECT * 
+                    FROM `'.\Config\Database\DBConfig::$tableCinemaHall.'`
+            ';
+            $stmt = $this->pdo->prepare($query);
+            $stmt->execute();
+            $cinemaHalls = $stmt->fetchAll();
+            $data['cinemaHalls'] = $cinemaHalls;
+            $stmt->closeCursor();
+        }
+        catch(\PDOException $e){
+            $data['error'] = \Config\Database\DBErrorName::$query;
+        }
+        return $data;
+    }
+
+    public function getMovies(){
+        if($this->pdo === null){
+            $data['error'] = \Config\Database\DBErrorName::$connection;
+            return $data;
+        }
+        $data = array();
+        $data['movies'] = array();
+        try{
+            $query = '
+                    SELECT * 
+                    FROM `'.\Config\Database\DBConfig::$tableMovie.'`
+            ';
+            $stmt = $this->pdo->prepare($query);
+            $stmt->execute();
+            $movies = $stmt->fetchAll();
+            $data['movies'] = $movies;
+            $stmt->closeCursor();
+        }
+        catch(\PDOException $e){
+            $data['error'] = \Config\Database\DBErrorName::$query;
+        }
+        return $data;
+    }
+
+    public function getTypesForMovie($idMovie){
+        if($this->pdo === null){
+            $data['error'] = \Config\Database\DBErrorName::$connection;
+            return $data;
+        }
+        if($idMovie === null){
+            $data['error'] = \Config\Database\DBErrorName::$empty;
+            return $data;
+        }
+        $data = array();
+        $data['types'] = array();
+        try{
+            $query = '
+                    SELECT * 
+                    FROM `'.\Config\Database\DBConfig::$tableMovieType.'`
+                    INNER JOIN `'.\Config\Database\DBConfig::$tableMovie.'`
+                    ON `'.\Config\Database\DBConfig::$tableMovieType.'`.`'.\Config\Database\DBConfig\MovieType::$IdMovie.'`
+                    = `'.\Config\Database\DBConfig::$tableMovie.'`.`'.\Config\Database\DBConfig\Movie::$IdMovie.'`
+                    INNER JOIN `'.\Config\Database\DBConfig::$tableType.'`
+                    ON `'.\Config\Database\DBConfig::$tableMovieType.'`.`'.\Config\Database\DBConfig\MovieType::$IdType.'`
+                    = `'.\Config\Database\DBConfig::$tableType.'`.`'.\Config\Database\DBConfig\Type::$IdType.'`
+                    WHERE `'.\Config\Database\DBConfig::$tableMovie.'`.`'.\Config\Database\DBConfig\Movie::$IdMovie.'` = :idMovie
+                    
+            ';
+            $stmt = $this->pdo->prepare($query);
+            $stmt->bindValue(':idMovie' , $idMovie , PDO::PARAM_INT);
+            $stmt->execute();
+            $types = $stmt->fetchAll();
+            $data['types'] = $types;
+            $stmt->closeCursor();
+        }
+        catch(\PDOException $e){
+            $data['error'] = \Config\Database\DBErrorName::$query;
+        }
+        return $data;
+    }
+
+    public function checkContainsTypeForMovie($idMovie, $idType){
+        if($this->pdo === null){
+            $data['error'] = \Config\Database\DBErrorName::$connection;
+            return $data;
+        }
+        if($idMovie === null || $idType === null){
+            $data['error'] = \Config\Database\DBErrorName::$empty;
+            return $data;
+        }
+        $data = array();
+        try{
+            $query = '
+                    SELECT * 
+                    FROM `'.\Config\Database\DBConfig::$tableMovieType.'`
+                    WHERE `'.\Config\Database\DBConfig::$tableMovieType.'`.`'.\Config\Database\DBConfig\MovieType::$IdMovie.'` = :idMovie
+                        AND `'.\Config\Database\DBConfig::$tableMovieType.'`.`'.\Config\Database\DBConfig\MovieType::$IdType.'` = :idType
+                    
+            ';
+            $stmt = $this->pdo->prepare($query);
+            $stmt->bindValue(':idMovie' , $idMovie , PDO::PARAM_INT);
+            $stmt->bindValue(':idType' , $idType , PDO::PARAM_INT);
+            $stmt->execute();
+            $types = $stmt->fetchAll();
+            if(count($types) > 0)
+                $data['check'] = true;
+            else
+                $data['check'] = false;
+            $stmt->closeCursor();
+        }
+        catch(\PDOException $e){
+            $data['error'] = \Config\Database\DBErrorName::$query;
+        }
+        return $data;
+    }
+
+    public function getIdMovieType($idMovie, $idType){
+        if($this->pdo === null){
+            $data['error'] = \Config\Database\DBErrorName::$connection;
+            return $data;
+        }
+        if($idMovie === null || $idType === null){
+            $data['error'] = \Config\Database\DBErrorName::$empty;
+            return $data;
+        }
+        $data = array();
+        try{
+            $query = '
+                    SELECT * 
+                    FROM `'.\Config\Database\DBConfig::$tableMovieType.'`
+                    WHERE `'.\Config\Database\DBConfig::$tableMovieType.'`.`'.\Config\Database\DBConfig\MovieType::$IdMovie.'` = :idMovie
+                        AND `'.\Config\Database\DBConfig::$tableMovieType.'`.`'.\Config\Database\DBConfig\MovieType::$IdType.'` = :idType
+                    
+            ';
+            $stmt = $this->pdo->prepare($query);
+            $stmt->bindValue(':idMovie' , $idMovie , PDO::PARAM_INT);
+            $stmt->bindValue(':idType' , $idType , PDO::PARAM_INT);
+            $stmt->execute();
+            $idMovieType = $stmt->fetchAll();
+            if(count($idMovieType) > 0)
+                $data['idMovieType'] = $idMovieType[0][\Config\Database\DBConfig\MovieType::$IdMovieType];
+            $stmt->closeCursor();
+        }
+        catch(\PDOException $e){
+            $data['error'] = \Config\Database\DBErrorName::$query;
+        }
+        return $data;
+    }
+
+    public function addShowing($idMovieType, $idCinemaHall, $dubbing, $dateTime = "2018-04-25 23:55:00", $idLanguageVersion = 1){
+        if($this->pdo === null){
+            $data['error'] = \Config\Database\DBErrorName::$connection;
+            return $data;
+        }
+        if($idMovieType === null || $idCinemaHall === null || $dateTime === null || $dubbing === null || $idLanguageVersion === null){
+            $data['error'] = \Config\Database\DBErrorName::$empty;
+            return $data;
+        }
+        $data = array();
+        try{
+            $query = '           
+                INSERT INTO '.\Config\Database\DBConfig::$tableShowing.' ('.\Config\Database\DBConfig\Showing::$IdMovieType.', 
+                                                                           '.\Config\Database\DBConfig\Showing::$IdCinemaHall.', 
+                                                                            '.\Config\Database\DBConfig\Showing::$DateTime.', 
+                                                                            '.\Config\Database\DBConfig\Showing::$Dubbing.',
+                                                                            '.\Config\Database\DBConfig\Showing::$IdLanguageVersion.')
+                VALUES (:idMovieType, :idCinemaHall, :dateTime, :dubbing, :idLanguageVersion)
+            ';
+            $stmt = $this->pdo->prepare($query);
+            $stmt->bindValue(':idMovieType' , $idMovieType , PDO::PARAM_INT);
+            $stmt->bindValue(':idCinemaHall' , $idCinemaHall , PDO::PARAM_INT);
+            $stmt->bindValue(':dateTime' , $dateTime , PDO::PARAM_STR);
+            $stmt->bindValue(':dubbing' , $dubbing , PDO::PARAM_BOOL);
+            $stmt->bindValue(':idLanguageVersion' , $idLanguageVersion , PDO::PARAM_INT);
+            $result = $stmt->execute();
+            if($result === true){
+                $data['message'] = "Udało sie dodać.";
+            }
+            else{
+                $data['error'] = "Nie udało się dodać.";
+            }
+            $stmt->closeCursor();
         }
         catch(\PDOException $e){
             $data['error'] = \Config\Database\DBErrorName::$query;

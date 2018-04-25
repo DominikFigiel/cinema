@@ -24,6 +24,7 @@ RewriteRule ^Wylogowanie/?$ index.php?controller=Access&action=logout [L]
 #Admin
 #Showing
 RewriteRule ^Zarządzanie/Seanse/?$ index.php?controller=Movie&action=getAllAdmin [L]
-RewriteRule ^Zarządzanie/Seanse/Dodaj?$ index.php?controller=Movie&action=addShowingFormAdmin [L]
+RewriteRule ^Zarządzanie/Seanse/Dodaj?$ index.php?controller=Movie&action=addFormAdmin [L]
+RewriteRule ^Zarządzanie/Seanse/Dodawanie?$ index.php?controller=Movie&action=addShowing [L]
 
 ErrorDocument 404 http://localhost/Projekty/ProjektZespolowy/cinema/errors/404.html
