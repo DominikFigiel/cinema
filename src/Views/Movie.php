@@ -3,30 +3,41 @@ namespace Views;
 
 class Movie extends View {
 
-    public function getAll($data = null){
+    public function getAll($data = null, $date = null, $type = null){
         if(isset($data['message']))
             $this->set('message' , $data['message']);
         if(isset($data['error']))
             $this->set('error' , $data['error']);
 
-        $date = null;
-        if(isset($data['date'])) {
-            $date = $data['date'];
+        if($date != null) {
             if(is_numeric($date))
                 $this->set('setDate', date('Y-m-d h:i:s', strtotime(date('Y-m-d h:i:s', time()). ' + '.$date.' days')));
             else
                 $this->set('setDate', $date);
         }
-        else $this->set('setDate', date('Y-m-d h:i:s', time()));
+        else {
+            $this->set('setDate', date('Y-m-d h:i:s', strtotime(date('Y-m-d h:i:s', time()). ' + 2 days')));
+        }
 
         $model = $this->getModel('Showing');
-        $data = $model->getAll($date , null);
+        $data = $model->getAll($date , $type);
         if(isset($data['message']))
             $this->set('message' , $data['message']);
         if(isset($data['error']))
             $this->set('error' , $data['error']);
         if(isset($data['showings']))
             $this->set('showings' , $data['showings']);
+
+        $data = $model->getType();
+        if(isset($data['message']))
+            $this->set('message' , $data['message']);
+        if(isset($data['error']))
+            $this->set('error' , $data['error']);
+        if(isset($data['types']))
+            $this->set('types' , $data['types']);
+        if($type == null)
+            $type = 'All';
+        $this->set('typeIn' , $type);
 
         $calendar = array();
         $date = date('Y-m-d h:i:s', time());
@@ -38,11 +49,62 @@ class Movie extends View {
         $this->render('movieGetAll');
     }
 
-    public function getAllAdmin($data = null){
+    public function getAllAdmin($data = null, $date = null, $type = null, $cinemaHall = null){
         if(isset($data['message']))
             $this->set('message' , $data['message']);
         if(isset($data['error']))
             $this->set('error' , $data['error']);
+
+        if($date != null) {
+            if(is_numeric($date))
+                $this->set('setDate', date('Y-m-d h:i:s', strtotime(date('Y-m-d h:i:s', time()). ' + '.$date.' days')));
+            else
+                $this->set('setDate', $date);
+        }
+        else {
+            $this->set('setDate', date('Y-m-d h:i:s', strtotime(date('Y-m-d h:i:s', time()). ' + 2 days')));
+        }
+
+        $model = $this->getModel('Showing');
+        $data = $model->getAll($date , $type , true, $cinemaHall);
+        if(isset($data['message']))
+            $this->set('message' , $data['message']);
+        if(isset($data['error']))
+            $this->set('error' , $data['error']);
+        if(isset($data['showings']))
+            $this->set('showings' , $data['showings']);
+
+        if($type == null){
+            $type = 'All';
+        }
+        $this->set('typeIn' , $type);
+
+        $data = $model->getType();
+        if(isset($data['message']))
+            $this->set('message' , $data['message']);
+        if(isset($data['error']))
+            $this->set('error' , $data['error']);
+        if(isset($data['types']))
+            $this->set('types' , $data['types']);
+
+        if($cinemaHall == null)
+            $cinemaHall = 'All';
+        $this->set('cinemaHallIn' , $cinemaHall);
+
+        $data = $model->getCinemaHalls();
+        if(isset($data['message']))
+            $this->set('message' , $data['message']);
+        if(isset($data['error']))
+            $this->set('error' , $data['error']);
+        if(isset($data['cinemaHalls']))
+            $this->set('cinemaHalls' , $data['cinemaHalls']);
+
+        $calendar = array();
+        $date = date('Y-m-d h:i:s', time());
+        for($i = 2; $i < 26; $i++){
+            $calendar[$i] = date('Y-m-d h:i:s', strtotime($date. ' + '.$i.' days'));
+        }
+        $this->set('calendar' , $calendar);
 
         $this->render('adminShowings');
     }
@@ -108,7 +170,6 @@ class Movie extends View {
         \Tools\Session::set('idType' , $idType);
         \Tools\Session::set('date' , $date);
         \Tools\Session::set('dubbing' , $dubbing);
-        $_COOKIE['url'] = "http://".$_SERVER['HTTP_HOST']."".\Config\Website\Config::$subdir."";
 
 
         $this->render('adminShowingAdd');

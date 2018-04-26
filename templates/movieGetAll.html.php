@@ -11,12 +11,26 @@
             <p class="lead">Kalendarz</p>
             {foreach from=$calendar key=$i item=$day}
             {if $day|date_format:"%Y-%m-%d" == $setDate|date_format:"%Y-%m-%d"}
-            <a href="http://{$smarty.server.HTTP_HOST}{$subdir}Film/{$i}" class="btn btn-primary mb-1">{($day|date_format:"%A")}</br>{($day|date_format:"%e %B")}</a>
+            <button  onclick="setCookie('dateGetAll', {$i})" class="btn btn-primary mb-1">{($day|date_format:"%A")}</br>{($day|date_format:"%e %B")}</button>
             {else}
-            <a href="http://{$smarty.server.HTTP_HOST}{$subdir}Film/{$i}" class="btn btn-secondary mb-1">{($day|date_format:"%A")}</br>{($day|date_format:"%e %B")}</a>
+            <button  onclick="setCookie('dateGetAll', {$i})" class="btn btn-secondary mb-1">{($day|date_format:"%A")}</br>{($day|date_format:"%e %B")}</button>
             {/if}
             {/foreach}
             {/if}
+            <hr/>
+        </div>
+    </div>
+    <!-- Rodzaj seansu -->
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            <p class="lead">Rodzaj seansu</p>
+            {if isset($types)}
+            {foreach $types as $type}
+            {$tmp = $type[\Config\Database\DBConfig\Type::$Type]}
+            <button value="{$type[\Config\Database\DBConfig\Type::$Type]}" onclick="setCookie('typeGetAll', value)" {if $type[\Config\Database\DBConfig\Type::$Type] == $typeIn}class="btn btn-primary"{else}class="btn btn-outline-secondary"{/if}>{$type[\Config\Database\DBConfig\Type::$Type]}</button>
+            {/foreach}
+            {/if}
+            <button onclick="setCookie('typeGetAll', 'All')" {if 'All' === $typeIn}class="btn btn-primary"{else}class="btn btn-outline-secondary"{/if}>Wszystkie</button>
             <hr/>
         </div>
     </div>

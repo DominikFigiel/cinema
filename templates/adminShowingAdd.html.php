@@ -6,12 +6,12 @@
         <div class="form-group text-center">
             <label>Sala: </label>
             {foreach $cinemaHalls as $cinemaHall}
-            <button {if $idCinemaHall && $cinemaHall[\Config\Database\DBConfig\CinemaHall::$IdCinemaHall] == $idCinemaHall} class="btn btn-info active" {else} class="btn btn-info" {/if} onclick="setCookie('idCinemaHall', {$cinemaHall[\Config\Database\DBConfig\CinemaHall::$IdCinemaHall]})">{$cinemaHall[\Config\Database\DBConfig\CinemaHall::$Name]}</button>
+            <button {if $idCinemaHall && $cinemaHall[\Config\Database\DBConfig\CinemaHall::$IdCinemaHall] == $idCinemaHall} class="btn btn-primary" {else} class="btn btn-secondary" {/if} onclick="setCookie('idCinemaHall', {$cinemaHall[\Config\Database\DBConfig\CinemaHall::$IdCinemaHall]})">{$cinemaHall[\Config\Database\DBConfig\CinemaHall::$Name]}</button>
             {/foreach}
         </div>
         <div class="form-group text-center">
             <label>Film: </label>
-            <select id="movies" name="movies" onchange="setCookie('idMovie', value)">
+            <select id="movies" name="movies" required onchange="setCookie('idMovie', value)">
             {foreach $movies as $movie}
                 <option {if $movie[\Config\Database\DBConfig\Movie::$IdMovie] == $idMovie}selected{/if} value="{$movie[\Config\Database\DBConfig\Movie::$IdMovie]}">{$movie[\Config\Database\DBConfig\Movie::$Title]}</option>
             {/foreach}
@@ -28,12 +28,12 @@
         </div>
         <div class="form-group text-center">
             <label>Dzień: </label>
-            <input type="date" id="date" name="date" value="" onchange=""/>
+            <input type="date" id="date" name="date" required value="{$date|date_format:'%Y-%m-%d'}" onchange="setCookie('date',value)"/>
 
         </div>
         <div class="form-group text-center">
             <label>Godzina: </label>
-            <input type="time" id="time" name="time" value=""/>
+            <input type="time" id="time" name="time" required value="{$date|date_format:'%H:%M'}" onchange="setCookie('time',value)"/>
         </div>
         <div class="form-group text-center">
             <a class="btn btn-success" href="http://{$smarty.server.HTTP_HOST}{$subdir}Zarządzanie/Seanse/Dodawanie">Dodaj</a>

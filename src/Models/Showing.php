@@ -3,7 +3,7 @@ namespace Models;
 use \PDO;
 class Showing extends Model {
 
-    public function getAll($date = null , $type = null){
+    public function getAll($date = null , $type = null , $admin = false, $cinemaHall = null){
         if($this->pdo === null){
             $data['error'] = \Config\Database\DBErrorName::$connection;
             return $data;
@@ -14,7 +14,7 @@ class Showing extends Model {
         if($date != null){
             //Jeśli data nie jest datą, tylko liczbą, to pobieramy dzisiejszą datę i dodajemy liczbę jako dni
             if(is_numeric($date)){
-                if(count($date) > 5)
+                if(count($date) > 5 && $admin == false)
                     $date = 5;
                 elseif (count($date) < 0)
                     $date = 0;
@@ -50,6 +50,9 @@ class Showing extends Model {
                     INNER JOIN `'.\Config\Database\DBConfig::$tableMovie.'`
                     ON `'.\Config\Database\DBConfig::$tableMovie.'`.`'.\Config\Database\DBConfig\Movie::$IdMovie.'`
                     = `'.\Config\Database\DBConfig::$tableMovieType.'`.`'.\Config\Database\DBConfig\MovieType::$IdMovie.'`
+                    INNER JOIN `'.\Config\Database\DBConfig::$tableCinemaHall.'`
+                    ON `'.\Config\Database\DBConfig::$tableCinemaHall.'`.`'.\Config\Database\DBConfig\CinemaHall::$IdCinemaHall.'`
+                    = `'.\Config\Database\DBConfig::$tableShowing.'`.`'.\Config\Database\DBConfig\Showing::$IdCinemaHall.'`
             ';
             if($type != null || $date != null) {
                 if ($type != null && $date != null) {
@@ -71,6 +74,8 @@ class Showing extends Model {
                     ';
                 }
             }
+            if($cinemaHall != null)
+                $query .= ' AND `' . \Config\Database\DBConfig::$tableCinemaHall . '`.`' . \Config\Database\DBConfig\CinemaHall::$Name . '` = :cinemaHall';
 
             $query .= "ORDER BY `".\Config\Database\DBConfig::$tableMovie."`.`".\Config\Database\DBConfig\Movie::$Title."` ,
                                 `".\Config\Database\DBConfig::$tableType."`.`".\Config\Database\DBConfig\Type::$Type."` ,
@@ -83,6 +88,8 @@ class Showing extends Model {
                 $stmt->bindValue(':date1' , $date1 , PDO::PARAM_STR);
                 $stmt->bindValue(':date2' , $date2 , PDO::PARAM_STR);
             }
+            if($cinemaHall != null)
+                $stmt->bindValue(':cinemaHall' , $cinemaHall , PDO::PARAM_STR);
             $stmt->execute();
             $showings = $stmt->fetchAll();
             $stmt->closeCursor();
@@ -217,6 +224,62 @@ class Showing extends Model {
         return $data;
     }
 
+    public function getType(){
+        if($this->pdo === null){
+            $data['error'] = \Config\Database\DBErrorName::$connection;
+            return $data;
+        }
+        $data = array();
+        $data['types'] = array();
+        try{
+            $query = '
+                    SELECT * 
+                    FROM `'.\Config\Database\DBConfig::$tableType.'`
+                    
+            ';
+            $stmt = $this->pdo->prepare($query);
+            $stmt->execute();
+            $types = $stmt->fetchAll();
+            $data['types'] = $types;
+            $stmt->closeCursor();
+        }
+        catch(\PDOException $e){
+            $data['error'] = \Config\Database\DBErrorName::$query;
+        }
+        return $data;
+    }
+
+    public function deleteShowing($idShowing){
+        if($this->pdo === null){
+            $data['error'] = \Config\Database\DBErrorName::$connection;
+            return $data;
+        }
+        if($idShowing === null){
+            $data['error'] = \Config\Database\DBErrorName::$empty;
+            return $data;
+        }
+        $data = array();
+        try{
+            $query = '
+                DELETE FROM `'.\Config\Database\DBConfig::$tableShowing.'`
+                WHERE `'.\Config\Database\DBConfig::$tableShowing.'`.`'.\Config\Database\DBConfig\Showing::$IdShowing.'` = :idShowing
+            ';
+            $stmt = $this->pdo->prepare($query);
+            $stmt->bindValue(':idShowing' , $idShowing , PDO::PARAM_INT);
+            $result = $stmt->execute();
+            if($result == true){
+                $data['message'] = "Udało się usunąć.";
+            }
+            else
+                $data['error'] = "Nie udało się usunąć.";
+            $stmt->closeCursor();
+        }
+        catch(\PDOException $e){
+            $data['error'] = \Config\Database\DBErrorName::$query;
+        }
+        return $data;
+    }
+
     public function getTypesForMovie($idMovie){
         if($this->pdo === null){
             $data['error'] = \Config\Database\DBErrorName::$connection;
@@ -322,7 +385,7 @@ class Showing extends Model {
         return $data;
     }
 
-    public function addShowing($idMovieType, $idCinemaHall, $dubbing, $dateTime = "2018-04-25 23:55:00", $idLanguageVersion = 1){
+    public function addShowing($idMovieType, $idCinemaHall, $dubbing, $dateTime, $idLanguageVersion = 1){
         if($this->pdo === null){
             $data['error'] = \Config\Database\DBErrorName::$connection;
             return $data;

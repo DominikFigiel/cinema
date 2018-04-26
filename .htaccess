@@ -7,7 +7,6 @@ RewriteCond %{REQUEST_FILENAME} !-d
 
 #Movie
 RewriteRule ^Film/?$ index.php?controller=Movie&action=getAll [L]
-RewriteRule ^Film/(\d+)?$ index.php?controller=Movie&action=getAll&id=$1 [L]
 RewriteRule ^Film/Szczegóły/(\d+)/?$ index.php?controller=Movie&action=getOne&id=$1 [L]
 
 #Contact
@@ -26,5 +25,6 @@ RewriteRule ^Wylogowanie/?$ index.php?controller=Access&action=logout [L]
 RewriteRule ^Zarządzanie/Seanse/?$ index.php?controller=Movie&action=getAllAdmin [L]
 RewriteRule ^Zarządzanie/Seanse/Dodaj?$ index.php?controller=Movie&action=addFormAdmin [L]
 RewriteRule ^Zarządzanie/Seanse/Dodawanie?$ index.php?controller=Movie&action=addShowing [L]
+RewriteRule ^Zarządzanie/Seanse/Usun/(\d+)?$ index.php?controller=Movie&action=deleteShowing&id=$1 [L]
 
 ErrorDocument 404 http://localhost/Projekty/ProjektZespolowy/cinema/errors/404.html

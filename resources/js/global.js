@@ -18,7 +18,3 @@ function setCookieDubbing(cname) {
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
     location.reload();
 }
-
-function checkDate() {
-
-}
