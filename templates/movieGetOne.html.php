@@ -32,7 +32,7 @@
 
     <!-- Aktualny repertuar - link -->
     <div class="text-center pb-4">
-        <a href="http://{$smarty.server.HTTP_HOST}{$subdir}Movie"><button type="button" class="btn btn-primary btn-lg">Zobacz aktualny repertuar</button></a>
+        <a href="http://{$smarty.server.HTTP_HOST}{$subdir}"><button type="button" class="btn btn-primary btn-lg">Zobacz aktualny repertuar</button></a>
     </div>
 
 </div>
