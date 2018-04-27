@@ -46,7 +46,7 @@ class Showing extends View {
         }
         $this->set('calendar' , $calendar);
 
-        $this->render('movieGetAll');
+        $this->render('showingGetAll');
     }
 
     public function getAllAdmin($data, $date = null, $type = null, $cinemaHall = null){
