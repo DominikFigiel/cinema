@@ -14,7 +14,7 @@ if(isset($_GET['controller']))
 else if(\Tools\Access::islogin())
     $controller = "AdminPanel";
 else
-    $controller = 'Movie';
+    $controller = 'Showing';
 
 if(isset($_GET['action']))
     $action = $_GET['action'];

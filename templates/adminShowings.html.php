@@ -1,6 +1,16 @@
 {extends file="templates/globalTemplate.html.php"}
 {block name="body"}
 <div class="container">
+    {if isset($message)}
+    <div>
+        <h4 class="h4">{$message}</h4>
+    </div>
+    {/if}
+    {if isset($error)}
+    <div>
+        <h4 class="h4">{$error}</h4>
+    </div>
+    {/if}
     <h1 class="h4 text-center">Zarządzanie seansami</h1>
     <a class="btn btn-success" href="http://{$smarty.server.HTTP_HOST}{$subdir}Zarządzanie/Seanse/Dodaj">Dodaj seans</a>
     <!-- Kalendarz -->
