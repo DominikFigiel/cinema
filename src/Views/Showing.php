@@ -121,26 +121,27 @@ class Showing extends View {
         $this->set('cinemaHalls' , $cinemaHalls['cinemaHalls']);
         //Ustawienie domyślnej sali
         if(count($cinemaHalls['cinemaHalls']))
-            if($idCinemaHall === null) {
+            if(is_null($idCinemaHall)) {
                 $idCinemaHall = $cinemaHalls['cinemaHalls'][0][\Config\Database\DBConfig\CinemaHall::$IdCinemaHall];
             }
+
 
         //Pobranie filmów
         $movies = $model->getMovies();
         $this->set('movies' , $movies['movies']);
         //Ustawienie domyślnego filmu
         if(count($movies['movies']) > 0)
-            if($idMovie === null) {
+            if(is_null($idMovie)) {
                 $idMovie = $movies['movies'][0][\Config\Database\DBConfig\Movie::$IdMovie];
             }
 
         //Pobranie typów dla filmu
-        if($idMovie != null)
+        if(!is_null($idMovie))
         {
             $typesForMovie = $model->getTypesForMovie($idMovie);
             $this->set('typesForMovie', $typesForMovie['types']);
             //Ustawienie domyślnego typu
-            if($idType == null) {
+            if(is_null($idType)) {
                 if (count($typesForMovie) > 0)
                     $idType = $typesForMovie['types'][0][\Config\Database\DBConfig\MovieType::$IdType];
             }
@@ -154,7 +155,7 @@ class Showing extends View {
 
 
         //Ustawienie domyślnej daty
-        if($date === null)
+        if(is_null($date))
             $date = date('Y-m-d h:i:s', time());
 
         //Ustawienie wartości do smarty

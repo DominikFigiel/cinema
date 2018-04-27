@@ -109,6 +109,9 @@ class Showing extends Controller {
                 else
                     $dubbing = false;
             }
+            else{
+                $dubbing = false;
+            }
             if(isset($_COOKIE["date"])) {
                 $date1 = date_create($date);
                 $date2 = date_create($_COOKIE["date"]);
