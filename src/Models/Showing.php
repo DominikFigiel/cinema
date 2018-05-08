@@ -9,7 +9,7 @@ class Showing extends Model {
             return $data;
         }
         if($date == null)
-            $date = date('Y-m-d h:i:s', time());
+            $date = date('Y-m-d H:i:s', time());
         //$date = date('Y-m-d h:i:s', time());
         if($date != null){
             //Jeśli data nie jest datą, tylko liczbą, to pobieramy dzisiejszą datę i dodajemy liczbę jako dni
@@ -18,7 +18,7 @@ class Showing extends Model {
                     $date = 5;
                 elseif (count($date) < 0)
                     $date = 0;
-                $date = date('Y-m-d h:i:s', strtotime( date('Y-m-d h:i:s', time()). ' + '.$date.' days'));
+                $date = date('Y-m-d H:i:s', strtotime( date('Y-m-d H:i:s', time()). ' + '.$date.' days'));
             }
 
             //Ustawienie pierwszej daty
@@ -115,11 +115,11 @@ class Showing extends Model {
             return $data;
         }
         $data = array();
-        if($idShowing === null || $idCinemaHall === null){
+        if(is_null($idShowing) || is_null($idCinemaHall)){
             $data['error'] = \Config\Database\DBErrorName::$empty;
             return $data;
         }
-        if($date === null)
+        if(is_null($date))
             $date = date('Y-m-d h:i:s', time());
         if($date !== null){
             //Jeśli data nie jest datą, tylko liczbą, to pobieramy dzisiejszą datę i dodajemy liczbę jako dni

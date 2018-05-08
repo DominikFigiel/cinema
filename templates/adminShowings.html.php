@@ -1,16 +1,6 @@
-{extends file="templates/globalTemplate.html.php"}
-{block name="body"}
+{extends file="templates/adminGlobalTemplate.html.php"}
+{block name="content"}
 <div class="container">
-    {if isset($message)}
-    <div>
-        <h4 class="h4">{$message}</h4>
-    </div>
-    {/if}
-    {if isset($error)}
-    <div>
-        <h4 class="h4">{$error}</h4>
-    </div>
-    {/if}
     <h1 class="h4 text-center">Zarządzanie seansami</h1>
     <a class="btn btn-success" href="http://{$smarty.server.HTTP_HOST}{$subdir}Zarządzanie/Seanse/Dodaj">Dodaj seans</a>
     <!-- Kalendarz -->
@@ -45,10 +35,11 @@
     </div>
 
     <!-- Filmy -->
+    <div id="data">
     {foreach $showings as $types}
     {foreach $types as $dubbings}
     {foreach $dubbings as $movie}
-    <div class="row">
+    <div id="item" class="row">
         <div class="col-lg-2 col-md-3 col-sm-6 col-6">
             <img src="http://{$smarty.server.HTTP_HOST}{$subdir}resources/images/covers/{$movie[\Config\Database\DBConfig\Movie::$Cover]}.jpg" class="img-fluid" alt="Responsive image">
         </div>
@@ -61,6 +52,7 @@
             <div class="text-center text-md-left">
                 {foreach $movie['hours'] as $hour}
                 <a href="http://{$smarty.server.HTTP_HOST}{$subdir}Zarządzanie/Seanse/Usun/{$movie[\Config\Database\DBConfig\Showing::$IdShowing]}" class="btn btn-outline-danger m-1 mt-3 mt-md-1">{$hour|date_format:'%H:%M'}</a>
+                <a class="btn btn-danger btn-xl" data-toggle="modal" data-href="http://{$smarty.server.HTTP_HOST}{$subdir}Zarządzanie/Seanse/" value="{$movie[\Config\Database\DBConfig\Showing::$IdShowing]}" data-target="#modal_delete">{$hour|date_format:'%H:%M'}</a>
                 {/foreach}
             </div>
         </div>
@@ -69,5 +61,6 @@
     {/foreach}
     {/foreach}
     {/foreach}
+    </div>
 </div>
 {/block}
