@@ -19,7 +19,19 @@ $(document).ready(function() {
                         tutaj.append(element);
                     });
 
-                    $("#message").text("Udało się usunąć.");
+                    if (($("#message").length > 0)){
+                        $("#messageText").text("Udało się usunąć.");
+                    }
+                    else{
+                        $("#errorAndMessage").append(''+
+                            '<div id="message" class="text-center alert alert-info" role="alert">\n' +
+                            '    <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>\n' +
+                            '    <span class="sr-only">Info:</span>\n' +
+                            '    <strong id="messageText">Udało się usunąć.</strong>\n' +
+                            '</div>'+
+                        '');
+                    }
+                    //$("#message").text("Udało się usunąć.");
                 },
                 error: function(blad){
                     console.log(blad);

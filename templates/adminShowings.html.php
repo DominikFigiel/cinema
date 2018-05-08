@@ -51,7 +51,11 @@
         <div class="col-lg-4 col-md-4 col-sm-12 col-12 mt-sm-3 mt-sm-3 mt-md-0">
             <div class="text-center text-md-left">
                 {foreach $movie['hours'] as $hour}
-                <a class="btn btn-outline-danger m-1 mt-3 mt-md-1 text-danger" data-toggle="modal" data-href="http://{$smarty.server.HTTP_HOST}{$subdir}Zarządzanie/Seanse/" value="{$movie[\Config\Database\DBConfig\Showing::$IdShowing]}" data-target="#modal_delete">{$hour|date_format:'%H:%M'}</a>
+                <div class="row">
+                    <div class="btn btn-outline-info m-1 mt-3 mt-md-1 text-primary">{$hour|date_format:'%H:%M'}</div>
+                    <a class="btn btn-outline-info m-1 mt-3 mt-md-1 text-info" href="http://{$smarty.server.HTTP_HOST}{$subdir}Zarządzanie/Seanse/Edytuj/{$movie[\Config\Database\DBConfig\Showing::$IdShowing]}">Edytuj</a>
+                    <a class="btn btn-outline-danger m-1 mt-3 mt-md-1 text-danger" data-toggle="modal" data-href="http://{$smarty.server.HTTP_HOST}{$subdir}Zarządzanie/Seanse/" value="{$movie[\Config\Database\DBConfig\Showing::$IdShowing]}" data-target="#modal_delete">Usuń</a>
+                </div>
                 {/foreach}
             </div>
         </div>
