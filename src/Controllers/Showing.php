@@ -67,6 +67,9 @@ class Showing extends Controller {
                     $date = date_format($date, "Y-m-d H:i:s");
                 }
             }
+            else{
+                $date = date('Y-m-d h:i:s', strtotime( date('Y-m-d h:i:s', time()). ' + '.'2'.' days'));
+            }
             if(isset($_COOKIE["typeAdminGetAll"])) {
                 $type = $_COOKIE["typeAdminGetAll"];
                 if($type == "All")
@@ -74,7 +77,7 @@ class Showing extends Controller {
             }
             if(isset($_COOKIE["cinemaHallGetAll"])){
                 $cinemaHall = $_COOKIE["cinemaHallGetAll"];
-                if($cinemaHall == 'All')
+                if($cinemaHall === 'All')
                     $cinemaHall = null;
             }
             $view->getAllAdmin($data, $date, $type, $cinemaHall);
@@ -112,9 +115,15 @@ class Showing extends Controller {
             else{
                 $dubbing = false;
             }
-            if(isset($_COOKIE["date"])) {
+            if(isset($_COOKIE["dateAdminGetAll"])) {
                 $date1 = date_create($date);
-                $date2 = date_create($_COOKIE["date"]);
+                if(is_numeric($_COOKIE["dateAdminGetAll"])) {
+                    $date2 = date('Y-m-d h:i:s', strtotime(date('Y-m-d h:i:s', time()) . ' + ' . $_COOKIE["dateAdminGetAll"] . ' days'));
+                    $date2 = date_create($date2);
+                }
+                else{
+                    $date2 = date_create($_COOKIE["dateAdminGetAll"]);
+                }
                 date_date_set($date1 , $date2->format('Y') , $date2->format('m'), $date2->format('d'));
                 $date = $date1;
                 $date = date_format($date,"Y/m/d H:i:s");

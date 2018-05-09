@@ -10,7 +10,6 @@ class Showing extends Model {
         }
         if($date == null)
             $date = date('Y-m-d H:i:s', time());
-        //$date = date('Y-m-d h:i:s', time());
         if($date != null){
             //Jeśli data nie jest datą, tylko liczbą, to pobieramy dzisiejszą datę i dodajemy liczbę jako dni
             if(is_numeric($date)){
@@ -54,8 +53,29 @@ class Showing extends Model {
                     ON `'.\Config\Database\DBConfig::$tableCinemaHall.'`.`'.\Config\Database\DBConfig\CinemaHall::$IdCinemaHall.'`
                     = `'.\Config\Database\DBConfig::$tableShowing.'`.`'.\Config\Database\DBConfig\Showing::$IdCinemaHall.'`
             ';
-            if($type != null || $date != null) {
-                if ($type != null && $date != null) {
+            if($type != null || $date != null || $cinemaHall != null) {
+                if($type != null && $date != null && $cinemaHall != null){
+                    $query .= '
+                        WHERE `' . \Config\Database\DBConfig::$tableType . '`.`' . \Config\Database\DBConfig\Type::$Type . '` = :type
+                        AND `'.\Config\Database\DBConfig::$tableCinemaHall.'`.`'.\Config\Database\DBConfig\CinemaHall::$Name.'` = :cinemaHall
+                        AND `' . \Config\Database\DBConfig::$tableShowing . '`.`' . \Config\Database\DBConfig\Showing::$DateTime . '` 
+                        BETWEEN :date1 AND :date2
+                    ';
+                }
+                else if($type != null && $cinemaHall != null){
+                    $query .= '
+                        WHERE `' . \Config\Database\DBConfig::$tableType . '`.`' . \Config\Database\DBConfig\Type::$Type . '` = :type
+                        AND `'.\Config\Database\DBConfig::$tableCinemaHall.'`.`'.\Config\Database\DBConfig\CinemaHall::$Name.'` = :cinemaHall
+                    ';
+                }
+                else if($date != null && $cinemaHall != null){
+                    $query .= '
+                        WHERE `'.\Config\Database\DBConfig::$tableCinemaHall.'`.`'.\Config\Database\DBConfig\CinemaHall::$Name.'` = :cinemaHall
+                        AND `' . \Config\Database\DBConfig::$tableShowing . '`.`' . \Config\Database\DBConfig\Showing::$DateTime . '` 
+                        BETWEEN :date1 AND :date2
+                    ';
+                }
+                else if ($type != null && $date != null) {
                     $query .= '
                         WHERE `' . \Config\Database\DBConfig::$tableType . '`.`' . \Config\Database\DBConfig\Type::$Type . '` = :type
                         AND `' . \Config\Database\DBConfig::$tableShowing . '`.`' . \Config\Database\DBConfig\Showing::$DateTime . '` 
@@ -73,9 +93,12 @@ class Showing extends Model {
                         WHERE `' . \Config\Database\DBConfig::$tableType . '`.`' . \Config\Database\DBConfig\Type::$Type . '` = :type
                     ';
                 }
+                else if($cinemaHall != null){
+                    $query .= '
+                        WHERE `'.\Config\Database\DBConfig::$tableCinemaHall.'`.`'.\Config\Database\DBConfig\CinemaHall::$Name.'` = :cinemaHall
+                    ';
+                }
             }
-            if($cinemaHall != null)
-                $query .= ' AND `' . \Config\Database\DBConfig::$tableCinemaHall . '`.`' . \Config\Database\DBConfig\CinemaHall::$Name . '` = :cinemaHall';
 
             $query .= "ORDER BY `".\Config\Database\DBConfig::$tableMovie."`.`".\Config\Database\DBConfig\Movie::$Title."` ,
                                 `".\Config\Database\DBConfig::$tableType."`.`".\Config\Database\DBConfig\Type::$Type."` ,
@@ -104,7 +127,7 @@ class Showing extends Model {
             }
         }
         catch(\PDOException $e){
-            $data['error'] = \Config\Database\DBErrorName::$query;
+            $data['error'] = \Config\Database\DBErrorName::$query."\n".$query;
         }
         return $data;
     }

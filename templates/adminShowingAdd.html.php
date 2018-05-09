@@ -28,7 +28,7 @@
         </div>
         <div class="form-group text-center">
             <label>Dzień: </label>
-            <input type="date" id="date" name="date" required value="{$date|date_format:'%Y-%m-%d'}" onchange="setCookie('date',value)"/>
+            <input type="date" id="date" name="date" required value="{$date|date_format:'%Y-%m-%d'}" onchange="setCookie('dateAdminGetAll',value)"/>
 
         </div>
         <div class="form-group text-center">

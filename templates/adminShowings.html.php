@@ -34,6 +34,21 @@
         </div>
     </div>
 
+    <!-- Rodzaj sali -->
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            <p class="lead">Sala</p>
+            {if isset($cinemaHalls)}
+            {foreach $cinemaHalls as $cinemaHall}
+            {$tmp = $cinemaHall[\Config\Database\DBConfig\CinemaHall::$Name]}
+            <button value="{$cinemaHall[\Config\Database\DBConfig\CinemaHall::$Name]}" onclick="setCookie('cinemaHallGetAll', value)" {if $cinemaHall[\Config\Database\DBConfig\CinemaHall::$Name] == $cinemaHallIn}class="btn btn-primary"{else}class="btn btn-outline-secondary"{/if}>{$cinemaHall[\Config\Database\DBConfig\CinemaHall::$Name]}</button>
+            {/foreach}
+            {/if}
+            <button onclick="setCookie('cinemaHallGetAll', 'All')" {if 'All' === $cinemaHallIn}class="btn btn-primary"{else}class="btn btn-outline-secondary"{/if}>Wszystkie</button>
+            <hr/>
+        </div>
+    </div>
+
     <!-- Filmy -->
     <div id="data">
     {foreach $showings as $types}
