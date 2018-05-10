@@ -164,6 +164,17 @@ catch(PDOException $e)
     echo \Config\Database\DBErrorName::$delete_table.DB::$tableProduction;
 }
 
+// Table CinemaHallPlace
+$query = 'DROP TABLE IF EXISTS `'.DB::$tableCinemaHallPlace.'`';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$delete_table.DB::$tableCinemaHallPlace;
+}
+
 // Table CinemaHall
 $query = 'DROP TABLE IF EXISTS `'.DB::$tableCinemaHall.'`';
 try
@@ -173,6 +184,17 @@ try
 catch(PDOException $e)
 {
     echo \Config\Database\DBErrorName::$delete_table.DB::$tableCinemaHall;
+}
+
+// Table Place
+$query = 'DROP TABLE IF EXISTS `'.DB::$tablePlace.'`';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$delete_table.DB::$tablePlace;
 }
 
 // Table LanguageVersion
@@ -384,6 +406,40 @@ try
 catch(PDOException $e)
 {
     echo \Config\Database\DBErrorName::$create_table.DB::$tableCinemaHall;
+}
+
+// Create table Place
+$query = 'CREATE TABLE IF NOT EXISTS `'.DB::$tablePlace.'` (
+                                `'.DB\Place::$IdPlace.'` INT NOT NULL AUTO_INCREMENT,
+                                `'.DB\Place::$Column.'` INT NOT NULL,
+                                `'.DB\Place::$Row.'` INT NOT NULL,
+                                PRIMARY KEY ('.DB\Place::$IdPlace.')
+                                ) ENGINE=InnoDB;';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$create_table.DB::$tablePlace;
+}
+
+// Create table CinemaHallPlace
+$query = 'CREATE TABLE IF NOT EXISTS `'.DB::$tableCinemaHallPlace.'` (
+                                `'.DB\CinemaHallPlace::$IdCinemaHallPlace.'` INT NOT NULL AUTO_INCREMENT,
+                                `'.DB\CinemaHallPlace::$IdCinemaHall.'` INT NOT NULL,
+                                `'.DB\CinemaHallPlace::$IdPlace.'` INT NOT NULL,
+                                PRIMARY KEY ('.DB\CinemaHallPlace::$IdCinemaHallPlace.'),
+                                FOREIGN KEY ('.DB\CinemaHallPlace::$IdCinemaHall.') REFERENCES '.DB::$tableCinemaHall.'('.DB\CinemaHall::$IdCinemaHall.') ON DELETE CASCADE,
+                                FOREIGN KEY ('.DB\CinemaHallPlace::$IdPlace.') REFERENCES '.DB::$tablePlace.'('.DB\Place::$IdPlace.') ON DELETE CASCADE
+                                ) ENGINE=InnoDB;';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$create_table.DB::$tableCinemaHallPlace;
 }
 
 // Create table LanguageVersion
@@ -926,6 +982,656 @@ try
     foreach($CinemaHalls as $CinemaHall)
     {
         $stmt -> bindValue(':Name', $CinemaHall['Name'], PDO::PARAM_STR);
+        $stmt -> execute();
+    }
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$noadd;
+}
+
+//Table Place
+$Places = array();
+$Places[] = array(
+    'Column' => 1,
+    'Row' => 1);
+$Places[] = array(
+    'Column' => 2,
+    'Row' => 1);
+$Places[] = array(
+    'Column' => 3,
+    'Row' => 1);
+$Places[] = array(
+    'Column' => 4,
+    'Row' => 1);
+$Places[] = array(
+    'Column' => 5,
+    'Row' => 1);
+$Places[] = array(
+    'Column' => 6,
+    'Row' => 1);
+$Places[] = array(
+    'Column' => 7,
+    'Row' => 1);
+$Places[] = array(
+    'Column' => 8,
+    'Row' => 1);
+$Places[] = array(
+    'Column' => 9,
+    'Row' => 1);
+$Places[] = array(
+    'Column' => 10,
+    'Row' => 1);
+
+$Places[] = array(
+    'Column' => 1,
+    'Row' => 2);
+$Places[] = array(
+    'Column' => 2,
+    'Row' => 2);
+$Places[] = array(
+    'Column' => 3,
+    'Row' => 2);
+$Places[] = array(
+    'Column' => 4,
+    'Row' => 2);
+$Places[] = array(
+    'Column' => 5,
+    'Row' => 2);
+$Places[] = array(
+    'Column' => 6,
+    'Row' => 2);
+$Places[] = array(
+    'Column' => 7,
+    'Row' => 2);
+$Places[] = array(
+    'Column' => 8,
+    'Row' => 2);
+$Places[] = array(
+    'Column' => 9,
+    'Row' => 2);
+$Places[] = array(
+    'Column' => 10,
+    'Row' => 2);
+
+$Places[] = array(
+    'Column' => 1,
+    'Row' => 3);
+$Places[] = array(
+    'Column' => 2,
+    'Row' => 3);
+$Places[] = array(
+    'Column' => 3,
+    'Row' => 3);
+$Places[] = array(
+    'Column' => 4,
+    'Row' => 3);
+$Places[] = array(
+    'Column' => 5,
+    'Row' => 3);
+$Places[] = array(
+    'Column' => 6,
+    'Row' => 3);
+$Places[] = array(
+    'Column' => 7,
+    'Row' => 3);
+$Places[] = array(
+    'Column' => 8,
+    'Row' => 3);
+$Places[] = array(
+    'Column' => 9,
+    'Row' => 3);
+$Places[] = array(
+    'Column' => 10,
+    'Row' => 3);
+
+$Places[] = array(
+    'Column' => 1,
+    'Row' => 4);
+$Places[] = array(
+    'Column' => 2,
+    'Row' => 4);
+$Places[] = array(
+    'Column' => 3,
+    'Row' => 4);
+$Places[] = array(
+    'Column' => 4,
+    'Row' => 4);
+$Places[] = array(
+    'Column' => 5,
+    'Row' => 4);
+$Places[] = array(
+    'Column' => 6,
+    'Row' => 4);
+$Places[] = array(
+    'Column' => 7,
+    'Row' => 4);
+$Places[] = array(
+    'Column' => 8,
+    'Row' => 4);
+$Places[] = array(
+    'Column' => 9,
+    'Row' => 4);
+$Places[] = array(
+    'Column' => 10,
+    'Row' => 4);
+
+$Places[] = array(
+    'Column' => 1,
+    'Row' => 5);
+$Places[] = array(
+    'Column' => 2,
+    'Row' => 5);
+$Places[] = array(
+    'Column' => 3,
+    'Row' => 5);
+$Places[] = array(
+    'Column' => 4,
+    'Row' => 5);
+$Places[] = array(
+    'Column' => 5,
+    'Row' => 5);
+$Places[] = array(
+    'Column' => 6,
+    'Row' => 5);
+$Places[] = array(
+    'Column' => 7,
+    'Row' => 5);
+$Places[] = array(
+    'Column' => 8,
+    'Row' => 5);
+$Places[] = array(
+    'Column' => 9,
+    'Row' => 5);
+$Places[] = array(
+    'Column' => 10,
+    'Row' => 5);
+
+$Places[] = array(
+    'Column' => 1,
+    'Row' => 6);
+$Places[] = array(
+    'Column' => 2,
+    'Row' => 6);
+$Places[] = array(
+    'Column' => 3,
+    'Row' => 6);
+$Places[] = array(
+    'Column' => 4,
+    'Row' => 6);
+$Places[] = array(
+    'Column' => 5,
+    'Row' => 6);
+$Places[] = array(
+    'Column' => 6,
+    'Row' => 6);
+$Places[] = array(
+    'Column' => 7,
+    'Row' => 6);
+$Places[] = array(
+    'Column' => 8,
+    'Row' => 6);
+$Places[] = array(
+    'Column' => 9,
+    'Row' => 6);
+$Places[] = array(
+    'Column' => 10,
+    'Row' => 6);
+
+$Places[] = array(
+    'Column' => 1,
+    'Row' => 7);
+$Places[] = array(
+    'Column' => 2,
+    'Row' => 7);
+$Places[] = array(
+    'Column' => 3,
+    'Row' => 7);
+$Places[] = array(
+    'Column' => 4,
+    'Row' => 7);
+$Places[] = array(
+    'Column' => 5,
+    'Row' => 7);
+$Places[] = array(
+    'Column' => 6,
+    'Row' => 7);
+$Places[] = array(
+    'Column' => 7,
+    'Row' => 7);
+$Places[] = array(
+    'Column' => 8,
+    'Row' => 7);
+$Places[] = array(
+    'Column' => 9,
+    'Row' => 7);
+$Places[] = array(
+    'Column' => 10,
+    'Row' => 7);
+
+$Places[] = array(
+    'Column' => 1,
+    'Row' => 8);
+$Places[] = array(
+    'Column' => 2,
+    'Row' => 8);
+$Places[] = array(
+    'Column' => 3,
+    'Row' => 8);
+$Places[] = array(
+    'Column' => 4,
+    'Row' => 8);
+$Places[] = array(
+    'Column' => 5,
+    'Row' => 8);
+$Places[] = array(
+    'Column' => 6,
+    'Row' => 8);
+$Places[] = array(
+    'Column' => 7,
+    'Row' => 8);
+$Places[] = array(
+    'Column' => 8,
+    'Row' => 8);
+$Places[] = array(
+    'Column' => 9,
+    'Row' => 8);
+$Places[] = array(
+    'Column' => 10,
+    'Row' => 8);
+
+$Places[] = array(
+    'Column' => 1,
+    'Row' => 9);
+$Places[] = array(
+    'Column' => 2,
+    'Row' => 9);
+$Places[] = array(
+    'Column' => 3,
+    'Row' => 9);
+$Places[] = array(
+    'Column' => 4,
+    'Row' => 9);
+$Places[] = array(
+    'Column' => 5,
+    'Row' => 9);
+$Places[] = array(
+    'Column' => 6,
+    'Row' => 9);
+$Places[] = array(
+    'Column' => 7,
+    'Row' => 9);
+$Places[] = array(
+    'Column' => 8,
+    'Row' => 9);
+$Places[] = array(
+    'Column' => 9,
+    'Row' => 9);
+$Places[] = array(
+    'Column' => 10,
+    'Row' => 9);
+
+$Places[] = array(
+    'Column' => 1,
+    'Row' => 10);
+$Places[] = array(
+    'Column' => 2,
+    'Row' => 10);
+$Places[] = array(
+    'Column' => 3,
+    'Row' => 10);
+$Places[] = array(
+    'Column' => 4,
+    'Row' => 10);
+$Places[] = array(
+    'Column' => 5,
+    'Row' => 10);
+$Places[] = array(
+    'Column' => 6,
+    'Row' => 10);
+$Places[] = array(
+    'Column' => 7,
+    'Row' => 10);
+$Places[] = array(
+    'Column' => 8,
+    'Row' => 10);
+$Places[] = array(
+    'Column' => 9,
+    'Row' => 10);
+$Places[] = array(
+    'Column' => 10,
+    'Row' => 10);
+// Wstawianie
+try
+{
+    $stmt = $pdo -> prepare('INSERT INTO `'.DB::$tablePlace.'` (`'.DB\Place::$Row.'`, `'.DB\Place::$Column.'`) VALUES(:row, :column)');
+    foreach($Places as $place)
+    {
+        $stmt -> bindValue(':row', $place['Row'], PDO::PARAM_INT);
+        $stmt -> bindValue(':column', $place['Column'], PDO::PARAM_INT);
+        $stmt -> execute();
+    }
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$noadd;
+}
+
+//Table CinemaHallPlace
+$CinemaHallPlaces = array();
+
+//CinemaHall 1
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 1);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 2);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 3);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 4);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 5);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 6);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 7);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 8);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 9);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 10);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 11);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 12);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 13);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 14);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 15);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 16);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 17);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 18);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 19);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 20);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 21);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 22);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 23);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 24);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 25);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 26);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 27);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 28);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 29);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 30);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 31);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 32);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 33);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 34);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 35);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 36);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 37);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 38);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 39);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 40);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 41);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 42);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 43);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 44);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 45);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 46);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 47);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 48);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 49);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 50);
+
+//CinemaHall 2
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 1);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 2);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 3);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 4);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 5);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 6);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 7);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 8);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 9);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 10);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 11);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 12);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 13);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 14);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 15);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 16);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 17);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 18);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 19);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 20);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 21);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 22);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 23);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 24);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 25);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 26);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 27);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 28);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 29);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 30);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 31);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 32);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 33);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 34);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 35);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 36);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 37);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 38);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 39);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 40);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 41);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 42);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 43);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 44);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 45);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 46);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 47);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 48);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 49);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 50);
+
+// Wstawianie
+try
+{
+    $stmt = $pdo -> prepare('INSERT INTO `'.DB::$tableCinemaHallPlace.'` (`'.DB\CinemaHallPlace::$IdCinemaHall.'`, `'.DB\CinemaHallPlace::$IdPlace.'`) VALUES(:idCinemaHall, :idPlace)');
+    foreach($CinemaHallPlaces as $cinemaHallPlace)
+    {
+        $stmt -> bindValue(':idCinemaHall', $cinemaHallPlace['idCinemaHall'], PDO::PARAM_INT);
+        $stmt -> bindValue(':idPlace', $cinemaHallPlace['idPlace'], PDO::PARAM_INT);
         $stmt -> execute();
     }
 }

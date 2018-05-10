@@ -26,4 +26,8 @@
         public static $tableType = "Type";
         public static $tablePricingCategory = "PricingCategory";
         public static $tablePricing = "Pricing";
+
+        //For reservation
+        public static $tablePlace = "Place";
+        public static $tableCinemaHallPlace = "CinemaHallPlace";
 	}
