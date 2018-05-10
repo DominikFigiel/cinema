@@ -3,6 +3,8 @@ namespace Views;
 
 class Showing extends View {
 
+    //---------------------- Users functions --------------------------------------
+
     public function getAll($data = null, $date = null, $type = null){
         if(isset($data['message']))
             $this->set('message' , $data['message']);
@@ -48,6 +50,8 @@ class Showing extends View {
 
         $this->render('showingGetAll');
     }
+
+    //------------------ Admins functions ------------------------------------------------
 
     public function getAllAdmin($data, $date = null, $type = null, $cinemaHall = null){
         if(isset($data['message']))
@@ -109,7 +113,7 @@ class Showing extends View {
         $this->render('adminShowings');
     }
 
-    public function addFormAdmin($data = null, $date = null , $idCinemaHall = null, $idMovie = null, $idType = null, $dubbing = false){
+    public function addFormAdmin($data = null, $date = null, $time = null, $idCinemaHall = null, $idMovie = null, $idType = null, $dubbing = false){
         if(isset($data['message']))
             $this->set('message' , $data['message']);
         if(isset($data['error']))
@@ -153,10 +157,25 @@ class Showing extends View {
             }
         }
 
+        if(!is_null($date)) {
+            if(is_numeric($date)) {
+                $date = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s', time()) . ' + ' . $date . ' days'));
+            }
+        }
+        else{
+            $date = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s', time()) . ' + ' . 2 . ' days'));
+        }
 
-        //Ustawienie domyślnej daty
-        if(is_null($date))
-            $date = date('Y-m-d h:i:s', time());
+        if(!is_null($time)){
+            if(is_string($date))
+                $date = date_create($date);
+            $date2 = date_create($time);
+            date_time_set($date ,
+                $date2->format('H'),
+                $date2->format('i'),
+                $date2->format('s'));
+            $date = date_format($date,"Y/m/d H:i:s");
+        }
 
         //Ustawienie wartości do smarty
         $this->set('date', $date);
@@ -174,6 +193,89 @@ class Showing extends View {
 
 
         $this->render('adminShowingAdd');
+    }
+
+    public function editFormAdmin($id, $idCinemaHall = null , $idMovie = null , $idType = null , $date = null, $time = null, $dubbing = null, $data = null){
+        if(isset($data['message']))
+            $this->set('message' , $data['message']);
+        if(isset($data['error']))
+            $this->set('error' , $data['error']);
+
+        $this->set('id', $id);
+
+        $model = $this->getModel('Showing');
+
+        //Pobranie danych filmu
+        $showing = $model->getOne($id);
+        if(isset($showing['error'])){
+            $this->set('error' , $showing['error']);
+            $this->render('adminShowings');
+        }
+        $showing = $showing['showing'];
+
+        if(is_null($idCinemaHall))
+            $idCinemaHall = $showing[\Config\Database\DBConfig\CinemaHall::$IdCinemaHall];
+        $this->set('idCinemaHall', $idCinemaHall);
+
+        if(is_null($idMovie))
+            $idMovie = $showing[\Config\Database\DBConfig\Movie::$IdMovie];
+        $this->set('idMovie', $idMovie);
+
+        if(is_null($idType))
+            $idType = $showing[\Config\Database\DBConfig\Type::$IdType];
+        $this->set('idTypeMovie', $idType);
+
+        if(is_null($dubbing))
+            $dubbing = $showing[\Config\Database\DBConfig\Showing::$Dubbing];
+        $this->set('dubbing', $dubbing);
+
+        if(is_null($date))
+            $date = "".$showing[\Config\Database\DBConfig\Showing::$DateTime];
+        else{
+            $date = date_create("".$date);
+            $date2 = "".$showing[\Config\Database\DBConfig\Showing::$DateTime];
+            $date2 = date_create($date2);
+            date_time_set($date ,
+                $date2->format('H'),
+                $date2->format('i'),
+                $date2->format('s'));
+        }
+        if(!is_null($time)){
+            if(is_string($date))
+                $date = date_create($date);
+            $date2 = date_create($time);
+            date_time_set($date ,
+                $date2->format('H'),
+                $date2->format('i'),
+                $date2->format('s'));
+            $date = date_format($date,"Y/m/d H:i:s");
+        }
+        $this->set('date', $date);
+
+        //Pobranie sal kinowych
+        $cinemaHalls = $model->getCinemaHalls();
+        $this->set('cinemaHalls' , $cinemaHalls['cinemaHalls']);
+
+        //Pobranie filmów
+        $movies = $model->getMovies();
+        $this->set('movies' , $movies['movies']);
+
+        //Pobranie typów dla filmu
+        if(!is_null($idMovie))
+        {
+            $typesForMovie = $model->getTypesForMovie($idMovie);
+            $this->set('typesForMovie', $typesForMovie['types']);
+        }
+
+        //Ustawienie wartości dla sesji (w razie, gdyby użytkownik chciał edytować seans i będą potrzebne dane)
+        \Tools\Session::set('idShowingEdit' , $id);
+        \Tools\Session::set('idCinemaHallEdit' , $idCinemaHall);
+        \Tools\Session::set('idMovieEdit' , $idMovie);
+        \Tools\Session::set('idTypeEdit' , $idType);
+        \Tools\Session::set('dateAdminEdit' , $date);
+        \Tools\Session::set('dubbingEdit' , $dubbing);
+
+        $this->render('adminShowingEdit');
     }
 
 }

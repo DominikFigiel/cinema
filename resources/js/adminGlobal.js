@@ -2,21 +2,21 @@ $(document).ready(function() {
 
     $('#modal_delete').on('show.bs.modal', function(e) {
         $("#deleteButton").click(function(){
-            var stala = "Usun/";
-            var idU = $(e.relatedTarget).attr('value');
-            var sciezka = $(e.relatedTarget).data('href');
+            var constant = "Usun/";
+            var id = $(e.relatedTarget).attr('value');
+            var url = $(e.relatedTarget).data('href');
             $.ajax({
                 type: "GET",
                 dataType: "html",
-                url: sciezka+stala+idU,
+                url: url+constant+id,
                 success: function(html){
-                    var tutaj = $("#data").empty();
-                    var elementy = $(html).find('#item');
+                    var data = $("#data").empty();
+                    var items = $(html).find('#item');
 
-                    $.each( elementy, function( key, value ) {
-                        var content = $(elementy[key]).html();
-                        var element = '<div id="showing" class="row">' + content + '</div>'
-                        tutaj.append(element);
+                    $.each( items, function( key, value ) {
+                        var content = $(items[key]).html();
+                        var item = '<div id="showing" class="row">' + content + '</div>'
+                        data.append(item);
                     });
 
                     if (($("#message").length > 0)){
@@ -31,10 +31,9 @@ $(document).ready(function() {
                             '</div>'+
                         '');
                     }
-                    //$("#message").text("Udało się usunąć.");
                 },
-                error: function(blad){
-                    console.log(blad);
+                error: function(error){
+                    console.log(error);
                 }
             });
             $("#modal_delete").modal('hide');

@@ -1,5 +1,5 @@
-{extends file="templates/globalTemplate.html.php"}
-{block name="body"}
+{extends file="templates/adminGlobalTemplate.html.php"}
+{block name="content"}
 <div class="container col-lg-12 col-md-12" xmlns:>
     <h1 class="h4 text-center">Dodanie seansu</h1>
     <form class="container cent col-lg-offset-3 col-lg-6 col-md-offset-3 col-md-6">

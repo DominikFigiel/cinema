@@ -46,6 +46,10 @@ class Showing extends Controller {
 
     public function getAllAdmin(){
         if(\Tools\Access::islogin()) {
+
+            //Czyszczenie cookies dla formularza edycji seansów
+            $this->clearCookiesForEditForm();
+
             $view = $this->getView('Showing');
             $data = null;
             $date = null;
@@ -91,12 +95,13 @@ class Showing extends Controller {
     public function addFormAdmin(){
         if(\Tools\Access::islogin()) {
             $view = $this->getView('Showing');
-            $data = null;
+            $data = array();
             $idCinemaHall = null;
             $idMovie = null;
             $idType = null;
             $dubbing = null;
-            $date = date('Y-m-d h:i:s', time());
+            $date = null;
+            $time = null;
             if(isset($_COOKIE["idCinemaHall"])) {
                 $idCinemaHall = $_COOKIE["idCinemaHall"];
             }
@@ -116,26 +121,10 @@ class Showing extends Controller {
                 $dubbing = false;
             }
             if(isset($_COOKIE["dateAdminGetAll"])) {
-                $date1 = date_create($date);
-                if(is_numeric($_COOKIE["dateAdminGetAll"])) {
-                    $date2 = date('Y-m-d h:i:s', strtotime(date('Y-m-d h:i:s', time()) . ' + ' . $_COOKIE["dateAdminGetAll"] . ' days'));
-                    $date2 = date_create($date2);
-                }
-                else{
-                    $date2 = date_create($_COOKIE["dateAdminGetAll"]);
-                }
-                date_date_set($date1 , $date2->format('Y') , $date2->format('m'), $date2->format('d'));
-                $date = $date1;
-                $date = date_format($date,"Y/m/d H:i:s");
+                $date = $_COOKIE["dateAdminGetAll"];
             }
             if(isset($_COOKIE["time"])) {
-                if(is_string($date))
-                    $date = date_create($date);
-                $date1 = $date;
-                $date2 = date_create($_COOKIE["time"]);
-                date_time_set($date1 , $date2->format('H'), $date2->format('m'), $date2->format('s'));
-                $date = $date1;
-                $date = date_format($date,"Y/m/d H:i:s");
+                $time = $_COOKIE["time"];
             }
 
 
@@ -143,12 +132,67 @@ class Showing extends Controller {
                 $data['message'] = \Tools\Session::get('message');
             if (\Tools\Session::is('error'))
                 $data['error'] = \Tools\Session::get('error');
-            $view->addFormAdmin($data , $date, $idCinemaHall, $idMovie, $idType, $dubbing);
+            $view->addFormAdmin($data , $date, $time, $idCinemaHall, $idMovie, $idType, $dubbing);
             \Tools\Session::clear('message');
             \Tools\Session::clear('error');
         }
         else
             $this->redirect('');
+    }
+
+    public function editFormAdmin($id)
+    {
+        if (\Tools\Access::islogin()) {
+            $data = array();
+            if (\Tools\Session::is('message'))
+                $data['message'] = \Tools\Session::get('message');
+            if (\Tools\Session::is('error'))
+                $data['error'] = \Tools\Session::get('error');
+            $view = $this->getView('Showing');
+
+            $idCinemaHall = null;
+            $idMovie = null;
+            $idType = null;
+            $date = null;
+            $dubbing = null;
+            $time = null;
+
+            if(isset($_COOKIE["dateAdminEdit"])) {
+                $date = $_COOKIE["dateAdminEdit"];
+            }
+            if(isset($_COOKIE["timeEdit"]) && !is_null($_COOKIE["timeEdit"])) {
+                $time = $_COOKIE["timeEdit"];
+
+            }
+
+            if(isset($_COOKIE["idCinemaHallEdit"])) {
+                $idCinemaHall = $_COOKIE["idCinemaHallEdit"];
+            }
+            if(isset($_COOKIE["idMovieEdit"])) {
+                $idMovie = $_COOKIE["idMovieEdit"];
+            }
+            if(isset($_COOKIE["idTypeEdit"])) {
+                $idType = $_COOKIE["idTypeEdit"];
+            }
+            if(isset($_COOKIE["dubbingEdit"])) {
+                $dubbing = $_COOKIE["dubbingEdit"];
+            }
+            $view->editFormAdmin($id , $idCinemaHall , $idMovie , $idType , $date, $time, $dubbing, $data);
+            \Tools\Session::clear('message');
+            \Tools\Session::clear('error');
+        }
+        else
+            $this->redirect('');
+    }
+
+    private function clearCookiesForEditForm(){
+        setcookie('idCinemaHallEdit' , null, time()+(60*60*1000), "/");
+        setcookie('idMovieEdit' , null, time()+(60*60*1000), "/");
+        setcookie('idTypeEdit' , null, time()+(60*60*1000), "/");
+        setcookie('dubbingEdit' , null, time()+(60*60*1000), "/");
+        setcookie('dateAdminEdit' , null, time()+(60*60*1000), "/");
+        setcookie('timeEdit' , null, time()+(60*60*1000), "/");
+        setcookie('dateAdminEdit' , null, time()+(60*60*1000), "/");
     }
 
     public function deleteShowing($id){
@@ -186,7 +230,6 @@ class Showing extends Controller {
             if(isset($result['error'])){
                 \Tools\Session::set('error', 'Nie udało się dodać.');
             }
-            $this->redirect('Zarządzanie/Seanse/');
 
             //Czyszczenie sesji
             if(\Tools\Session::is('idMovie'))
@@ -199,6 +242,52 @@ class Showing extends Controller {
                 \Tools\Session::clear('date');
             if(\Tools\Session::is('dubbing'))
                 \Tools\Session::clear('dubbing');
+
+            $this->redirect('Zarządzanie/Seanse/');
+        }
+        else
+            $this->redirect('');
+    }
+
+    public function editShowing(){
+        if(\Tools\Access::islogin()) {
+            if(!\Tools\Session::is('idMovieEdit') || !\Tools\Session::is('idTypeEdit')
+                || !\Tools\Session::is('idCinemaHallEdit') || !\Tools\Session::is('idShowingEdit')
+                || !\Tools\Session::is('dateAdminEdit') || !\Tools\Session::is('dubbingEdit')){
+                \Tools\Session::set('error', 'Nie udało się edytować.');
+                $this->redirect('Zarządzanie/Seanse/');
+            }
+            $model = $this->getModel('Showing');
+            $idMovieType = $model->getIdMovieType(\Tools\Session::get('idMovieEdit') , \Tools\Session::get('idTypeEdit'));
+            $idMovieType = $idMovieType['idMovieType'];
+            if(isset($idMovieType['message'])){
+                \Tools\Session::set('message', $idMovieType['message']);
+            }
+            if(isset($idMovieType['error'])){
+                \Tools\Session::set('error', $idMovieType['error']);
+            }
+            $data = $model->editShowing(\Tools\Session::get('idShowingEdit') ,$idMovieType ,\Tools\Session::get('idCinemaHallEdit'), \Tools\Session::get('dateAdminEdit'),
+                \Tools\Session::get('dubbingEdit'));
+            if(isset($data['message'])){
+                \Tools\Session::set('message', $data['message']);
+            }
+            if(isset($data['error'])){
+                \Tools\Session::set('error', $data['error']);
+            }
+
+            //Czyszczenie sesji
+            if(\Tools\Session::is('idMovieEdit'))
+                \Tools\Session::clear('idMovieEdit');
+            if(\Tools\Session::is('idTypeEdit'))
+                \Tools\Session::clear('idTypeEdit');
+            if(\Tools\Session::is('idCinemaHallEdit'))
+                \Tools\Session::clear('idCinemaHallEdit');
+            if(\Tools\Session::is('dateAdminEdit'))
+                \Tools\Session::clear('dateEdit');
+            if(\Tools\Session::is('dubbingEdit'))
+                \Tools\Session::clear('dubbingEdit');
+
+            $this->redirect('Zarządzanie/Seanse/');
         }
         else
             $this->redirect('');

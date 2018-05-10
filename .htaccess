@@ -26,5 +26,7 @@ RewriteRule ^Zarządzanie/Seanse/?$ index.php?controller=Showing&action=getAllAd
 RewriteRule ^Zarządzanie/Seanse/Dodaj?$ index.php?controller=Showing&action=addFormAdmin [L]
 RewriteRule ^Zarządzanie/Seanse/Dodawanie?$ index.php?controller=Showing&action=addShowing [L]
 RewriteRule ^Zarządzanie/Seanse/Usun/(\d+)?$ index.php?controller=Showing&action=deleteShowing&id=$1 [L]
+RewriteRule ^Zarządzanie/Seanse/Edytuj/(\d+)?$ index.php?controller=Showing&action=editFormAdmin&id=$1 [L]
+RewriteRule ^Zarządzanie/Seanse/Edytowanie?$ index.php?controller=Showing&action=editShowing [L]
 
 ErrorDocument 404 http://localhost/Projekty/ProjektZespolowy/cinema/errors/404.html
