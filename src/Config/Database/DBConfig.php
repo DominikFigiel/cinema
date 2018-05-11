@@ -30,4 +30,6 @@
         //For reservation
         public static $tablePlace = "Place";
         public static $tableCinemaHallPlace = "CinemaHallPlace";
+        public static $tableUser = "User";
+        public static $tableReservation = "Reservation";
 	}

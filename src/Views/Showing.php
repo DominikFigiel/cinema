@@ -1,5 +1,6 @@
 <?php
 namespace Views;
+use DateTime;
 
 class Showing extends View {
 
@@ -170,6 +171,16 @@ class Showing extends View {
             if(is_string($date))
                 $date = date_create($date);
             $date2 = date_create($time);
+            date_time_set($date ,
+                $date2->format('H'),
+                $date2->format('i'),
+                $date2->format('s'));
+            $date = date_format($date,"Y/m/d H:i:s");
+        }
+        else{
+            $date2 = date('Y-m-d H:i:s', time());
+            $date2 =new DateTime($date2);
+            $date = new DateTime($date);
             date_time_set($date ,
                 $date2->format('H'),
                 $date2->format('i'),

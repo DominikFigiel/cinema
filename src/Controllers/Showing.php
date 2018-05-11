@@ -193,6 +193,8 @@ class Showing extends Controller {
         setcookie('dateAdminEdit' , null, time()+(60*60*1000), "/");
         setcookie('timeEdit' , null, time()+(60*60*1000), "/");
         setcookie('dateAdminEdit' , null, time()+(60*60*1000), "/");
+
+        setcookie('time' , null, time()+(60*60*1000), "/");
     }
 
     public function deleteShowing($id){
