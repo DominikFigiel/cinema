@@ -3,7 +3,7 @@
 <div class="container mb-5">
     <div class="row">
         <div class="col-lg-12 text-center">
-            <h1 class="h2 mt-5">Podaj dane kontaktowe</span></h1>
+            <h1 class="h2 mt-5">Dane kontaktowe</span></h1>
         </div>
     </div>
     <div class="row">
@@ -28,6 +28,7 @@
                 </div>
                 <div class="form-group text-center">
                     <button type="submit" class="btn btn-primary">Zarezerwuj</button>
+                    <a href="http://{$smarty.server.HTTP_HOST}{$subdir}Rezerwacja/Miejsce/Seans/{$idShowing}" class="btn btn-danger">Wróć</a>
                 </div>
             </form>
         </div>

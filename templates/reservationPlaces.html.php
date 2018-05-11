@@ -24,7 +24,7 @@
                     {if !isset($places[$keyRow][$keyColumn]['busy'])}
                     <td><button type="button" onclick="addCookieFor('places', {$column['id']})" class="btn btn-success">{$keyColumn}</button></td>
                     {else if $places[$keyRow][$keyColumn]['busy'] == false}
-                    <td><button type="button" class="btn btn-primary">{$keyColumn}</button></td>
+                    <td><button type="button" onclick="deleteCookieFor('places', {$column['id']})" class="btn btn-primary">{$keyColumn}</button></td>
                     {else}
                     <td><button type="button" class="btn btn-danger">{$keyColumn}</button></td>
                     {/if}
@@ -40,11 +40,11 @@
     </div>
     <div class="row">
         <div class="col-lg-12 text-center">
-        {if isset($placesReservation)}
+            {if isset($placesReservation)}
             <a href="http://{$smarty.server.HTTP_HOST}{$subdir}Rezerwacja/DaneKontaktowe/Seans/{$idShowing}" class="btn btn-primary text-right">Dalej</a>
             {else}
             <button class="btn btn-dark text-right">Dalej</button>
-        {/if}
+            {/if}
         </div>
     </div>
     {else}

@@ -15,6 +15,30 @@ function addCookieFor(cname, cvalue) {
     setCookie(cname, value);
 }
 
+function deleteCookieFor(cname, cvalue) {
+    var value = getCookie(cname);
+    if(value != null && value != ""){
+        var array = value.split(",");
+        for(var i = 0; i < array.length; i++){
+            if((parseInt(cvalue)) == (parseInt(array[i]))){
+                for(var j = i; j < array.length; j++){
+                    array[j] = array[j+1];
+                }
+                break;
+            }
+        }
+        value = "";
+        var tmpArray = new Array();
+        for(var i = 0; i < array.length-1; i++){
+            if(value == null || value == "")
+                value = array[i];
+            else
+                value = value + "," + array[i];
+        }
+    }
+    setCookie(cname, value);
+}
+
 function getCookie(cname){
     var name = cname + "=";
     var decodedCookie = decodeURIComponent(document.cookie);

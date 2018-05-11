@@ -9,9 +9,13 @@ class Reservation extends View {
         if(isset($data['error']))
             $this->set('error' , $data['error']);
 
-        if(isset($data['places'])) {
+        if(isset($data['places']) && $data['places'] != "") {
             $placesReservation = explode(",",$data['places']);
-            $this->set('placesReservation', $placesReservation);
+            if(is_array($placesReservation)) {
+                if (count($placesReservation) > 0 && !empty($placesReservation)) {
+                    $this->set('placesReservation', $placesReservation);
+                }
+            }
         }
 
         $model = $this->getModel('Showing');
