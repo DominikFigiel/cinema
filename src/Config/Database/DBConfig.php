@@ -32,4 +32,5 @@
         public static $tableCinemaHallPlace = "CinemaHallPlace";
         public static $tableUser = "User";
         public static $tableReservation = "Reservation";
+        public static $tableReservationPlace = "ReservationPlace";
 	}

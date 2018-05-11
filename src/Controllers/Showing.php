@@ -50,6 +50,8 @@ class Showing extends Controller {
             //Czyszczenie cookies dla formularza edycji seansów
             $this->clearCookiesForEditForm();
 
+            $this->clearCookies();
+
             $view = $this->getView('Showing');
             $data = null;
             $date = null;
@@ -193,7 +195,10 @@ class Showing extends Controller {
         setcookie('dateAdminEdit' , null, time()+(60*60*1000), "/");
         setcookie('timeEdit' , null, time()+(60*60*1000), "/");
         setcookie('dateAdminEdit' , null, time()+(60*60*1000), "/");
+    }
 
+    private function clearCookies(){
+        //For addForm
         setcookie('time' , null, time()+(60*60*1000), "/");
     }
 

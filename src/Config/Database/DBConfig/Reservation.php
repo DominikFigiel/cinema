@@ -5,5 +5,4 @@ class Reservation{
     public static $IdReservation = "IdReservation";
     public static $IdUser = "IdUser";
     public static $IdShowing = "IdShowing";
-    public static $IdCinemaHallPlace = "IdCinemaHallPlace";
 }

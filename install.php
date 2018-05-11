@@ -32,6 +32,39 @@ catch(PDOException $e)
     echo \Config\Database\DBErrorName::$delete_table.DB::$tableAdmin;
 }
 
+//Table ReservationPlace
+$query = 'DROP TABLE IF EXISTS `'.DB::$tableReservationPlace.'`';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$delete_table.DB::$tableReservationPlace;
+}
+
+//Table Reservation
+$query = 'DROP TABLE IF EXISTS `'.DB::$tableReservation.'`';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$delete_table.DB::$tableReservation;
+}
+
+//Table User
+$query = 'DROP TABLE IF EXISTS `'.DB::$tableUser.'`';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$delete_table.DB::$tableUser;
+}
+
 //Table Pricing
 $query = 'DROP TABLE IF EXISTS `'.DB::$tablePricing.'`';
 try
@@ -496,6 +529,62 @@ catch(PDOException $e)
 {
     echo \Config\Database\DBErrorName::$create_table.DB::$tableShowing;
 }
+
+// Create table User
+$query = 'CREATE TABLE IF NOT EXISTS `'.DB::$tableUser.'` (
+                                `'.DB\User::$IdUser.'` INT NOT NULL AUTO_INCREMENT,
+                                `'.DB\User::$FirstName.'` VARCHAR(200) NOT NULL,
+                                `'.DB\User::$LastName.'` VARCHAR(200) NOT NULL,
+                                `'.DB\User::$Email.'` VARCHAR(200) NOT NULL,
+                                `'.DB\User::$MobilePhone.'` VARCHAR(12) NOT NULL,
+                                PRIMARY KEY ('.DB\User::$IdUser.')
+                                ) ENGINE=InnoDB;';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$create_table.DB::$tableUser;
+}
+
+// Create table Reservation
+$query = 'CREATE TABLE IF NOT EXISTS `'.DB::$tableReservation.'` (
+                                `'.DB\Reservation::$IdReservation.'` INT NOT NULL AUTO_INCREMENT,
+                                `'.DB\Reservation::$IdUser.'` INT NOT NULL,
+                                `'.DB\Reservation::$IdShowing.'` INT NOT NULL,
+                                PRIMARY KEY ('.DB\Reservation::$IdReservation.'),
+                                FOREIGN KEY ('.DB\Reservation::$IdUser.') REFERENCES '.DB::$tableUser.'('.DB\User::$IdUser.') ON DELETE CASCADE,
+                                FOREIGN KEY ('.DB\Reservation::$IdShowing.') REFERENCES '.DB::$tableShowing.'('.DB\Showing::$IdShowing.') ON DELETE CASCADE
+                                ) ENGINE=InnoDB;';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$create_table.DB::$tableReservation;
+}
+
+// Create table ReservationPlace
+$query = 'CREATE TABLE IF NOT EXISTS `'.DB::$tableReservationPlace.'` (
+                                `'.DB\ReservationPlace::$IdReservationPlace.'` INT NOT NULL AUTO_INCREMENT,
+                                `'.DB\ReservationPlace::$IdReservation.'` INT NOT NULL,
+                                `'.DB\ReservationPlace::$IdPlace.'` INT NOT NULL,
+                                PRIMARY KEY ('.DB\ReservationPlace::$IdReservationPlace.'),
+                                FOREIGN KEY ('.DB\ReservationPlace::$IdReservation.') REFERENCES '.DB::$tableReservation.'('.DB\Reservation::$IdReservation.') ON DELETE CASCADE,
+                                FOREIGN KEY ('.DB\ReservationPlace::$IdPlace.') REFERENCES '.DB::$tablePlace.'('.DB\Place::$IdPlace.') ON DELETE CASCADE
+                                ) ENGINE=InnoDB;';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$create_table.DB::$tableReservationPlace;
+}
+
+
 
 
 
