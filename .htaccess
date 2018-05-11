@@ -20,6 +20,11 @@ RewriteRule ^Logowanie/?$ index.php?controller=Access&action=logform [L]
 RewriteRule ^Walidowanie/?$ index.php?controller=Access&action=login [L]
 RewriteRule ^Wylogowanie/?$ index.php?controller=Access&action=logout [L]
 
+#Reservation
+RewriteRule ^Rezerwacja/Miejsce/Seans/(\d+)/?$ index.php?controller=Reservation&action=chooseAPlaces&id=$1 [L]
+RewriteRule ^Rezerwacja/DaneKontaktowe/Seans/(\d+)/?$ index.php?controller=Reservation&action=userData&id=$1 [L]
+RewriteRule ^Rezerwowanie/?$ index.php?controller=Reservation&action=reservation [L]
+
 #Admin
 #Showing
 RewriteRule ^Zarządzanie/Seanse/?$ index.php?controller=Showing&action=getAllAdmin [L]

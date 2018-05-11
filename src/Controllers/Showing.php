@@ -7,6 +7,7 @@ class Showing extends Controller {
 
     public function getAll(){
         if(!\Tools\Access::islogin()) {
+            $this->clearCookies();
             \Tools\Session::set("navigation", "Movie");
             $view = $this->getView('Showing');
             $data = null;
@@ -200,6 +201,9 @@ class Showing extends Controller {
     private function clearCookies(){
         //For addForm
         setcookie('time' , null, time()+(60*60*1000), "/");
+
+        //For reservation places
+        setcookie('places' , null, time()+(60*60*1000), "/");
     }
 
     public function deleteShowing($id){

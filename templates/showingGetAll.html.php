@@ -51,7 +51,7 @@
         <div class="col-lg-4 col-md-4 col-sm-12 col-12 mt-sm-3 mt-sm-3 mt-md-0">
             <div class="text-center text-md-left">
                 {foreach $movie['hours'] as $hour}
-                <button type="button" class="btn btn-outline-primary m-1 mt-3 mt-md-1">{$hour|date_format:'%H:%M'}</button>
+                <a href="http://{$smarty.server.HTTP_HOST}{$subdir}Rezerwacja/Miejsce/Seans/{$movie[\Config\Database\DBConfig\Showing::$IdShowing]}" title="Zarezerwuj bilet" class="btn btn-outline-primary m-1 mt-3 mt-md-1">{$hour|date_format:'%H:%M'}</a>
                 {/foreach}
             </div>
         </div>
@@ -61,6 +61,7 @@
     {/foreach}
     {/foreach}
 
+    <!-- Pamiętać usunąć -->
     {if isset($error)}
     <div>
         <h4 class="h4">{$error}</h4>
