@@ -8,23 +8,19 @@
     </div>
     <div class="row">
         <div class="container col-lg-12 col-md-12" xmlns:">
-            <form action="http://{$smarty.server.HTTP_HOST}{$subdir}Rezerwowanie/" method="post" class="container cent col-lg-offset-3 col-lg-6 col-md-offset-3 col-md-6">
+            <form action="http://{$smarty.server.HTTP_HOST}{$subdir}Rezerwowanie/" method="post" class="container col-lg-offset-3 col-lg-6 col-md-offset-3 col-md-6">
                 <input id="idShowing" name="idShowing" required value="{$idShowing}" readonly hidden/>
                 <div class="form-group text-center">
-                    <label>Imię: </label>
-                    <input type="text" id="firstName" name="firstName" required minlength="5" maxlength="200" />
+                    <input class="form-control" size="20" type="text" id="firstName" name="firstName" placeholder="Imię" title="Imię" required minlength="5" maxlength="200" />
                 </div>
                 <div class="form-group text-center">
-                    <label>Nazwisko: </label>
-                    <input type="text" id="lastName" name="lastName" required minlength="5" maxlength="200" />
+                    <input class="form-control" placeholder="Nazwisko" title="Nazwisko" type="text" id="lastName" name="lastName" required minlength="5" maxlength="200" />
                 </div>
                 <div class="form-group text-center">
-                    <label>Email: </label>
-                    <input type="email" id="email" name="email" required minlength="5" maxlength="200" />
+                    <input class="form-control" placeholder="Email" title="Emial" type="email" id="email" name="email" required minlength="5" maxlength="200" />
                 </div>
                 <div class="form-group text-center">
-                    <label>Numer telefonu: </label>
-                    <input type="number" id="mobilePhone" name="mobilePhone" required minlength="9" maxlength="12" />
+                    <input class="form-control" type="number" placeholder="Numer telefonu" title="Numer telefonu" id="mobilePhone" name="mobilePhone" required minlength="9" maxlength="12" />
                 </div>
                 <div class="form-group text-center">
                     <button type="submit" class="btn btn-primary">Zarezerwuj</button>
