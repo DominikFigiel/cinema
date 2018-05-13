@@ -23,12 +23,12 @@ class Showing extends Model {
 
             //Ustawienie pierwszej daty
             $date1 = date_create($date);
-            date_time_set($date1, 00, 00, 00, 00);
+            date_time_set($date1, 00, 00, 00);
             $date1 = date_format($date1 , 'Y-m-d H:i:s');
 
             //Ustawienie drugiej daty
             $date2 = date_create($date);
-            date_time_set($date2, 23, 59 ,59, 59);
+            date_time_set($date2, 23, 59 ,59);
             $date2 = date_format($date2 , 'Y-m-d H:i:s');
         }
         //$type = '3D';
