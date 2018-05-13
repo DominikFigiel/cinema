@@ -140,4 +140,28 @@ class Reservation extends Model {
         return $data;
     }
 
+    public function getReservationForShowing(){
+        if($this->pdo === null){
+            $data['error'] = \Config\Database\DBErrorName::$connection;
+            return $data;
+        }
+        $data = array();
+        $data['reservationForShowing'] = array();
+        try {
+            $query = '
+                SELECT * 
+                FROM `'.\Config\Database\DBConfig::$tableReservation.'`
+                ORDER BY `'.\Config\Database\DBConfig::$tableReservation.'`.`'.\Config\Database\DBConfig\Reservation::$IdShowing.'` ASC
+            ';
+            $stmt = $this->pdo->prepare($query);
+            $stmt->execute();
+            $data['reservationForShowing'] =  $stmt->fetchAll();
+            $stmt->closeCursor();
+        }
+        catch(\PDOException $e){
+            $data['error'] = \Config\Database\DBErrorName::$query;
+        }
+        return $data;
+    }
+
 }

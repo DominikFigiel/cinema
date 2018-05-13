@@ -70,14 +70,22 @@ class Showing extends View {
             $this->set('setDate', date('Y-m-d h:i:s', strtotime(date('Y-m-d h:i:s', time()). ' + 2 days')));
         }
 
+
+        //Get all showings
         $model = $this->getModel('Showing');
-        $data = $model->getAll($date , $type , true, $cinemaHall);
+        $data = $model->getAllAdmin($date , $type , true, $cinemaHall);
         if(isset($data['message']))
             $this->set('message' , $data['message']);
         if(isset($data['error']))
             $this->set('error' , $data['error']);
-        if(isset($data['showings']))
-            $this->set('showings' , $data['showings']);
+        if(isset($data['showings'])) {
+
+            $this->set('showings', $data['showings']);
+        }
+
+
+
+
 
         if($type == null){
             $type = 'All';

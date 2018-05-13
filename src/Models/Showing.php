@@ -1,6 +1,7 @@
 <?php
 namespace Models;
 use \PDO;
+use \Models\Reservation;
 class Showing extends Model {
 
     public function getAll($date = null , $type = null , $admin = false, $cinemaHall = null){
@@ -129,6 +130,35 @@ class Showing extends Model {
         catch(\PDOException $e){
             $data['error'] = \Config\Database\DBErrorName::$query."\n".$query;
         }
+        return $data;
+    }
+
+    public function getAllAdmin($date = null , $type = null , $admin = false, $cinemaHall = null){
+        $data = array();
+        $showingsAll = $this->getAll($date , $type , $admin, $cinemaHall);
+        if(isset($showingsAll['error']))
+            $data['error'] = $showingsAll['error'];
+        if(isset($showingsAll['message']))
+            $data['message'] = $showingsAll['message'];
+        $data['showings'] = $showingsAll['showings'];
+
+        /*$showingsReserved = new Reservation();
+        $showingsReserved = $showingsReserved->getReservationForShowing();
+        if(isset($showingsReserved['error']))
+            $data['error'] = $showingsReserved['error'];
+        if(isset($showingsReserved['message']))
+            $data['message'] = $showingsReserved['message'];
+        if(isset($showingsReserved['reservationForShowing'])) {
+            $showingsReserved = $showingsReserved['reservationForShowing'];
+            foreach ($data['showings'] as $showing){
+                $tmpShowing = $data['showings'][$showing[\Config\Database\DBConfig\Movie::$IdMovie]][$showing[\Config\Database\DBConfig\Type::$Type]][$showing[\Config\Database\DBConfig\Showing::$Dubbing]];
+                foreach ($showingsReserved as $showingReserved){
+                    if((int)$tmpShowing[\Config\Database\DBConfig\Showing::$IdShowing] == (int)$showingReserved[\Config\Database\DBConfig\Reservation::$IdShowing]){
+                        $showing[$showing[\Config\Database\DBConfig\Movie::$IdMovie]][$showing[\Config\Database\DBConfig\Type::$Type]][$showing[\Config\Database\DBConfig\Showing::$Dubbing]]['reservation'] = true;
+                    }
+                }
+            }
+        }*/
         return $data;
     }
 
