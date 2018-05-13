@@ -1,0 +1,37 @@
+#włączenie mod_rewrite
+Options +FollowSymLinks
+RewriteEngine On
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+#Movie
+RewriteRule ^Film/?$ index.php?controller=Showing&action=getAll [L]
+RewriteRule ^Film/Szczegóły/(\d+)/?$ index.php?controller=Movie&action=getOne&id=$1 [L]
+
+#Contact
+RewriteRule ^Kontakt/?$ index.php?controller=Contact&action=get [L]
+
+#Cennik
+RewriteRule ^Cennik/?$ index.php?controller=Pricing&action=getAll [L]
+
+#Logging
+RewriteRule ^Logowanie/?$ index.php?controller=Access&action=logform [L]
+RewriteRule ^Walidowanie/?$ index.php?controller=Access&action=login [L]
+RewriteRule ^Wylogowanie/?$ index.php?controller=Access&action=logout [L]
+
+#Reservation
+RewriteRule ^Rezerwacja/Miejsce/Seans/(\d+)/?$ index.php?controller=Reservation&action=chooseAPlaces&id=$1 [L]
+RewriteRule ^Rezerwacja/DaneKontaktowe/Seans/(\d+)/?$ index.php?controller=Reservation&action=userData&id=$1 [L]
+RewriteRule ^Rezerwowanie/?$ index.php?controller=Reservation&action=reservation [L]
+
+#Admin
+#Showing
+RewriteRule ^Zarządzanie/Seanse/?$ index.php?controller=Showing&action=getAllAdmin [L]
+RewriteRule ^Zarządzanie/Seanse/Dodaj?$ index.php?controller=Showing&action=addFormAdmin [L]
+RewriteRule ^Zarządzanie/Seanse/Dodawanie?$ index.php?controller=Showing&action=addShowing [L]
+RewriteRule ^Zarządzanie/Seanse/Usun/(\d+)?$ index.php?controller=Showing&action=deleteShowing&id=$1 [L]
+RewriteRule ^Zarządzanie/Seanse/Edytuj/(\d+)?$ index.php?controller=Showing&action=editFormAdmin&id=$1 [L]
+RewriteRule ^Zarządzanie/Seanse/Edytowanie?$ index.php?controller=Showing&action=editShowing [L]
+
+ErrorDocument 404 http://localhost/Projekty/ProjektZespolowy/cinema/errors/404.html

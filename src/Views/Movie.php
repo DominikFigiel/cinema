@@ -3,21 +3,6 @@ namespace Views;
 
 class Movie extends View {
 
-    public function getAll($data = null){
-
-        if(isset($data['message']))
-            $this->set('message' , $data['message']);
-        if(isset($data['error']))
-            $this->set('error' , $data['error']);
-
-        $model = $this->getModel('Showing');
-        $data = $model->getAll();
-        if(isset($data['showings']))
-            $this->set('showings' , $data['showings']);
-
-        $this->render('movieGetAll');
-    }
-
     public function getOne($id , $data = null){
 
         if(isset($data['message']))
