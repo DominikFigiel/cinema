@@ -2,8 +2,18 @@ body {
     padding-top: 54px;
     padding-bottom: 25px;
 }
+
+@media (max-width: 780px) {
+    .btn-seat {
+        padding: 0.1rem 0.3rem;
+    }
+}
+
 @media (min-width: 992px) {
     body {
         padding-top: 56px;
+    }
+    .btn-seat {
+        padding: 0.7rem 2.0rem;
     }
 }
