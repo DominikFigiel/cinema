@@ -69,6 +69,8 @@ class Genre extends Model {
             $data['error'] = \Config\Database\DBErrorName::$empty;
             return $data;
         }
+        //if(!is_numeric($idGenre))
+            //$idGenre = intval($idGenre);
         $data = array();
         try{
             $query = '           
@@ -78,7 +80,7 @@ class Genre extends Model {
             ';
             $stmt = $this->pdo->prepare($query);
             $stmt->bindValue(':idMovie' , $idMovie , PDO::PARAM_INT);
-            $stmt->bindValue(':idGenre' , $idGenre , PDO::PARAM_INT);
+            $stmt->bindValue(':idGenre' , $idGenre , PDO::PARAM_STR);
             $result = $stmt->execute();
             if($result === true){
                 $data['message'] = "Udało sie dodać gatunek.";
@@ -132,11 +134,8 @@ class Genre extends Model {
             $data['error'] = \Config\Database\DBErrorName::$empty;
             return $data;
         }
-        $idGenres = array($idGenres);
-        if(is_array($idGenres) && count($idGenres) > 1){
+        if(is_array($idGenres)){
             foreach ($idGenres as $idGenre){
-                if(!is_numeric($idGenre))
-                    $idGenre = (int)$idGenre;
                 $genreForMovie = $this->addGenreForMovie($idMovie, $idGenre);
                 if (isset($genreForMovie['error'])){
                     $data['error'] = $genreForMovie['error'];
@@ -145,8 +144,6 @@ class Genre extends Model {
             }
         }
         else{
-            //if(!is_numeric($idGenres))
-                //$idGenres = (int)$idGenres;
             $genreForMovie = $this->addGenreForMovie($idMovie, $idGenres);
             if(isset($genreForMovie['error']))
                 $data['error'] = $genreForMovie['error'];

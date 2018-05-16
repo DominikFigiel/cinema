@@ -20,16 +20,16 @@
                 <input type="number" class="form-control" name="DurationTime" id="DurationTime" placeholder="Czas trwania" required="required"/>
             </div>
             <div class="form-group">
-                <label for="Genre">Gatunek:</label></br>
-                <select id="Genre" name="Genre" required>
+                <label for="Genre">Wybierz gatunek:</label>
+                <select id="Genre" name="Genre[]" multiple required>
                 {foreach from=$genres item=$genre}
                     <option value="{$genre[\Config\Database\DBConfig\Genre::$IdGenre]}">{$genre[\Config\Database\DBConfig\Genre::$GenreName]}</option>
                 {/foreach}
                 </select>
             </div>
             <div class="form-group">
-                <label for="Production">Produkcja:</label></br>
-                <select id="Production" name="Production" required>
+                <label for="Production">Wybierz produkcje:</label>
+                <select id="Production" name="Production[]" multiple required>
                     {foreach from=$productions item=$production}
                     <option value="{$production[\Config\Database\DBConfig\Production::$IdProduction]}">{$production[\Config\Database\DBConfig\Production::$Country]}</option>
                     {/foreach}

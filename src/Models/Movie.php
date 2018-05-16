@@ -225,13 +225,13 @@ class Movie extends Model {
         return $data;
     }
 
-    public function addMovie($title, $releaseDate, $age, $durationTime, $cover, $description, $genres, $productions){
+    public function addMovie($title, $releaseDate, $age, $durationTime, $cover, $description, $idGenres, $idProductions){
         if($this->pdo === null){
             $data['error'] = \Config\Database\DBErrorName::$connection;
             return $data;
         }
         if(is_null($title) || is_null($releaseDate) || is_null($age) || is_null($durationTime) || is_null($cover)
-            || is_null($description) || is_null($genres) || is_null($productions)){
+            || is_null($description) || is_null($idGenres) || is_null($idProductions)){
             $data['error'] = \Config\Database\DBErrorName::$empty;
             return $data;
         }
@@ -246,8 +246,9 @@ class Movie extends Model {
         }
 
         if(isset($movie['idMovie'])) {
-            $productions = new Production();
-            $productions = $productions->addProductionForMovie($movie['idMovie'] , $productions);
+            $data['idMovie'] = $movie['idMovie'];
+            $productions = new \Models\Production();
+            $productions = $productions->addProductionsForMovie($movie['idMovie'] , $idProductions);
             if (isset($productions['error'])) {
                 $data['error'] = $productions['error'];
                 return $data;
@@ -256,8 +257,8 @@ class Movie extends Model {
                 $data['message'] = $productions['message'];
             }
 
-            $genres = new Genre();
-            $genres = $genres->addGenreForMovie($movie['idMovie'], $genres);
+            $genres = new \Models\Genre();
+            $genres = $genres->addGenresForMovie($movie['idMovie'], $idGenres);
             if (isset($genres['error'])) {
                 $data['error'] = $genres['error'];
                 return $data;
@@ -366,7 +367,7 @@ class Movie extends Model {
             $stmt->closeCursor();
         }
         catch(\PDOException $e){
-            $data['error'] = \Config\Database\DBErrorName::$query;
+            $data['error'] = \Config\Database\DBErrorName::$query." TUTAJ 3";
         }
         return $data;
     }

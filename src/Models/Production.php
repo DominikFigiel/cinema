@@ -70,6 +70,9 @@ class Production extends Model {
             return $data;
         }
         $data = array();
+        //var_dump($idProduction);
+        //if(!is_numeric($idProduction))
+            //$idProduction = intval($idProduction);
         try{
             $query = '           
                 INSERT INTO '.\Config\Database\DBConfig::$tableMovieProduction.' ('.\Config\Database\DBConfig\MovieProduction::$IdMovie.',
@@ -78,7 +81,7 @@ class Production extends Model {
             ';
             $stmt = $this->pdo->prepare($query);
             $stmt->bindValue(':idMovie' , $idMovie , PDO::PARAM_INT);
-            $stmt->bindValue(':idProduction' , $idProduction , PDO::PARAM_INT);
+            $stmt->bindValue(':idProduction' , $idProduction , PDO::PARAM_STR);
             $result = $stmt->execute();
             if($result === true){
                 $data['message'] = "Udało sie dodać.";
@@ -132,10 +135,8 @@ class Production extends Model {
             $data['error'] = \Config\Database\DBErrorName::$empty;
             return $data;
         }
-        if(is_array($idProductions) && count($idProductions) > 1){
+        if(is_array($idProductions)){
             foreach ($idProductions as $idProduction){
-                if(!is_numeric($idProduction))
-                    $idProduction = (int)$idProduction;
                 $productionForMovie = $this->addProductionForMovie($idMovie, $idProduction);
                 if (isset($productionForMovie['error'])) {
                     $data['error'] = $productionForMovie['error'];
@@ -145,8 +146,6 @@ class Production extends Model {
             }
         }
         else{
-            //if(!is_numeric($idProductions))
-                //$idProductions = (int)$idProductions;
             $productionForMovie = $this->addProductionForMovie($idMovie, $idProductions);
             if(isset($productionForMovie['error']))
                 $data['error'] = $productionForMovie['error'];
