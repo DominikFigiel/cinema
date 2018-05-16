@@ -15,7 +15,7 @@ $(document).ready(function() {
 
                     $.each( items, function( key, value ) {
                         var content = $(items[key]).html();
-                        var item = '<div id="showing" class="row">' + content + '</div>'
+                        var item = '<div id="item" class="row">' + content + '</div><hr/>'
                         data.append(item);
                     });
 
@@ -39,4 +39,5 @@ $(document).ready(function() {
             $("#modal_delete").modal('hide');
         });
     });
+
 });
