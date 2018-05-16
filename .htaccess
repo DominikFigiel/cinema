@@ -11,6 +11,7 @@ RewriteRule ^Film/Szczegóły/(\d+)/?$ index.php?controller=Movie&action=getOne&
 RewriteRule ^Film/Dodaj/?$ index.php?controller=Movie&action=addForm [L]
 RewriteRule ^Film/Edytuj/(\d+)?$ index.php?controller=Movie&action=editForm&id=$1 [L]
 
+
 #Contact
 RewriteRule ^Kontakt/?$ index.php?controller=Contact&action=get [L]
 

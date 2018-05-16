@@ -3,8 +3,6 @@ namespace Controllers;
 
 class Movie extends Controller {
 
-
-
     public function index()
     {
         // Index tworzy obiekt widoku, który zleca wyświetlanie wszystkich produktów w widoku

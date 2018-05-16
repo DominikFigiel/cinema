@@ -24,8 +24,7 @@ class Movie extends View {
         return false;
     }
 
-    public
-    function addform()
+    public function addform()
     {
         $this->set('customScript', array('jquery.validate.min', 'MovieAddForm', 'formularz'));
         $this->render('MovieAddForm');
@@ -33,7 +32,6 @@ class Movie extends View {
 
     public function getOne($id , $data = null)
     {
-
         if(isset($data['message']))
             $this->set('message' , $data['message']);
         if(isset($data['error']))
@@ -59,8 +57,7 @@ class Movie extends View {
         $this->render('movieGetOne');
     }
 
-    public
-    function editForm($movie)
+    public function editForm($movie)
     {
         $this->set('IdMovie', $movie[\Config\Database\DBConfig\Movie::$IdMovie ]);
         $this->set('Title', $movie[\Config\Database\DBConfig\Movie::$Title]);

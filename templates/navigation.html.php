@@ -8,8 +8,6 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
                 {if !isset($smarty.session.user)}
-
-
                 <li {if !isset($smarty.session.navigation) || $smarty.session.navigation=="Movie"}class="nav-item active"{else}class="nav-item"{/if}>
                     <a class="nav-link" href="http://{$smarty.server.HTTP_HOST}{$subdir}Film">Repertuar
                         <span class="sr-only">(current)</span>
