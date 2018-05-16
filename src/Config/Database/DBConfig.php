@@ -11,6 +11,7 @@
         public static $user = 'root';
         public static $password = '';
 
+        public static $tableAdmin = "Admin";
 		public static $tableGenre = 'Genre';
         public static $tableMovie = 'Movie';
         public static $tableMovieGenre = 'MovieGenre';
@@ -18,4 +19,18 @@
         public static $tableMovieProduction = 'MovieProduction';
         public static $tableActor = 'Actor';
         public static $tableCast = 'Cast';
+        public static $tableCinemaHall = "CinemaHall";
+        public static $tableLanguageVersion = "LanguageVersion";
+        public static $tableMovieType = "MovieType";
+        public static $tableShowing = "Showing";
+        public static $tableType = "Type";
+        public static $tablePricingCategory = "PricingCategory";
+        public static $tablePricing = "Pricing";
+
+        //For reservation
+        public static $tablePlace = "Place";
+        public static $tableCinemaHallPlace = "CinemaHallPlace";
+        public static $tableUser = "User";
+        public static $tableReservation = "Reservation";
+        public static $tableReservationPlace = "ReservationPlace";
 	}

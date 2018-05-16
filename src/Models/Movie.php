@@ -4,7 +4,6 @@ use \PDO;
 class Movie extends Model {
 
     public function getAll(){
-
         if($this->pdo === null){
             $data['error'] = \Config\Database\DBErrorName::$connection;
             return $data;
@@ -166,4 +165,103 @@ class Movie extends Model {
         }
         return $data;
     }
+
+    public function add ($Title  , $ReleaseDate , $Age , $DurationTime  , $Cover  , $Description  ){
+        if($this->pdo === null){
+    $data['error'] = \Config\Database\DBErrorName::$connection;
+    return $data;
+    }
+    if ($Title === null || $ReleaseDate === null || $Age === null || $DurationTime === null || $Cover === null || $Description === null )
+    {
+    $data['error'] = \Config\Database\DBErrorName::$empty;
+    return $data;
+    }
+    $data = array();
+    try {
+        $stmt = $this->pdo->prepare('INSERT INTO `' . \Config\Database\DBConfig::$tableMovie . '` (`' . \Config\Database\DBConfig\Movie::$Title . '` , `' . \Config\Database\DBConfig\Movie::$ReleaseDate . '` , `' . \Config\Database\DBConfig\Movie::$Age . '`, `' . \Config\Database\DBConfig\Movie::$DurationTime . '` , `' . \Config\Database\DBConfig\Movie::$Cover . '` , `' . \Config\Database\DBConfig\Movie::$Description . '`)
+			VALUES (:Title , :ReleaseDate , :Age , :DurationTime, :Cover, :Description)');
+        $stmt->bindValue(':Title', $Title, PDO::PARAM_STR);
+        $stmt->bindValue(':ReleaseDate', $ReleaseDate, PDO::PARAM_STR);
+        $stmt->bindValue(':Age', $Age, PDO::PARAM_INT);
+        $stmt->bindValue(':DurationTime', $DurationTime, PDO::PARAM_INT);
+        $stmt->bindValue(':Cover', $Cover, PDO::PARAM_INT);
+        $stmt->bindValue(':Description', $Description, PDO::PARAM_STR);
+        $result = $stmt->execute();
+    if (!$result)
+        $data['error'] = \Config\Database\DBErrorName::$noadd;
+    }
+    catch(\PDOException $e){
+    $data['error'] = \Config\Database\DBErrorName::$query;
+    }
+    return $data;
+    }
+
+public function delete($id){
+    $data = array();
+    if($this->pdo === null){
+        $data['error'] = \Config\Database\DBErrorName::$connection;
+        return $data;
+    }
+    if($id === null){
+        $data['error'] = \Config\Database\DBErrorName::$nomatch;
+        return $data;
+    }
+    try	{
+        $stmt = $this->pdo->prepare('DELETE FROM  `'.\Config\Database\DBConfig::$tableMovie.'` WHERE  `'.\Config\Database\DBConfig\Movie::$IdMovie.'`=:id');
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $result = $stmt->execute();
+        if(!$result)
+            $data['error'] = \Config\Database\DBErrorName::$nomatch;
+        else
+            $data['message'] = \Config\Database\DBMessageName::$deleteok;
+        $stmt->closeCursor();
+    }
+    catch(\PDOException $e)	{
+        $data['error'] = \Config\Database\DBErrorName::$query;
+    }
+    return $data;
+}
+
+public function update($IdMovie , $Title , $ReleaseDate , $Age , $DurationTime, $Cover, $Description)
+{
+
+    $data = array();
+    if($this->pdo === null){
+        $data['error'] = \Config\Database\DBErrorName::$connection;
+        return $data;
+    }
+    if($IdMovie === null || $Title === null || $ReleaseDate === null || $Age === null || $DurationTime === null || $Cover === null || $Description === null)
+    {
+        $data['error'] = \Config\Database\DBErrorName::$empty;
+        return $data;
+    }
+
+    try {
+        $stmt = $this->pdo->prepare('UPDATE `' . \Config\Database\DBConfig::$tableMovie . '` SET `'
+            . \Config\Database\DBConfig\Movie::$Title . '`=:Title,`'
+            . \Config\Database\DBConfig\Movie::$ReleaseDate . '`=:ReleaseDate,`'
+            . \Config\Database\DBConfig\Movie::$Age . '`=:Age,`'
+            . \Config\Database\DBConfig\Movie::$DurationTime . '`=:DurationTime,`'
+            . \Config\Database\DBConfig\Movie::$Cover . '`=:Cover,`'
+            . \Config\Database\DBConfig\Movie::$Description . '`=:Description WHERE `'
+            . \Config\Database\DBConfig\Movie::$IdMovie . '`=:IdMovie');
+
+        $stmt->bindValue(':Title', $Title, PDO::PARAM_STR);
+        $stmt->bindValue(':ReleaseDate', $ReleaseDate, PDO::PARAM_STR);
+        $stmt->bindValue(':Age', $Age, PDO::PARAM_INT);
+        $stmt->bindValue(':DurationTime', $DurationTime, PDO::PARAM_INT);
+        $stmt->bindValue(':Cover', $Cover, PDO::PARAM_INT);
+        $stmt->bindValue(':Description', $Description, PDO::PARAM_STR);
+        $stmt->bindValue(':IdMovie', $IdMovie, PDO::PARAM_INT);
+        $result = $stmt->execute();
+        $rows = $stmt->rowCount();
+        if (!$result)
+            $data['error'] = \Config\Database\DBErrorName::$nomatch;
+
+    } catch (\PDOException $e) {
+        $data['error'] = \Config\Database\DBErrorName::$query;
+    }
+    return $data;
+}
+
 }
