@@ -40,5 +40,7 @@ RewriteRule ^Zarządzanie/Filmy/Szczegóły/(\d+)/?$ index.php?controller=Movie&
 RewriteRule ^Zarządzanie/Filmy/Dodaj/?$ index.php?controller=Movie&action=addFormAdmin [L]
 RewriteRule ^Zarządzanie/Filmy/Dodawanie/?$ index.php?controller=Movie&action=addMovie [L]
 RewriteRule ^Zarządzanie/Filmy/Usun/(\d+)?$ index.php?controller=Movie&action=deleteMovie&id=$1 [L]
+RewriteRule ^Zarządzanie/Filmy/Edytuj/(\d+)?$ index.php?controller=Movie&action=editFormAdmin&id=$1 [L]
+RewriteRule ^Zarządzanie/Filmy/Edytowanie/?$ index.php?controller=Movie&action=editMovie [L]
 
 ErrorDocument 404 http://localhost/Projekty/ProjektZespolowy/cinema/errors/404.html

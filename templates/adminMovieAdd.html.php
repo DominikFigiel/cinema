@@ -21,6 +21,7 @@
             </div>
             <div class="form-group">
                 <label for="Genre">Wybierz gatunek:</label>
+                <br>
                 <select id="Genre" name="Genre[]" multiple required>
                 {foreach from=$genres item=$genre}
                     <option value="{$genre[\Config\Database\DBConfig\Genre::$IdGenre]}">{$genre[\Config\Database\DBConfig\Genre::$GenreName]}</option>
@@ -29,6 +30,7 @@
             </div>
             <div class="form-group">
                 <label for="Production">Wybierz produkcje:</label>
+                <br>
                 <select id="Production" name="Production[]" multiple required>
                     {foreach from=$productions item=$production}
                     <option value="{$production[\Config\Database\DBConfig\Production::$IdProduction]}">{$production[\Config\Database\DBConfig\Production::$Country]}</option>
@@ -40,6 +42,7 @@
                 <textarea rows="4" cols="50" name="Description"  class="form-control" id="Description"required="required" placeholder="Podaj opis do filmu "></textarea>
             </div>
             <button type="submit" class="btn btn-success">Dodaj</button>
+            <a class="btn btn-danger" href="http://{$smarty.server.HTTP_HOST}{$subdir}Zarządzanie/Filmy/">Wróć</a>
         </form>
     <hr/>
     <hr/>

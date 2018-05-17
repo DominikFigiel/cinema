@@ -51,6 +51,22 @@ class Movie extends Controller {
             $this->redirect('');
     }
 
+    public function editFormAdmin($id){
+        if(\Tools\Access::islogin()) {
+            $data = array();
+            $view = $this->getView('Movie');
+            if (\Tools\Session::is('message'))
+                $data['message'] = \Tools\Session::get('message');
+            if (\Tools\Session::is('error'))
+                $data['error'] = \Tools\Session::get('error');
+            $view->editFormAdmin($id, $data);
+            \Tools\Session::clear('message');
+            \Tools\Session::clear('error');
+        }
+        else
+            $this->redirect('');
+    }
+
     public function adminGetOne($id){
         $view = $this->getView('Movie');
         $data = array();
@@ -74,6 +90,33 @@ class Movie extends Controller {
                                         $Genre, $Productions);
             if(isset($movie['message'])){
                 \Tools\Session::set('message', $movie['message']);
+            }
+            if(isset($movie['error'])){
+                \Tools\Session::set('error', $movie['error']);
+            }
+
+            $this->redirect('Zarządzanie/Filmy/');
+        }
+        else
+            $this->redirect('Zarządzanie/Filmy/');
+    }
+
+    public function editMovie(){
+        if(\Tools\Access::islogin()) {
+            $model = $this->getModel('Movie');
+
+            //Najpierw usuwamy
+            //$this->deleteMovie($_POST['idMovie']);
+            $model->deleteMovie($_POST['idMovie']);
+
+            //Później dodajemy
+            $Genre = $_POST['Genre'];
+            $Productions = $_POST['Production'];
+            $movie = $model->addMovie($_POST['Title'], $_POST['ReleaseDate'], $_POST['Age'],
+                $_POST['DurationTime'], "COVER", $_POST['Description'],
+                $Genre, $Productions);
+            if(isset($movie['message'])){
+                \Tools\Session::set('message', "Udało się edytować film.");
             }
             if(isset($movie['error'])){
                 \Tools\Session::set('error', $movie['error']);

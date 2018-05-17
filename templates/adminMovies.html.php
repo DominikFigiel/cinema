@@ -22,7 +22,7 @@
         </div>
         <div class="col-lg-2 col-md-4 col-sm-12 col-12 mt-sm-3 mt-sm-3 mt-md-0">
             <div class="text-center text-md-left">
-                <a href="http://{$smarty.server.HTTP_HOST}{$subdir}" title="Edytuj" class="btn btn-outline-primary m-1 mt-3 mt-md-1">Edytuj</a>
+                <a href="http://{$smarty.server.HTTP_HOST}{$subdir}Zarządzanie/Filmy/Edytuj/{$movie[\Config\Database\DBConfig\Movie::$IdMovie]}" title="Edytuj" class="btn btn-outline-primary m-1 mt-3 mt-md-1">Edytuj</a>
                 <a class="btn btn-outline-danger m-1 mt-3 mt-md-1 text-danger" data-toggle="modal" data-target="#modal_delete" data-href="http://{$smarty.server.HTTP_HOST}{$subdir}Zarządzanie/Filmy/" value="{$movie[\Config\Database\DBConfig\Movie::$IdMovie]}" title="Usuń" class="btn btn-outline-danger m-1 mt-3 mt-md-1">Usuń</a>
             </div>
         </div>

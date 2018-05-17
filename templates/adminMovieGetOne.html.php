@@ -31,7 +31,7 @@
     <hr/>
 
     <div class="text-center pb-4">
-        <a href="http://{$smarty.server.HTTP_HOST}{$subdir}Zarządzanie/Filmy/"><button type="button" class="btn btn-primary btn-lg" title="Edytuj">Edytuj</button></a>
+        <a href="http://{$smarty.server.HTTP_HOST}{$subdir}Zarządzanie/Filmy/Edytuj/{$movie[\Config\Database\DBConfig\Movie::$IdMovie]}"><button type="button" class="btn btn-primary btn-lg" title="Edytuj">Edytuj</button></a>
         <a href="http://{$smarty.server.HTTP_HOST}{$subdir}Zarządzanie/Filmy/"><button type="button" class="btn btn-danger btn-lg" title="Cofnij">Cofnij</button></a>
     </div>
 
