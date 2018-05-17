@@ -37,4 +37,13 @@ RewriteRule ^Zarządzanie/Seanse/Usun/(\d+)?$ index.php?controller=Showing&actio
 RewriteRule ^Zarządzanie/Seanse/Edytuj/(\d+)?$ index.php?controller=Showing&action=editFormAdmin&id=$1 [L]
 RewriteRule ^Zarządzanie/Seanse/Edytowanie?$ index.php?controller=Showing&action=editShowing [L]
 
+#Movie
+RewriteRule ^Zarządzanie/Filmy/?$ index.php?controller=Movie&action=adminGetAll [L]
+RewriteRule ^Zarządzanie/Filmy/Szczegóły/(\d+)/?$ index.php?controller=Movie&action=adminGetOne&id=$1 [L]
+RewriteRule ^Zarządzanie/Filmy/Dodaj/?$ index.php?controller=Movie&action=addFormAdmin [L]
+RewriteRule ^Zarządzanie/Filmy/Dodawanie/?$ index.php?controller=Movie&action=addMovie [L]
+RewriteRule ^Zarządzanie/Filmy/Usun/(\d+)?$ index.php?controller=Movie&action=deleteMovie&id=$1 [L]
+RewriteRule ^Zarządzanie/Filmy/Edytuj/(\d+)?$ index.php?controller=Movie&action=editFormAdmin&id=$1 [L]
+RewriteRule ^Zarządzanie/Filmy/Edytowanie/?$ index.php?controller=Movie&action=editMovie [L]
+
 ErrorDocument 404 http://localhost/Projekty/ProjektZespolowy/cinema/errors/404.html

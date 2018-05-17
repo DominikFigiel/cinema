@@ -60,15 +60,5 @@
     {/foreach}
     {/foreach}
     {/foreach}
-
-    <!-- Pamiętać usunąć -->
-    {if isset($error)}
-    <div>
-        <h4 class="h4">{$error}</h4>
-    </div>
-    {/if}
-
-    <a href="http://{$smarty.server.HTTP_HOST}{$subdir}Film/Dodaj" title="Zarezerwuj bilet" class="btn btn-outline-primary m-1 mt-3 mt-md-1">Add</a>
-
 </div>
 {/block}

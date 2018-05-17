@@ -1,6 +1,10 @@
 <?php
 namespace Models;
 use \PDO;
+use \Models\Genre;
+use \Models\Production;
+use \Models\Actor;
+use \Models\Type;
 class Movie extends Model {
 
     public function getAll(){
@@ -43,7 +47,7 @@ class Movie extends Model {
             $stmt = $this->pdo->prepare('SELECT * FROM `'.\Config\Database\DBConfig::$tableMovie.'` 
                 WHERE  `'.\Config\Database\DBConfig\Movie::$IdMovie.'`=:id');
             $stmt->bindValue(':id' , $id , PDO::PARAM_INT);
-            $result = $stmt->execute();
+            $stmt->execute();
             $movies = $stmt->fetchAll();
             $stmt->closeCursor();
             if($movies && !empty($movies))
@@ -166,102 +170,238 @@ class Movie extends Model {
         return $data;
     }
 
-    public function add ($Title  , $ReleaseDate , $Age , $DurationTime  , $Cover  , $Description  ){
+    //-------------------- Admin functions ------------------------------------
+
+    public function adminGetAll(){
         if($this->pdo === null){
-    $data['error'] = \Config\Database\DBErrorName::$connection;
-    return $data;
-    }
-    if ($Title === null || $ReleaseDate === null || $Age === null || $DurationTime === null || $Cover === null || $Description === null )
-    {
-    $data['error'] = \Config\Database\DBErrorName::$empty;
-    return $data;
-    }
-    $data = array();
-    try {
-        $stmt = $this->pdo->prepare('INSERT INTO `' . \Config\Database\DBConfig::$tableMovie . '` (`' . \Config\Database\DBConfig\Movie::$Title . '` , `' . \Config\Database\DBConfig\Movie::$ReleaseDate . '` , `' . \Config\Database\DBConfig\Movie::$Age . '`, `' . \Config\Database\DBConfig\Movie::$DurationTime . '` , `' . \Config\Database\DBConfig\Movie::$Cover . '` , `' . \Config\Database\DBConfig\Movie::$Description . '`)
-			VALUES (:Title , :ReleaseDate , :Age , :DurationTime, :Cover, :Description)');
-        $stmt->bindValue(':Title', $Title, PDO::PARAM_STR);
-        $stmt->bindValue(':ReleaseDate', $ReleaseDate, PDO::PARAM_STR);
-        $stmt->bindValue(':Age', $Age, PDO::PARAM_INT);
-        $stmt->bindValue(':DurationTime', $DurationTime, PDO::PARAM_INT);
-        $stmt->bindValue(':Cover', $Cover, PDO::PARAM_INT);
-        $stmt->bindValue(':Description', $Description, PDO::PARAM_STR);
-        $result = $stmt->execute();
-    if (!$result)
-        $data['error'] = \Config\Database\DBErrorName::$noadd;
-    }
-    catch(\PDOException $e){
-    $data['error'] = \Config\Database\DBErrorName::$query;
-    }
-    return $data;
-    }
+            $data['error'] = \Config\Database\DBErrorName::$connection;
+            return $data;
+        }
+        $data = array();
+        $data['movies'] = array();
+        try{
+            $query = '
+                    SELECT * 
+                    FROM `'.\Config\Database\DBConfig::$tableMovie.'`
+                    INNER JOIN `'.\Config\Database\DBConfig::$tableMovieGenre.'`
+                    ON `'.\Config\Database\DBConfig::$tableMovie.'`.`'.\Config\Database\DBConfig\Movie::$IdMovie.'`
+                    = `'.\Config\Database\DBConfig::$tableMovieGenre.'`.`'.\Config\Database\DBConfig\MovieGenre::$IdMovie.'`
+                    INNER JOIN `'.\Config\Database\DBConfig::$tableGenre.'`
+                    ON `'.\Config\Database\DBConfig::$tableGenre.'`.`'.\Config\Database\DBConfig\Genre::$IdGenre.'`
+                    = `'.\Config\Database\DBConfig::$tableMovieGenre.'`.`'.\Config\Database\DBConfig\MovieGenre::$IdGenre.'`
+                    INNER JOIN `'.\Config\Database\DBConfig::$tableMovieProduction.'`
+                    ON `'.\Config\Database\DBConfig::$tableMovie.'`.`'.\Config\Database\DBConfig\Movie::$IdMovie.'`
+                    = `'.\Config\Database\DBConfig::$tableMovieProduction.'`.`'.\Config\Database\DBConfig\MovieProduction::$IdMovie.'`
+                    INNER JOIN `'.\Config\Database\DBConfig::$tableProduction.'`
+                    ON `'.\Config\Database\DBConfig::$tableProduction.'`.`'.\Config\Database\DBConfig\Production::$IdProduction.'`
+                    = `'.\Config\Database\DBConfig::$tableMovieProduction.'`.`'.\Config\Database\DBConfig\MovieProduction::$IdProduction.'`
+            ';
+            $query .= 'ORDER BY `'.\Config\Database\DBConfig::$tableMovie.'`.`'.\Config\Database\DBConfig\Movie::$Title.'` , 
+                                `'.\Config\Database\DBConfig::$tableProduction.'`.`'.\Config\Database\DBConfig\Production::$Country.'`,
+                                `'.\Config\Database\DBConfig::$tableGenre.'`.`'.\Config\Database\DBConfig\Genre::$GenreName.'` ASC';
+            $stmt = $this->pdo->query($query);
+            $movies = $stmt->fetchAll();
+            $stmt->closeCursor();
 
-public function delete($id){
-    $data = array();
-    if($this->pdo === null){
-        $data['error'] = \Config\Database\DBErrorName::$connection;
-        return $data;
-    }
-    if($id === null){
-        $data['error'] = \Config\Database\DBErrorName::$nomatch;
-        return $data;
-    }
-    try	{
-        $stmt = $this->pdo->prepare('DELETE FROM  `'.\Config\Database\DBConfig::$tableMovie.'` WHERE  `'.\Config\Database\DBConfig\Movie::$IdMovie.'`=:id');
-        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
-        $result = $stmt->execute();
-        if(!$result)
-            $data['error'] = \Config\Database\DBErrorName::$nomatch;
-        else
-            $data['message'] = \Config\Database\DBMessageName::$deleteok;
-        $stmt->closeCursor();
-    }
-    catch(\PDOException $e)	{
-        $data['error'] = \Config\Database\DBErrorName::$query;
-    }
-    return $data;
-}
-
-public function update($IdMovie , $Title , $ReleaseDate , $Age , $DurationTime, $Cover, $Description)
-{
-
-    $data = array();
-    if($this->pdo === null){
-        $data['error'] = \Config\Database\DBErrorName::$connection;
-        return $data;
-    }
-    if($IdMovie === null || $Title === null || $ReleaseDate === null || $Age === null || $DurationTime === null || $Cover === null || $Description === null)
-    {
-        $data['error'] = \Config\Database\DBErrorName::$empty;
+            if($movies && !empty($movies)) {
+                $data['movies'] = array();
+                foreach ($movies as $movie){
+                    if(!isset($data['movies'][$movie[\Config\Database\DBConfig\Movie::$IdMovie]]))
+                        $data['movies'][$movie[\Config\Database\DBConfig\Movie::$IdMovie]] = $movie;
+                    if(!isset( $data['movies'][$movie[\Config\Database\DBConfig\Movie::$IdMovie]]['genres'][$movie[\Config\Database\DBConfig\Genre::$GenreName]])) {
+                        $data['movies'][$movie[\Config\Database\DBConfig\Movie::$IdMovie]]['genres'][$movie[\Config\Database\DBConfig\Genre::$GenreName]] = null;
+                        $data['movies'][$movie[\Config\Database\DBConfig\Movie::$IdMovie]]['genres'][$movie[\Config\Database\DBConfig\Genre::$GenreName]] = count($data['movies'][$movie[\Config\Database\DBConfig\Movie::$IdMovie]]['genres']);
+                    }
+                    if(!isset($data['movies'][$movie[\Config\Database\DBConfig\Movie::$IdMovie]]['productions'][$movie[\Config\Database\DBConfig\Production::$Country]])) {
+                        $data['movies'][$movie[\Config\Database\DBConfig\Movie::$IdMovie]]['productions'][$movie[\Config\Database\DBConfig\Production::$Country]] = null;
+                        $data['movies'][$movie[\Config\Database\DBConfig\Movie::$IdMovie]]['productions'][$movie[\Config\Database\DBConfig\Production::$Country]] = count($data['movies'][$movie[\Config\Database\DBConfig\Movie::$IdMovie]]['productions']);
+                    }
+                }
+            }
+        }
+        catch(\PDOException $e){
+            $data['error'] = \Config\Database\DBErrorName::$query;
+        }
         return $data;
     }
 
-    try {
-        $stmt = $this->pdo->prepare('UPDATE `' . \Config\Database\DBConfig::$tableMovie . '` SET `'
-            . \Config\Database\DBConfig\Movie::$Title . '`=:Title,`'
-            . \Config\Database\DBConfig\Movie::$ReleaseDate . '`=:ReleaseDate,`'
-            . \Config\Database\DBConfig\Movie::$Age . '`=:Age,`'
-            . \Config\Database\DBConfig\Movie::$DurationTime . '`=:DurationTime,`'
-            . \Config\Database\DBConfig\Movie::$Cover . '`=:Cover,`'
-            . \Config\Database\DBConfig\Movie::$Description . '`=:Description WHERE `'
-            . \Config\Database\DBConfig\Movie::$IdMovie . '`=:IdMovie');
+    public function addMovie($title, $releaseDate, $age, $durationTime, $cover, $description, $idGenres, $idProductions){
+        if($this->pdo === null){
+            $data['error'] = \Config\Database\DBErrorName::$connection;
+            return $data;
+        }
+        if(is_null($title) || is_null($releaseDate) || is_null($age) || is_null($durationTime) || is_null($cover)
+            || is_null($description) || is_null($idGenres) || is_null($idProductions)){
+            $data['error'] = \Config\Database\DBErrorName::$empty;
+            return $data;
+        }
+        $data = array();
+        $movie = $this->addOnlyMovie($title, $releaseDate, $age, $durationTime, $cover, $description);
+        if(isset($movie['error'])) {
+            $data['error'] = $movie['error'];
+            return $data;
+        }
+        if(isset($movie['message'])) {
+            $data['message'] = $movie['message'];
+        }
 
-        $stmt->bindValue(':Title', $Title, PDO::PARAM_STR);
-        $stmt->bindValue(':ReleaseDate', $ReleaseDate, PDO::PARAM_STR);
-        $stmt->bindValue(':Age', $Age, PDO::PARAM_INT);
-        $stmt->bindValue(':DurationTime', $DurationTime, PDO::PARAM_INT);
-        $stmt->bindValue(':Cover', $Cover, PDO::PARAM_INT);
-        $stmt->bindValue(':Description', $Description, PDO::PARAM_STR);
-        $stmt->bindValue(':IdMovie', $IdMovie, PDO::PARAM_INT);
-        $result = $stmt->execute();
-        $rows = $stmt->rowCount();
-        if (!$result)
-            $data['error'] = \Config\Database\DBErrorName::$nomatch;
+        if(isset($movie['idMovie'])) {
+            $data['idMovie'] = $movie['idMovie'];
+            $productions = new \Models\Production();
+            $productions = $productions->addProductionsForMovie($movie['idMovie'] , $idProductions);
+            if (isset($productions['error'])) {
+                $data['error'] = $productions['error'];
+                return $data;
+            }
+            if(isset($productions['message'])) {
+                $data['message'] = $productions['message'];
+            }
 
-    } catch (\PDOException $e) {
-        $data['error'] = \Config\Database\DBErrorName::$query;
+            $genres = new \Models\Genre();
+            $genres = $genres->addGenresForMovie($movie['idMovie'], $idGenres);
+            if (isset($genres['error'])) {
+                $data['error'] = $genres['error'];
+                return $data;
+            }
+            if(isset($genres['message'])) {
+                $data['message'] = $genres['message'];
+            }
+        }
+
+        return $data;
     }
-    return $data;
-}
 
+    public function deleteMovie($idMovie){
+        if($this->pdo === null){
+            $data['error'] = \Config\Database\DBErrorName::$connection;
+            return $data;
+        }
+        if(is_null($idMovie)){
+            $data['error'] = \Config\Database\DBErrorName::$empty;
+            return $data;
+        }
+        $data = array();
+
+        $type = new \Models\Type();
+        $type = $type->deleteTypesForMovie($idMovie);
+        if(isset($type['error'])) {
+            $data['error'] = $type['error'];
+            return $data;
+        }
+        if(isset($type['messages']))
+            $data['messages'] = $type['messages'];
+
+        $actor = new \Models\Actor();
+        $actor = $actor->deleteActorsForMovie($idMovie);
+        if(isset($actor['error'])) {
+            $data['error'] = $actor['error'];
+            return $data;
+        }
+        if(isset($actor['messages']))
+            $data['messages'] = $actor['messages'];
+
+        $production = new \Models\Production();
+        $production = $production->deleteProductionsForMovie($idMovie);
+        if(isset($production['error'])) {
+            $data['error'] = $production['error'];
+            return $data;
+        }
+        if(isset($production['messages']))
+            $data['messages'] = $production['messages'];
+
+        $genre = new \Models\Genre();
+        $genre = $genre->deleteGenresForMovie($idMovie);
+        if(isset($genre['error'])) {
+            $data['error'] = $genre['error'];
+            return $data;
+        }
+        if(isset($genre['messages']))
+            $data['messages'] = $genre['messages'];
+
+        $movie = $this->deleteOnlyMovie($idMovie);
+        if(isset($movie['error'])) {
+            $data['error'] = $movie['error'];
+            return $data;
+        }
+        if(isset($movie['messages']))
+            $data['messages'] = $movie['messages'];
+        return $data;
+    }
+
+    private function addOnlyMovie($title, $releaseDate, $age, $durationTime, $cover, $description){
+        if($this->pdo === null){
+            $data['error'] = \Config\Database\DBErrorName::$connection;
+            return $data;
+        }
+        if(is_null($title) || is_null($releaseDate) || is_null($age) || is_null($durationTime) || is_null($cover)
+            || is_null($description)){
+            $data['error'] = \Config\Database\DBErrorName::$empty;
+            return $data;
+        }
+        $data = array();
+        try{
+            $query = '           
+                INSERT INTO '.\Config\Database\DBConfig::$tableMovie.' ('.\Config\Database\DBConfig\Movie::$Title.',
+                                                                        '.\Config\Database\DBConfig\Movie::$ReleaseDate.',
+                                                                        '.\Config\Database\DBConfig\Movie::$Age.',
+                                                                        '.\Config\Database\DBConfig\Movie::$DurationTime.',
+                                                                        '.\Config\Database\DBConfig\Movie::$Cover.',
+                                                                        '.\Config\Database\DBConfig\Movie::$Description.')
+                VALUES (:title, :releaseDate, :age, :durationTime, :cover, :description)
+            ';
+            $stmt = $this->pdo->prepare($query);
+            $stmt->bindValue(':title' , $title , PDO::PARAM_STR);
+            $stmt->bindValue(':releaseDate' , $releaseDate , PDO::PARAM_STR);
+            $stmt->bindValue(':age' , $age , PDO::PARAM_INT);
+            $stmt->bindValue(':durationTime' , $durationTime , PDO::PARAM_INT);
+            $stmt->bindValue(':cover' , $cover , PDO::PARAM_STR);
+            $stmt->bindValue(':description' , $description , PDO::PARAM_STR);
+            $result = $stmt->execute();
+            if($result === true){
+                $data['message'] = "Udało sie dodać film.";
+                $data['idMovie'] =$this->pdo->lastInsertId();
+            }
+            else{
+                $data['error'] = "Nie udało się dodać.";
+            }
+            $stmt->closeCursor();
+        }
+        catch(\PDOException $e){
+            $data['error'] = \Config\Database\DBErrorName::$query." TUTAJ 3";
+        }
+        return $data;
+    }
+
+    private function deleteOnlyMovie($idMovie){
+        if($this->pdo === null){
+            $data['error'] = \Config\Database\DBErrorName::$connection;
+            return $data;
+        }
+        if(is_null($idMovie)){
+            $data['error'] = \Config\Database\DBErrorName::$empty;
+            return $data;
+        }
+        $data = array();
+        try{
+            $query = '           
+                DELETE FROM '.\Config\Database\DBConfig::$tableMovie.' 
+                WHERE '.\Config\Database\DBConfig::$tableMovie.'.'.\Config\Database\DBConfig\Movie::$IdMovie.' = :idMovie
+            ';
+            $stmt = $this->pdo->prepare($query);
+            $stmt->bindValue(':idMovie' , $idMovie , PDO::PARAM_INT);
+            $result = $stmt->execute();
+            if($result === true){
+                $data['message'] = "Udało sie usunąć.";
+                $data['idMovie'] =$this->pdo->lastInsertId();
+            }
+            else{
+                $data['error'] = "Nie udało się usunąć.";
+            }
+            $stmt->closeCursor();
+        }
+        catch(\PDOException $e){
+            $data['error'] = \Config\Database\DBErrorName::$query;
+        }
+        return $data;
+    }
 }
