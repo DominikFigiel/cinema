@@ -60,13 +60,5 @@
     {/foreach}
     {/foreach}
     {/foreach}
-
-    <!-- Pamiętać usunąć -->
-    {if isset($error)}
-    <div>
-        <h4 class="h4">{$error}</h4>
-    </div>
-    {/if}
-
 </div>
 {/block}
