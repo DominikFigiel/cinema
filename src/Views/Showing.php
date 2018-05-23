@@ -19,7 +19,7 @@ class Showing extends View {
                 $this->set('setDate', $date);
         }
         else {
-            $this->set('setDate', date('Y-m-d h:i:s', strtotime(date('Y-m-d h:i:s', time()). ' + 2 days')));
+            $this->set('setDate', date('Y-m-d h:i:s', strtotime(date('Y-m-d h:i:s', time()). ' + 0 days')));
         }
 
         $model = $this->getModel('Showing');

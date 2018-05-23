@@ -325,6 +325,14 @@ class Movie extends Model {
         }
         if(isset($movie['messages']))
             $data['messages'] = $movie['messages'];
+
+        $deleteCover = $this->deleteCoverForMovie(((string)$idMovie).".jpg");
+        if(isset($deleteCover['message'])){
+            $data['message'] = $deleteCover['message'];
+        }
+        if(isset($deleteCover['error']))
+            $data['error'] = $deleteCover['error'];
+
         return $data;
     }
 
@@ -349,22 +357,72 @@ class Movie extends Model {
                                                                         '.\Config\Database\DBConfig\Movie::$Description.')
                 VALUES (:title, :releaseDate, :age, :durationTime, :cover, :description)
             ';
+
             $stmt = $this->pdo->prepare($query);
             $stmt->bindValue(':title' , $title , PDO::PARAM_STR);
             $stmt->bindValue(':releaseDate' , $releaseDate , PDO::PARAM_STR);
             $stmt->bindValue(':age' , $age , PDO::PARAM_INT);
             $stmt->bindValue(':durationTime' , $durationTime , PDO::PARAM_INT);
-            $stmt->bindValue(':cover' , $cover , PDO::PARAM_STR);
+            $stmt->bindValue(':cover' , 'Cover' , PDO::PARAM_STR);
             $stmt->bindValue(':description' , $description , PDO::PARAM_STR);
             $result = $stmt->execute();
             if($result === true){
                 $data['message'] = "Udało sie dodać film.";
-                $data['idMovie'] =$this->pdo->lastInsertId();
+                $data['idMovie'] = $this->pdo->lastInsertId();
+
+                $imagePath = "resources/images/covers/";
+                $info = pathinfo($cover['imageName']);
+                $ext = strtolower($info['extension']);
+                if(is_uploaded_file($cover['imageTemp'])) {
+                    if(move_uploaded_file($cover['imageTemp'], $imagePath.((string)$data['idMovie']).".".$ext)) {
+                        //$data['message'] = "Sussecfully uploaded your image.";
+                        $this->updateCoverNameOnMovie($data['idMovie'] , $data['idMovie']);
+                    }
+                    else {
+                        //$data['message'] = "Failed to move your image.";
+                    }
+                }
+                else {
+                    //$data['message'] = "Failed to upload your image.";
+                }
             }
             else{
                 $data['error'] = "Nie udało się dodać.";
             }
             $stmt->closeCursor();
+        }
+        catch(\PDOException $e){
+            $data['error'] = \Config\Database\DBErrorName::$query." TUTAJ 3";
+        }
+        return $data;
+    }
+
+    private function updateCoverNameOnMovie($idMovie, $coverName){
+        if($this->pdo === null){
+            $data['error'] = \Config\Database\DBErrorName::$connection;
+            return $data;
+        }
+        if(is_null($idMovie) || is_null($coverName)){
+            $data['error'] = \Config\Database\DBErrorName::$empty;
+            return $data;
+        }
+        $data = array();
+        try {
+            $query = '           
+                UPDATE '.\Config\Database\DBConfig::$tableMovie.'
+                SET '.\Config\Database\DBConfig\Movie::$Cover.' = :coverName
+                WHERE '.\Config\Database\DBConfig::$tableMovie.'.'.\Config\Database\DBConfig\Movie::$IdMovie.' = :idMovie
+            ';
+            $stmt = $this->pdo->prepare($query);
+            $stmt->bindValue(':idMovie' , $idMovie , PDO::PARAM_INT);
+            $stmt->bindValue(':coverName' , $coverName , PDO::PARAM_STR);
+            $result = $stmt->execute();
+            if($result === true) {
+                $data['message'] = "Udało sie zaktualizować nazwę okladki.";
+            }
+            else{
+                $data['error'] = "Nie udało się zaktualizować nazwy okladki.";
+            }
         }
         catch(\PDOException $e){
             $data['error'] = \Config\Database\DBErrorName::$query." TUTAJ 3";
@@ -402,6 +460,20 @@ class Movie extends Model {
         catch(\PDOException $e){
             $data['error'] = \Config\Database\DBErrorName::$query;
         }
+        return $data;
+    }
+
+    private function deleteCoverForMovie($name){
+        if(is_null($name)){
+            $data['error'] = \Config\Database\DBErrorName::$empty;
+            return $data;
+        }
+        $data = array();
+        $imagePath = "resources/images/covers/";
+        if(unlink($imagePath."".$name))
+            $data['message'] = "Udało się usunąć okladke.";
+        else
+            $data['error'] = "Nie udalo sie usunac okladaki.";
         return $data;
     }
 }

@@ -2,7 +2,7 @@
 {block name="content"}
 <div class="container col-lg-12 col-md-12" xmlns:>
     <h1 class="h4 text-center text-info">Dodanie filmu</h1>
-        <form class="container cent col-lg-offset-3 col-lg-6 col-md-offset-3 col-md-6" action="http://{$smarty.server.HTTP_HOST}{$subdir}Zarządzanie/Filmy/Dodawanie" id="formularz" method="post">
+        <form class="container cent col-lg-offset-3 col-lg-6 col-md-offset-3 col-md-6" action="http://{$smarty.server.HTTP_HOST}{$subdir}Zarządzanie/Filmy/Dodawanie" id="formularz" method="post" enctype='multipart/form-data'>
             <div class="form-group">
                 <label for="Title">Tytuł filmu</label>
                 <input type="text" class="form-control" name="Title" id="Title" placeholder="Podaj tytuł filmu" required="required"/>
@@ -36,6 +36,10 @@
                     <option value="{$production[\Config\Database\DBConfig\Production::$IdProduction]}">{$production[\Config\Database\DBConfig\Production::$Country]}</option>
                     {/foreach}
                 </select>
+            </div>
+            <div class="form-group">
+                <label for="Cover">Okładka</label>
+                <input type="file" name="Cover"  class="form-control" id="Cover" required="required" placeholder=".jpg .jpeg" accept="image/jpeg"/>
             </div>
             <div class="form-group">
                 <label for="Description">Opis filmu</label>
