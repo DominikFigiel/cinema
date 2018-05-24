@@ -140,7 +140,7 @@ class Showing extends View {
 
 
         //Pobranie filmów
-        $movies = $model->getMovies();
+        $movies = $model->getMoviesForAdd();
         $this->set('movies' , $movies['movies']);
         //Ustawienie domyślnego filmu
         if(count($movies['movies']) > 0)

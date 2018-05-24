@@ -336,6 +336,58 @@ class Movie extends Model {
         return $data;
     }
 
+    public function editMovie($idMovie, $title, $releaseDate, $age, $durationTime, $idGenres, $idProductions, $description, $cover = null){
+        $data = array();
+        if(is_null($idMovie) || is_null($title) || is_null($releaseDate) || is_null($age) || is_null($durationTime)
+            || is_null($description) || is_null($idGenres) || is_null($idProductions)){
+            $data['error'] = \Config\Database\DBErrorName::$empty;
+            return $data;
+        }
+        $onlyMovie = $this->editOnlyMovieForId($idMovie, $title, $releaseDate, $age, $durationTime, $description, $cover);
+        if(isset($onlyMovie['message']))
+            $data['message'] = $onlyMovie['message'];
+        if(isset($onlyMovie['error']))
+            $data['error'] = $onlyMovie['error']."Tutaj 5";
+
+        $production = new \Models\Production();
+        $productions = $production->deleteProductionsForMovie($idMovie);
+        if(isset($productions['error'])) {
+            $data['error'] = $productions['error']."Tutaj 4";
+            return $data;
+        }
+        if(isset($productions['messages']))
+            $data['messages'] = $productions['messages'];
+
+        $productions = $production->addProductionsForMovie($idMovie , $idProductions);
+        if (isset($productions['error'])) {
+            $data['error'] = $productions['error']."Tutaj 3";
+            return $data;
+        }
+        if(isset($productionss['message'])) {
+            $data['message'] = $productions['message'];
+        }
+
+        $genre = new \Models\Genre();
+        $genres = $genre->deleteGenresForMovie($idMovie);
+        if(isset($genres['error'])) {
+            $data['error'] = $genres['error']."Tutaj 2";
+            return $data;
+        }
+        if(isset($genres['messages']))
+            $data['messages'] = $genres['messages'];
+
+        $genres = $genre->addGenresForMovie($idMovie, $idGenres);
+        if (isset($genres['error'])) {
+            $data['error'] = $genres['error']."Tutaj";
+            return $data;
+        }
+        if(isset($genres['message'])) {
+            $data['message'] = $genres['message'];
+        }
+
+        return $data;
+    }
+
     private function addOnlyMovie($title, $releaseDate, $age, $durationTime, $description, $cover = null){
         if($this->pdo === null){
             $data['error'] = \Config\Database\DBErrorName::$connection;
@@ -396,7 +448,61 @@ class Movie extends Model {
             $stmt->closeCursor();
         }
         catch(\PDOException $e){
-            $data['error'] = \Config\Database\DBErrorName::$query." TUTAJ 3";
+            $data['error'] = \Config\Database\DBErrorName::$query;
+        }
+        return $data;
+    }
+
+    private function editOnlyMovieForId($idMovie, $title, $releaseDate, $age, $durationTime, $description, $cover = null){
+        if($this->pdo === null){
+            $data['error'] = \Config\Database\DBErrorName::$connection;
+            return $data;
+        }
+        if(is_null($idMovie) || is_null($title) || is_null($releaseDate) || is_null($age) || is_null($durationTime)
+            || is_null($description)){
+            $data['error'] = \Config\Database\DBErrorName::$empty;
+            return $data;
+        }
+        $data = array();
+        try{
+            $query = '           
+                UPDATE '.\Config\Database\DBConfig::$tableMovie.' 
+                SET '.\Config\Database\DBConfig\Movie::$Title.' = :title,
+                    '.\Config\Database\DBConfig\Movie::$ReleaseDate.' = :releaseDate,
+                    '.\Config\Database\DBConfig\Movie::$Age.' = :age,
+                    '.\Config\Database\DBConfig\Movie::$DurationTime.' = :durationTime,
+                    '.\Config\Database\DBConfig\Movie::$Description.' = :description
+               WHERE '.\Config\Database\DBConfig::$tableMovie.'.'.\Config\Database\DBConfig\Movie::$IdMovie.' = :idMovie
+            ';
+            var_dump($query);
+            $stmt = $this->pdo->prepare($query);
+            $stmt->bindValue(':idMovie' , $idMovie , PDO::PARAM_INT);
+            $stmt->bindValue(':title' , $title , PDO::PARAM_STR);
+            $stmt->bindValue(':releaseDate' , $releaseDate , PDO::PARAM_STR);
+            $stmt->bindValue(':age' , $age , PDO::PARAM_INT);
+            $stmt->bindValue(':durationTime' , $durationTime , PDO::PARAM_INT);
+            $stmt->bindValue(':description' , $description , PDO::PARAM_STR);
+            $result = $stmt->execute();
+            if($result){
+                $imagePath = "resources/images/covers/";
+                if($cover != null) {
+                    $info = pathinfo($cover['imageName']);
+                    $ext = strtolower($info['extension']);
+                    $this->deleteCoverForMovie($imagePath.((string)$idMovie) . "." . $ext);
+                    if (is_uploaded_file($cover['imageTemp'])) {
+                        if (move_uploaded_file($cover['imageTemp'], $imagePath . ((string)$idMovie) . "." . $ext)) {
+                            //$data['message'] = "Sussecfully uploaded your image.";
+                        } else {
+                            //$data['message'] = "Failed to move your image.";
+                        }
+                    } else {
+                        //$data['message'] = "Failed to upload your image.";
+                    }
+                }
+            }
+        }
+        catch(\PDOException $e){
+            $data['error'] = \Config\Database\DBErrorName::$query;
         }
         return $data;
     }
@@ -429,7 +535,7 @@ class Movie extends Model {
             }
         }
         catch(\PDOException $e){
-            $data['error'] = \Config\Database\DBErrorName::$query." TUTAJ 3";
+            $data['error'] = \Config\Database\DBErrorName::$query;
         }
         return $data;
     }

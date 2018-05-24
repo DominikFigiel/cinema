@@ -327,6 +327,35 @@ class Showing extends Model {
         return $data;
     }
 
+    public function getMoviesForAdd(){
+        if($this->pdo === null){
+            $data['error'] = \Config\Database\DBErrorName::$connection;
+            return $data;
+        }
+        $data = array();
+        $data['movies'] = array();
+        try{
+            $query = '
+                    SELECT * 
+                    FROM `'.\Config\Database\DBConfig::$tableMovie.'`
+                    WHERE EXISTS (SELECT *
+                                  FROM `'.\Config\Database\DBConfig::$tableMovieType.'`
+                                  WHERE `'.\Config\Database\DBConfig::$tableMovieType.'`.`'.\Config\Database\DBConfig\MovieType::$IdMovie.'` = 
+                                            `'.\Config\Database\DBConfig::$tableMovie.'`.`'.\Config\Database\DBConfig\Movie::$IdMovie.'`)
+                    ORDER BY `'.\Config\Database\DBConfig::$tableMovie.'`.`'.\Config\Database\DBConfig\Movie::$Title.'` ASC
+            ';
+            $stmt = $this->pdo->prepare($query);
+            $stmt->execute();
+            $movies = $stmt->fetchAll();
+            $data['movies'] = $movies;
+            $stmt->closeCursor();
+        }
+        catch(\PDOException $e){
+            $data['error'] = \Config\Database\DBErrorName::$query;
+        }
+        return $data;
+    }
+
     public function getType(){
         if($this->pdo === null){
             $data['error'] = \Config\Database\DBErrorName::$connection;
