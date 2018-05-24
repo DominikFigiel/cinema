@@ -91,8 +91,8 @@ class Movie extends Controller {
             $Genre = $_POST['Genre'];
             $Productions = $_POST['Production'];
             $movie = $model->addMovie($_POST['Title'], $_POST['ReleaseDate'], $_POST['Age'],
-                                        $_POST['DurationTime'], $cover, $_POST['Description'],
-                                        $Genre, $Productions);
+                                        $_POST['DurationTime'], $_POST['Description'],
+                                        $Genre, $Productions, $cover);
             if(isset($movie['message'])){
                 \Tools\Session::set('message', $movie['message']);
             }
@@ -110,16 +110,29 @@ class Movie extends Controller {
         if(\Tools\Access::islogin()) {
             $model = $this->getModel('Movie');
 
+            //Edytujemy okładkę
+            if(file_exists("resources/images/covers/".$_POST['idMovie'].".jpg"))
+                rename("resources/images/covers/".$_POST['idMovie'].".jpg", "resources/images/covers/tmp.jpg");
+
             //Najpierw usuwamy
             //$this->deleteMovie($_POST['idMovie']);
             $model->deleteMovie($_POST['idMovie']);
 
             //Później dodajemy
+            $cover = null;
+            if(isset($_FILES['Cover']) && $_FILES['Cover']['name'] != "" &&
+                $_FILES['Cover']['type'] != "" && $_FILES['Cover']['tmp_name'] != "") {
+                $cover = array();
+                $cover['imageName'] = $_FILES['Cover']['name'];
+                $cover['type'] = $_FILES['Cover']['type'];
+                $cover['imageTemp'] = $_FILES['Cover']['tmp_name'];
+                var_dump("Weszło");
+            }
             $Genre = $_POST['Genre'];
             $Productions = $_POST['Production'];
             $movie = $model->addMovie($_POST['Title'], $_POST['ReleaseDate'], $_POST['Age'],
-                $_POST['DurationTime'], "COVER", $_POST['Description'],
-                $Genre, $Productions);
+                $_POST['DurationTime'], $_POST['Description'],
+                $Genre, $Productions, $cover);
             if(isset($movie['message'])){
                 \Tools\Session::set('message', "Udało się edytować film.");
             }

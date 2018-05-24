@@ -2,7 +2,7 @@
 {block name="content"}
 <div class="container col-lg-12 col-md-12" xmlns:>
     <h1 class="h4 text-center text-info">Edycja filmu</h1>
-    <form class="container cent col-lg-offset-3 col-lg-6 col-md-offset-3 col-md-6" action="http://{$smarty.server.HTTP_HOST}{$subdir}Zarządzanie/Filmy/Edytowanie/" method="post">
+    <form class="container cent col-lg-offset-3 col-lg-6 col-md-offset-3 col-md-6" action="http://{$smarty.server.HTTP_HOST}{$subdir}Zarządzanie/Filmy/Edytowanie/" method="post" enctype='multipart/form-data'>
         <input id="idMovie" name="idMovie" value="{$id}" hidden/>
         <div class="form-group">
             <label for="Title">Tytuł filmu</label>
@@ -37,6 +37,14 @@
                 <option value="{$production[\Config\Database\DBConfig\Production::$IdProduction]}" {foreach from=$productionsChecked item=$productionChecked}{if $production[\Config\Database\DBConfig\Production::$IdProduction] == $productionChecked[\Config\Database\DBConfig\Production::$IdProduction]}selected{/if}{/foreach}>{$production[\Config\Database\DBConfig\Production::$Country]}</option>
                 {/foreach}
             </select>
+        </div>
+        <div class="form-group col-lg-4 col-md-4 col-sm-12 col-12">
+            <label for="CoverImg">Okładka</label>
+            <img src="http://{$smarty.server.HTTP_HOST}{$subdir}resources\images\covers\{$id}.jpg" alt="Cover" name="CoverImg" class="form-control" id="CoverImg"required="required">
+        </div>
+        <div class="form-group">
+            <label for="Cover">Inna okładka</label>
+            <input type="file" name="Cover"  class="form-control" id="Cover" placeholder=".jpg .jpeg" accept="image/jpeg"/>
         </div>
         <div class="form-group">
             <label for="Description">Opis filmu</label>

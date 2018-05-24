@@ -225,18 +225,18 @@ class Movie extends Model {
         return $data;
     }
 
-    public function addMovie($title, $releaseDate, $age, $durationTime, $cover, $description, $idGenres, $idProductions){
+    public function addMovie($title, $releaseDate, $age, $durationTime, $description, $idGenres, $idProductions, $cover = null){
         if($this->pdo === null){
             $data['error'] = \Config\Database\DBErrorName::$connection;
             return $data;
         }
-        if(is_null($title) || is_null($releaseDate) || is_null($age) || is_null($durationTime) || is_null($cover)
+        if(is_null($title) || is_null($releaseDate) || is_null($age) || is_null($durationTime)
             || is_null($description) || is_null($idGenres) || is_null($idProductions)){
             $data['error'] = \Config\Database\DBErrorName::$empty;
             return $data;
         }
         $data = array();
-        $movie = $this->addOnlyMovie($title, $releaseDate, $age, $durationTime, $cover, $description);
+        $movie = $this->addOnlyMovie($title, $releaseDate, $age, $durationTime, $description, $cover);
         if(isset($movie['error'])) {
             $data['error'] = $movie['error'];
             return $data;
@@ -336,12 +336,12 @@ class Movie extends Model {
         return $data;
     }
 
-    private function addOnlyMovie($title, $releaseDate, $age, $durationTime, $cover, $description){
+    private function addOnlyMovie($title, $releaseDate, $age, $durationTime, $description, $cover = null){
         if($this->pdo === null){
             $data['error'] = \Config\Database\DBErrorName::$connection;
             return $data;
         }
-        if(is_null($title) || is_null($releaseDate) || is_null($age) || is_null($durationTime) || is_null($cover)
+        if(is_null($title) || is_null($releaseDate) || is_null($age) || is_null($durationTime)
             || is_null($description)){
             $data['error'] = \Config\Database\DBErrorName::$empty;
             return $data;
@@ -371,19 +371,23 @@ class Movie extends Model {
                 $data['idMovie'] = $this->pdo->lastInsertId();
 
                 $imagePath = "resources/images/covers/";
-                $info = pathinfo($cover['imageName']);
-                $ext = strtolower($info['extension']);
-                if(is_uploaded_file($cover['imageTemp'])) {
-                    if(move_uploaded_file($cover['imageTemp'], $imagePath.((string)$data['idMovie']).".".$ext)) {
-                        //$data['message'] = "Sussecfully uploaded your image.";
-                        $this->updateCoverNameOnMovie($data['idMovie'] , $data['idMovie']);
-                    }
-                    else {
-                        //$data['message'] = "Failed to move your image.";
+                if($cover != null) {
+                    $info = pathinfo($cover['imageName']);
+                    $ext = strtolower($info['extension']);
+                    if (is_uploaded_file($cover['imageTemp'])) {
+                        if (move_uploaded_file($cover['imageTemp'], $imagePath . ((string)$data['idMovie']) . "." . $ext)) {
+                            //$data['message'] = "Sussecfully uploaded your image.";
+                            $this->updateCoverNameOnMovie($data['idMovie'], $data['idMovie']);
+                        } else {
+                            //$data['message'] = "Failed to move your image.";
+                        }
+                    } else {
+                        //$data['message'] = "Failed to upload your image.";
                     }
                 }
-                else {
-                    //$data['message'] = "Failed to upload your image.";
+                else if($cover == null && file_exists($imagePath."tmp.jpg")){
+                    rename($imagePath."tmp.jpg", $imagePath.$data['idMovie'].".jpg");
+                    $this->updateCoverNameOnMovie($data['idMovie'], $data['idMovie']);
                 }
             }
             else{
@@ -470,8 +474,12 @@ class Movie extends Model {
         }
         $data = array();
         $imagePath = "resources/images/covers/";
-        if(unlink($imagePath."".$name))
-            $data['message'] = "Udało się usunąć okladke.";
+        if(file_exists($imagePath."".$name)) {
+            if (unlink($imagePath . "" . $name))
+                $data['message'] = "Udało się usunąć okladke.";
+            else
+                $data['error'] = "Nie udalo sie usunac okladaki.";
+        }
         else
             $data['error'] = "Nie udalo sie usunac okladaki.";
         return $data;
