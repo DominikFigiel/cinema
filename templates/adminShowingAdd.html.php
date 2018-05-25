@@ -17,6 +17,11 @@
             {/foreach}
             </select>
         </div>
+        {if isset($check) && $check == true}
+        <div class="form-group text-center">
+            <a href="http://{$smarty.server.HTTP_HOST}{$subdir}Zarządzanie/Filmy/BezTypu/"><span>Jeśli nie widzisz dodanego filmu, nadaj mu typ</span></a>
+        </div>
+        {/if}
         <div class="form-group text-center">
             <label>Typ filmu: </label>
             {foreach $typesForMovie as $typeForMovie}

@@ -43,6 +43,14 @@ class Movie extends View {
 
         $this->set("time", time());
 
+        //Sprawdzenie, czy są filmy bez typu
+        $model = $this->getModel('Movie');
+        $check = $model->checkIfExistsMovieWithoutType();
+        if(isset($check['check']))
+            $this->set("check", $check['check']);
+        else
+            $this->set("check", false);
+
         $this->render('adminMovies');
     }
 

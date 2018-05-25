@@ -5,6 +5,9 @@
     <div class="row">
         <div class="col-lg-12 text-center">
             <a class="btn btn-success" href="http://{$smarty.server.HTTP_HOST}{$subdir}Zarządzanie/Filmy/Dodaj/" title="Dodaj film">Dodaj film</a>
+            {if isset($check) && $check == true}
+            <a class="btn btn-info" href="http://{$smarty.server.HTTP_HOST}{$subdir}Zarządzanie/Filmy/BezTypu/" title="Nadaj filmowi typ">Nadaj filmowi typ</a>
+            {/if}
             <hr/>
         </div>
     </div>

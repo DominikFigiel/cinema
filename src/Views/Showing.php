@@ -210,6 +210,13 @@ class Showing extends View {
         \Tools\Session::set('date' , $date);
         \Tools\Session::set('dubbing' , $dubbing);
 
+        //Sprawdzenie, czy są filmy bez typu
+        $model = $this->getModel('Movie');
+        $check = $model->checkIfExistsMovieWithoutType();
+        if(isset($check['check']))
+            $this->set("check", $check['check']);
+        else
+            $this->set("check", false);
 
         $this->render('adminShowingAdd');
     }
