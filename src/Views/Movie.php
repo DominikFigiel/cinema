@@ -41,6 +41,8 @@ class Movie extends View {
         if(isset($data['movies']))
             $this->set('movies' , $data['movies']);
 
+        $this->set("time", time());
+
         $this->render('adminMovies');
     }
 

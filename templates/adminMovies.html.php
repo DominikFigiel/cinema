@@ -12,7 +12,7 @@
     {foreach $movies as $movie}
     <div id="item" class="row">
         <div class="col-lg-2 col-md-3 col-sm-6 col-6">
-            <img src="http://{$smarty.server.HTTP_HOST}{$subdir}resources/images/covers/{$movie[\Config\Database\DBConfig\Movie::$Cover]}.jpg" class="img-fluid" alt="Responsive image">
+            <img src="http://{$smarty.server.HTTP_HOST}{$subdir}resources/images/covers/{$movie[\Config\Database\DBConfig\Movie::$Cover]}.jpg?nocache={$time}" class="img-fluid" alt="Responsive image">
         </div>
         <div class="col-lg-8 col-md-5 col-sm-6 col-6">
             <p><strong><a class="text-dark" href="http://{$smarty.server.HTTP_HOST}{$subdir}Zarządzanie/Filmy/Szczegóły/{$movie[\Config\Database\DBConfig\Movie::$IdMovie]}"><u>{$movie[\Config\Database\DBConfig\Movie::$Title]}</u></a></strong></p>
