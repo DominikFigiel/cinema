@@ -30,6 +30,20 @@ class Movie extends View {
         $this->render('movieGetOne');
     }
 
+    public function getAllWithoutShowing($data = null){
+        if(isset($data['message']))
+            $this->set('message' , $data['message']);
+        if(isset($data['error']))
+            $this->set('error' , $data['error']);
+
+        $model = $this->getModel('Movie');
+        $data = $model->getAllWithoutShowing();
+        if(isset($data['movies']))
+            $this->set('movies' , $data['movies']);
+
+        $this->render('inCinemaSoon');
+    }
+
     public function adminGetAll($data = null){
         if(isset($data['message']))
             $this->set('message' , $data['message']);

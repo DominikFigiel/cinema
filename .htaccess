@@ -7,6 +7,7 @@ RewriteCond %{REQUEST_FILENAME} !-d
 
 #Movie
 RewriteRule ^Film/?$ index.php?controller=Showing&action=getAll [L]
+RewriteRule ^Wkrótce-w-kinie/?$ index.php?controller=Movie&action=getAllWithoutShowing [L]
 RewriteRule ^Film/Szczegóły/(\d+)/?$ index.php?controller=Movie&action=getOne&id=$1 [L]
 
 #Contact

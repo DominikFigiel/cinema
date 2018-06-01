@@ -32,6 +32,71 @@ class Movie extends Model {
         return $data;
     }
 
+    public function getAllWithoutShowing(){
+        if($this->pdo === null){
+            $data['error'] = \Config\Database\DBErrorName::$connection;
+            return $data;
+        }
+        $data = array();
+        $data['movies'] = array();
+        try{
+            $query = "
+                    SELECT * 
+                    FROM `".\Config\Database\DBConfig::$tableMovie."`
+                    INNER JOIN `".\Config\Database\DBConfig::$tableMovieGenre."`
+                    ON `".\Config\Database\DBConfig::$tableMovie."`.`".\Config\Database\DBConfig\Movie::$IdMovie."`
+                    = `".\Config\Database\DBConfig::$tableMovieGenre."`.`".\Config\Database\DBConfig\MovieGenre::$IdMovie."`
+                    INNER JOIN `".\Config\Database\DBConfig::$tableGenre."`
+                    ON `".\Config\Database\DBConfig::$tableGenre."`.`".\Config\Database\DBConfig\Genre::$IdGenre."`
+                    = `".\Config\Database\DBConfig::$tableMovieGenre."`.`".\Config\Database\DBConfig\MovieGenre::$IdGenre."`
+                    INNER JOIN `".\Config\Database\DBConfig::$tableMovieProduction."`
+                    ON `".\Config\Database\DBConfig::$tableMovie."`.`".\Config\Database\DBConfig\Movie::$IdMovie."`
+                    = `".\Config\Database\DBConfig::$tableMovieProduction."`.`".\Config\Database\DBConfig\MovieProduction::$IdMovie."`
+                    INNER JOIN `".\Config\Database\DBConfig::$tableProduction."`
+                    ON `".\Config\Database\DBConfig::$tableProduction."`.`".\Config\Database\DBConfig\Production::$IdProduction."`
+                    = `".\Config\Database\DBConfig::$tableMovieProduction."`.`".\Config\Database\DBConfig\MovieProduction::$IdProduction."`
+                    WHERE NOT EXISTS(
+                        SELECT *
+                        FROM `".\Config\Database\DBConfig::$tableShowing."`
+                        INNER JOIN `".\Config\Database\DBConfig::$tableMovieType."`
+                        ON `".\Config\Database\DBConfig::$tableShowing."`.`".\Config\Database\DBConfig\Showing::$IdMovieType."` =
+                            `".\Config\Database\DBConfig::$tableMovieType."`.`".\Config\Database\DBConfig\MovieType::$IdMovieType."`
+                        WHERE `".\Config\Database\DBConfig::$tableMovie."`.`".\Config\Database\DBConfig\Movie::$IdMovie."` =
+                              `".\Config\Database\DBConfig::$tableMovieType."`.`".\Config\Database\DBConfig\MovieType::$IdMovie."`
+                    ) AND (
+                        (`".\Config\Database\DBConfig::$tableMovie."`.`".\Config\Database\DBConfig\Movie::$ReleaseDate."`
+                        > (NOW() - INTERVAL '30' DAY))
+                    )
+            ";
+            $query .= 'ORDER BY `'.\Config\Database\DBConfig::$tableMovie.'`.`'.\Config\Database\DBConfig\Movie::$Title.'` , 
+                                `'.\Config\Database\DBConfig::$tableProduction.'`.`'.\Config\Database\DBConfig\Production::$Country.'`,
+                                `'.\Config\Database\DBConfig::$tableGenre.'`.`'.\Config\Database\DBConfig\Genre::$GenreName.'` ASC';
+            $stmt = $this->pdo->query($query);
+            $movies = $stmt->fetchAll();
+            $stmt->closeCursor();
+
+            if($movies && !empty($movies)) {
+                $data['movies'] = array();
+                foreach ($movies as $movie){
+                    if(!isset($data['movies'][$movie[\Config\Database\DBConfig\Movie::$IdMovie]]))
+                        $data['movies'][$movie[\Config\Database\DBConfig\Movie::$IdMovie]] = $movie;
+                    if(!isset( $data['movies'][$movie[\Config\Database\DBConfig\Movie::$IdMovie]]['genres'][$movie[\Config\Database\DBConfig\Genre::$GenreName]])) {
+                        $data['movies'][$movie[\Config\Database\DBConfig\Movie::$IdMovie]]['genres'][$movie[\Config\Database\DBConfig\Genre::$GenreName]] = null;
+                        $data['movies'][$movie[\Config\Database\DBConfig\Movie::$IdMovie]]['genres'][$movie[\Config\Database\DBConfig\Genre::$GenreName]] = count($data['movies'][$movie[\Config\Database\DBConfig\Movie::$IdMovie]]['genres']);
+                    }
+                    if(!isset($data['movies'][$movie[\Config\Database\DBConfig\Movie::$IdMovie]]['productions'][$movie[\Config\Database\DBConfig\Production::$Country]])) {
+                        $data['movies'][$movie[\Config\Database\DBConfig\Movie::$IdMovie]]['productions'][$movie[\Config\Database\DBConfig\Production::$Country]] = null;
+                        $data['movies'][$movie[\Config\Database\DBConfig\Movie::$IdMovie]]['productions'][$movie[\Config\Database\DBConfig\Production::$Country]] = count($data['movies'][$movie[\Config\Database\DBConfig\Movie::$IdMovie]]['productions']);
+                    }
+                }
+            }
+        }
+        catch(\PDOException $e){
+            $data['error'] = \Config\Database\DBErrorName::$query;
+        }
+        return $data;
+    }
+
     public function getOne($id){
         if($this->pdo === null){
             $data['error'] = \Config\Database\DBErrorName::$connection;
