@@ -164,7 +164,7 @@ class Reservation extends Model {
         return $data;
     }
 
-    public function getAll($date = null, $firstName = null, $lastName = null){
+    public function getAll($date = null, $firstName = null, $lastName = null, $email = null, $mobilePhone = null){
         $data = array();
         if($this->pdo === null){
             $data['error'] = \Config\Database\DBErrorName::$connection;
@@ -192,13 +192,23 @@ class Reservation extends Model {
             $date2 = date_format($date2 , 'Y-m-d H:i:s');
         }
 
-        if($firstName !== null){
-            $firstName = '%'.$firstName.'%';
+        if($firstName === null){
+            $firstName = "";
         }
+        $firstName = '%'.$firstName.'%';
 
-        if($lastName !== null){
-            $lastName = '%'.$lastName.'%';
+        if($lastName === null){
+            $lastName = "";
         }
+        $lastName = '%'.$lastName.'%';
+        if($email === null){
+            $email = "";
+        }
+        $email = '%'.$email.'%';
+        if($mobilePhone === null){
+            $mobilePhone = "";
+        }
+        $mobilePhone = '%'.$mobilePhone.'%';
 
         try {
             $query = '
@@ -229,26 +239,21 @@ class Reservation extends Model {
                 ON `'.\Config\Database\DBConfig::$tableLanguageVersion.'`.`'.\Config\Database\DBConfig\LanguageVersion::$IdLanguageVersion.'` =
                     `'.\Config\Database\DBConfig::$tableShowing.'`.`'.\Config\Database\DBConfig\Showing::$IdLanguageVersion.'`  
             ';
-            if($date === null && $firstName === null)
-                $query .= '
-                    WHERE `'.\Config\Database\DBConfig::$tableShowing.'`.`'.\Config\Database\DBConfig\Showing::$DateTime.'` > NOW()
-                ';
-            else if ($date !== null && $firstName === null){
-                $query .= '
-                    WHERE `'.\Config\Database\DBConfig::$tableShowing.'`.`'.\Config\Database\DBConfig\Showing::$DateTime .'` 
-                          BETWEEN :date1 AND :date2
-                ';
-            }
-            else if ($date === null && $firstName !== null){
+            if($date === null)
                 $query .= "
-                    WHERE `".\Config\Database\DBConfig::$tableShowing."`.`".\Config\Database\DBConfig\Showing::$DateTime."` > NOW()
+                    WHERE (`".\Config\Database\DBConfig::$tableShowing."`.`".\Config\Database\DBConfig\Showing::$DateTime."` > NOW())
                     AND (`".\Config\Database\DBConfig::$tableUser."`.`".\Config\Database\DBConfig\User::$FirstName."` LIKE :firstName)
+                    AND (`".\Config\Database\DBConfig::$tableUser."`.`".\Config\Database\DBConfig\User::$LastName."` LIKE :lastName)
+                    AND (`".\Config\Database\DBConfig::$tableUser."`.`".\Config\Database\DBConfig\User::$Email."` LIKE :email)
+                    AND (`".\Config\Database\DBConfig::$tableUser."`.`".\Config\Database\DBConfig\User::$MobilePhone."` LIKE :mobilePhone)
                 ";
-            }
-            else if ($date !== null && $firstName !== null){
+            else{
                 $query .= "
-                    WHERE (`".\Config\Database\DBConfig::$tableShowing."`.`".\Config\Database\DBConfig\Showing::$DateTime."` BETWEEN :date1 AND :date2)
+                    WHERE (`".\Config\Database\DBConfig::$tableShowing."`.`".\Config\Database\DBConfig\Showing::$DateTime ."` BETWEEN :date1 AND :date2)
                     AND (`".\Config\Database\DBConfig::$tableUser."`.`".\Config\Database\DBConfig\User::$FirstName."` LIKE :firstName)
+                    AND (`".\Config\Database\DBConfig::$tableUser."`.`".\Config\Database\DBConfig\User::$LastName."` LIKE :lastName)
+                    AND (`".\Config\Database\DBConfig::$tableUser."`.`".\Config\Database\DBConfig\User::$Email."` LIKE :email)
+                    AND (`".\Config\Database\DBConfig::$tableUser."`.`".\Config\Database\DBConfig\User::$MobilePhone."` LIKE :mobilePhone)
                 ";
             }
             $query .= '
@@ -266,6 +271,12 @@ class Reservation extends Model {
             }
             if($firstName !== null){
                 $stmt->bindValue(':lastName' , $lastName , PDO::PARAM_STR);
+            }
+            if($email !== null){
+                $stmt->bindValue(':email' , $email , PDO::PARAM_STR);
+            }
+            if($mobilePhone !== null){
+                $stmt->bindValue(':mobilePhone' , $mobilePhone , PDO::PARAM_STR);
             }
             $stmt->execute();
             $reservations = $stmt->fetchAll();

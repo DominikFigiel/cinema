@@ -91,16 +91,21 @@ function setCookieDubbing(cname) {
     location.reload();
 }
 
-function searchReservation(firstName, lastName) {
+function searchReservation(firstName, lastName, email, mobilePhone) {
     firstName = document.getElementById(firstName).value;
     lastName = document.getElementById(lastName).value;
-    //if(firstName !== "")
-        setCookie('firstName', firstName);
-    //else
-        //deleteAllCookieFor(firstName);
-    //if(lastName !== "")
-        setCookie('lastName', lastName);
-    //else
-        //deleteAllCookieFor(lastName);
+    email = document.getElementById(email).value;
+    mobilePhone = document.getElementById(mobilePhone).value;
+    setCookie('firstName', firstName);
+    setCookie('lastName', lastName);
+    setCookie('email', email);
+    setCookie('mobilePhone', mobilePhone);
     location.reload();
+}
+
+function clearSearchReservation() {
+    setCookie('firstName', '');
+    setCookie('lastName', '');
+    setCookie('email', '');
+    setCookie('mobilePhone', '');
 }

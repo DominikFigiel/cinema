@@ -139,9 +139,21 @@ class Reservation extends Controller {
             if(isset($_COOKIE["firstName"]) && !is_null($_COOKIE["firstName"]) && $_COOKIE["firstName"] !== '') {
                 $firstName = $_COOKIE["firstName"];
             }
+            $lastName = null;
+            if(isset($_COOKIE["lastName"]) && !is_null($_COOKIE["lastName"]) && $_COOKIE["lastName"] !== '') {
+                $lastName = $_COOKIE["lastName"];
+            }
+            $email = null;
+            if(isset($_COOKIE["email"]) && !is_null($_COOKIE["email"]) && $_COOKIE["email"] !== '') {
+                $email = $_COOKIE["email"];
+            }
+            $mobilePhone = null;
+            if(isset($_COOKIE["mobilePhone"]) && !is_null($_COOKIE["mobilePhone"]) && $_COOKIE["mobilePhone"] !== '') {
+                $mobilePhone = $_COOKIE["mobilePhone"];
+            }
 
             $view = $this->getView('Reservation');
-            $view->searchAdmin($data, $date, $firstName);
+            $view->searchAdmin($data, $date, $firstName, $lastName, $email, $mobilePhone);
 
             \Tools\Session::clear('message');
             \Tools\Session::clear('error');

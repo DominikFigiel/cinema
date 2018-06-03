@@ -24,9 +24,14 @@
     <div class="row">
         <div class="col-lg-12 text-center">
             <p class="lead">Dane użytkownika</p>
-            <input type="text" value="{if isset($firstName) && $firstName !== null}{$firstName}{/if}" name="firstName" id="firstName" placeholder="Imię"/>
-            <input type="text" value="" name="lastName" id="lastName" placeholder="Nazwisko"/>
-            <button onclick="searchReservation('firstName', 'lastName')" class="btn btn-outline-primary">Szukaj</button>
+            <form>
+                <input type="text" value="{if isset($firstName) && $firstName !== null}{$firstName}{/if}" name="firstName" id="firstName" placeholder="Imię"/>
+                <input type="text" value="{if isset($lastName) && $lastName !== null}{$lastName}{/if}" name="lastName" id="lastName" placeholder="Nazwisko"/>
+                <input type="email" value="{if isset($email) && $email !== null}{$email}{/if}" name="email" id="email" placeholder="Email"/>
+                <input type="number" value="{if isset($mobilePhone) && $mobilePhone !== null}{$mobilePhone}{/if}" name="mobilePhone" id="mobilePhone" placeholder="Numer telefonu"/>
+                <button type="submit" onclick="searchReservation('firstName', 'lastName', 'email', 'mobilePhone')" class="btn btn-outline-primary">Szukaj</button>
+                <button type="reset" onclick="clearSearchReservation()" class="btn btn-outline-danger">Wyczyść</button>
+            </form>
             <hr/>
         </div>
     </div>
