@@ -1,12 +1,11 @@
-{extends file="templates/globalTemplate.html.php"}
-{block name="body"}
-<!-- Treść strony -->
+{extends file="templates/adminGlobalTemplate.html.php"}
+{block name="content"}
 <div class="container mb-5">
 
     <!-- Kalendarz -->
     <div class="row">
         <div class="col-lg-12 text-center">
-            <h1 class="mt-5">Repertuar</h1>
+            <h1 class="h4 text-center">Zarządzanie rezerwacjami</h1>
             {if isset($calendar)}
             <p class="lead">Kalendarz</p>
             {foreach from=$calendar key=$i item=$day}

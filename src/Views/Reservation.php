@@ -51,12 +51,15 @@ class Reservation extends View {
             $this->set('places', $places);
         }
 
+        if(\Tools\Access::islogin())
+            $this->set('admin', true);
+
         $this->set('idShowing', $id);
 
         $this->render('reservationPlaces');
     }
 
-    public function userData($id, $places){
+    public function userData($id, $places, $data = null){
         if(isset($data['message']))
             $this->set('message' , $data['message']);
         if(isset($data['error']))
@@ -70,6 +73,54 @@ class Reservation extends View {
         $this->set('idShowing', $id);
 
         $this->render('reservationUserData');
+    }
+
+    //-------------------- Admin -----------------------------------
+
+    public function getAllAdmin($data = null, $date = null, $type = null){
+        if(isset($data['message']))
+            $this->set('message' , $data['message']);
+        if(isset($data['error']))
+            $this->set('error' , $data['error']);
+
+        if($date != null) {
+            if(is_numeric($date))
+                $this->set('setDate', date('Y-m-d h:i:s', strtotime(date('Y-m-d h:i:s', time()). ' + '.$date.' days')));
+            else
+                $this->set('setDate', $date);
+        }
+        else {
+            $this->set('setDate', date('Y-m-d h:i:s', strtotime(date('Y-m-d h:i:s', time()). ' + 0 days')));
+        }
+
+        $model = $this->getModel('Showing');
+        $data = $model->getAll($date , $type);
+        if(isset($data['message']))
+            $this->set('message' , $data['message']);
+        if(isset($data['error']))
+            $this->set('error' , $data['error']);
+        if(isset($data['showings']))
+            $this->set('showings' , $data['showings']);
+
+        $data = $model->getType();
+        if(isset($data['message']))
+            $this->set('message' , $data['message']);
+        if(isset($data['error']))
+            $this->set('error' , $data['error']);
+        if(isset($data['types']))
+            $this->set('types' , $data['types']);
+        if($type == null)
+            $type = 'All';
+        $this->set('typeIn' , $type);
+
+        $calendar = array();
+        $date = date('Y-m-d h:i:s', time());
+        for($i = 0; $i < 7; $i++){
+            $calendar[$i] = date('Y-m-d h:i:s', strtotime($date. ' + '.$i.' days'));
+        }
+        $this->set('calendar' , $calendar);
+
+        $this->render('adminReservations');
     }
 
 }

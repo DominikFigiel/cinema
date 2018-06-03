@@ -164,4 +164,38 @@ class Reservation extends Model {
         return $data;
     }
 
+    public function getAll($idShowing = null, $firstName = null, $lastName = null){
+        $data = array();
+        if($this->pdo === null){
+            $data['error'] = \Config\Database\DBErrorName::$connection;
+            return $data;
+        }
+        $data['reservations'] = array();
+        try {
+            $query = '
+                SELECT * 
+                FROM `'.\Config\Database\DBConfig::$tableReservation.'` 
+                INNER JOIN `'.\Config\Database\DBConfig::$tableUser.'`
+                ON `'.\Config\Database\DBConfig::$tableReservation.'`.`'.\Config\Database\DBConfig\Reservation::$IdUser.'` =
+                    `'.\Config\Database\DBConfig::$tableUser.'`.`'.\Config\Database\DBConfig\User::$IdUser.'`
+            ';
+            if(!is_null($firstName) || !is_null($lastName)){
+                if(!is_null($firstName) && !is_null($lastName)){
+                    $query +='WHERE `'.\Config\Database\DBConfig::$tableUser.'`.`'.\Config\Database\DBConfig\User::$FirstName.'` = :firstName
+                              AND `'.\Config\Database\DBConfig::$tableUser.'`.`'.\Config\Database\DBConfig\User::$LastName.'` = :lastName';
+                }
+            }
+            $query += '';
+            $query += 'ORDER BY `'.\Config\Database\DBConfig::$tableReservation.'`.`'.\Config\Database\DBConfig\Reservation::$IdShowing.'` ASC';
+            $stmt = $this->pdo->prepare($query);
+            $stmt->execute();
+            $data['reservationForShowing'] =  $stmt->fetchAll();
+            $stmt->closeCursor();
+        }
+        catch(\PDOException $e){
+            $data['error'] = \Config\Database\DBErrorName::$query;
+        }
+        return $data;
+    }
+
 }

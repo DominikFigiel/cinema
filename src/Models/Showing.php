@@ -2,6 +2,7 @@
 namespace Models;
 use \PDO;
 use \Models\Reservation;
+use \Models\CinemaHallPlaces;
 class Showing extends Model {
 
     public function getAll($date = null , $type = null , $admin = false, $cinemaHall = null){
@@ -118,17 +119,25 @@ class Showing extends Model {
             $showings = $stmt->fetchAll();
             $stmt->closeCursor();
 
+            $isBusy = new CinemaHallPlaces();
+
             $data['showings'] = array();
             if($showings && !empty($showings)) {
                 foreach ($showings as $showing){
                     if(!isset($data['showings'][$showing[\Config\Database\DBConfig\Movie::$IdMovie]][$showing[\Config\Database\DBConfig\Type::$Type]][$showing[\Config\Database\DBConfig\Showing::$Dubbing]]))
                         $data['showings'][$showing[\Config\Database\DBConfig\Movie::$IdMovie]][$showing[\Config\Database\DBConfig\Type::$Type]][$showing[\Config\Database\DBConfig\Showing::$Dubbing]] = $showing;
-                    $data['showings'][$showing[\Config\Database\DBConfig\Movie::$IdMovie]][$showing[\Config\Database\DBConfig\Type::$Type]][$showing[\Config\Database\DBConfig\Showing::$Dubbing]]['hours'][] = $showing[\Config\Database\DBConfig\Showing::$DateTime];
+                    $data['showings'][$showing[\Config\Database\DBConfig\Movie::$IdMovie]][$showing[\Config\Database\DBConfig\Type::$Type]][$showing[\Config\Database\DBConfig\Showing::$Dubbing]]['hours'][$showing[\Config\Database\DBConfig\Showing::$IdShowing]]['hour'] = $showing[\Config\Database\DBConfig\Showing::$DateTime];
+                    $boolean = $isBusy->isAllBusy($showing[\Config\Database\DBConfig\Showing::$IdShowing]);
+                    if(!isset($boolean['error']))
+                        $data['showings'][$showing[\Config\Database\DBConfig\Movie::$IdMovie]][$showing[\Config\Database\DBConfig\Type::$Type]][$showing[\Config\Database\DBConfig\Showing::$Dubbing]]['hours'][$showing[\Config\Database\DBConfig\Showing::$IdShowing]]['busy'] = $boolean['isAllBusy'];
+                    else{
+                        $data['showings'][$showing[\Config\Database\DBConfig\Movie::$IdMovie]][$showing[\Config\Database\DBConfig\Type::$Type]][$showing[\Config\Database\DBConfig\Showing::$Dubbing]]['hours'][$showing[\Config\Database\DBConfig\Showing::$IdShowing]]['busy'] = null;
+                    }
                 }
             }
         }
         catch(\PDOException $e){
-            $data['error'] = \Config\Database\DBErrorName::$query."\n".$query;
+            $data['error'] = \Config\Database\DBErrorName::$query;
         }
         return $data;
     }

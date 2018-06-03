@@ -5,12 +5,15 @@
     <!-- Wybór sali -->
     <div class="row">
         <div class="col-lg-12 text-center">
-            <h1 class="mt-5">Tytuł:"{$showing[\Config\Database\DBConfig\Movie::$Title]}" <span class="h3">{$showing[\Config\Database\DBConfig\Showing::$DateTime]}</span></h1>
+            <h1 class="mt-5">Tytuł:"{$showing[\Config\Database\DBConfig\Movie::$Title]}" <span class="h3">{$showing[\Config\Database\DBConfig\Showing::$DateTime]|date_format:'%Y-%m-%d %H:%M'}</span></h1>
         </div>
     </div>
     <div class="row">
         <div class="col-lg-12 text-center mb-3">
             <h3 class="h3">Wybierz miejsca</h3>
+            {if isset($admin) && $admin === true}
+            <a href="http://{$smarty.server.HTTP_HOST}{$subdir}Zarządzanie/Rezerwacje/" class="btn btn-outline-danger text-center">Wróć</a>
+            {/if}
         </div>
     </div>
     {if isset($places)}
@@ -23,11 +26,18 @@
                 <div class="d-inline mr-2">
                     <button type="button" onclick="addCookieFor('places', {$column['id']})" class="btn btn-success btn-seat">{$keyColumn}</button>
                 </div>
+                <script type="text/javascript">
+                    addPlace({$column['id']});
+                </script>
                 {else if $places[$keyRow][$keyColumn]['busy'] == false}
                 <div class="d-inline mr-2">
                     <button type="button" onclick="deleteCookieFor('places', {$column['id']})" class="btn btn-primary btn-seat">{$keyColumn}</button>
                 </div>
+                <script type="text/javascript">
+                    addPlace({$column['id']});
+                </script>
                 {else}
+                {assign "busy" true}
                 <div class="d-inline mr-2">
                     <button type="button" class="btn btn-danger btn-seat">{$keyColumn}</button>
                 </div>
@@ -42,6 +52,13 @@
     {/if}
     <div class="row">
         <div class="col-lg-12 text-center mt-3">
+            <button type="button" class="btn btn-danger text-right" onclick="deleteAllCookieFor('places')">Wyczyść</button>
+            {if isset($admin) && $admin === true && !isset($busy)}
+            <button type="button" class="btn btn-primary text-right" onclick="addAllPlacesCookieFor('places')">Zarezerwuj całą salę</button>
+            {/if}
+            {if isset($admin) && $admin === true && isset($busy)}
+            <button type="button" class="btn btn-primary text-right" onclick="addAllPlacesCookieFor('places')">Zarezerwuj resztę miejsc</button>
+            {/if}
             {if isset($placesReservation)}
             <a href="http://{$smarty.server.HTTP_HOST}{$subdir}Rezerwacja/DaneKontaktowe/Seans/{$idShowing}" class="btn btn-primary text-right">Dalej</a>
             {else}

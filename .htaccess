@@ -48,4 +48,7 @@ RewriteRule ^Zarządzanie/Filmy/Edytowanie/?$ index.php?controller=Movie&action=
 RewriteRule ^Zarządzanie/Filmy/BezTypu/?$ index.php?controller=Type&action=getMovieWithoutTypes [L]
 RewriteRule ^Zarządzanie/Filmy/BezTypu/Ustaw/(\d+)?$ index.php?controller=Type&action=setTypeForMovie&id=$1 [L]
 
+#Reservation
+RewriteRule ^Zarządzanie/Rezerwacje/?$ index.php?controller=Reservation&action=getAllAdmin [L]
+
 ErrorDocument 404 http://localhost/Projekty/ProjektZespolowy/cinema/errors/404.html

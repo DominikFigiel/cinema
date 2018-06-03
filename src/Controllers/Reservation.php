@@ -4,7 +4,7 @@ namespace Controllers;
 class Reservation extends Controller {
 
     public function chooseAPlaces($id){
-        if(!\Tools\Access::islogin()) {
+        if(!\Tools\Access::islogin() || \Tools\Access::islogin()) {
             $data = array();
             \Tools\Session::set("navigation", "Movie");
             $view = $this->getView('Reservation');
@@ -26,7 +26,7 @@ class Reservation extends Controller {
     }
 
     public function userData($id){
-        if(!\Tools\Access::islogin()) {
+        if(!\Tools\Access::islogin() || \Tools\Access::islogin()) {
             $data = array();
             \Tools\Session::set("navigation", "Movie");
             $view = $this->getView('Reservation');
@@ -39,7 +39,7 @@ class Reservation extends Controller {
                 $this->redirect('');
 
 
-            $view->userData($id , $_COOKIE['places']);
+            $view->userData($id , $_COOKIE['places'], $data);
             \Tools\Session::clear('message');
             \Tools\Session::clear('error');
         }
@@ -48,15 +48,67 @@ class Reservation extends Controller {
     }
 
     public function reservation(){
-        if(!\Tools\Access::islogin()) {
+        if(!\Tools\Access::islogin() || \Tools\Access::islogin()) {
             if(!isset($_COOKIE['places']))
                 $this->redirect('');
             $model = $this->getModel('Reservation');
             $reservation = $model->reservation($_POST['idShowing'], $_POST['firstName'],
                                                 $_POST['lastName'], $_POST['email'],
                                                 $_POST['mobilePhone'], $_COOKIE['places']);
-
+            setcookie('places' , null, time()+(60*60*1000), "/");
+            if (!\Tools\Access::islogin())
+                $this->redirect('');
+            else {
+                $this->redirect('Zarządzanie/Rezerwacje/');
+            }
+        }
+        else
             $this->redirect('');
+    }
+
+    //---------------------- Admin -----------------------------------
+
+    public function getAllAdmin(){
+        if(\Tools\Access::islogin()) {
+
+            //For reservation places
+            setcookie('places' , null, time()+(60*60*1000), "/");
+
+            $data = array();
+            if (\Tools\Session::is('message'))
+                $data['message'] = \Tools\Session::get('message');
+            if (\Tools\Session::is('error'))
+                $data['error'] = \Tools\Session::get('error');
+            $view = $this->getView('Reservation');
+
+            $data = null;
+            $date = null;
+            $type = null;
+            if (\Tools\Session::is('message'))
+                $data['message'] = \Tools\Session::get('message');
+            if (\Tools\Session::is('error'))
+                $data['error'] = \Tools\Session::get('error');
+            if(isset($_COOKIE["dateGetAll"])) {
+                if(is_numeric($_COOKIE["dateGetAll"])){
+                    $date = date('Y-m-d h:i:s', strtotime( date('Y-m-d h:i:s', time()). ' + '.$_COOKIE["dateGetAll"].' days'));
+                }
+                else {
+                    $date1 = date_create($date);
+                    $date2 = date_create($_COOKIE["dateGetAll"]);
+                    date_date_set($date1, $date2->format('Y'), $date2->format('m'), $date2->format('d'));
+                    $date = $date1;
+                    $date = date_format($date, "Y-m-d H:i:s");
+                }
+            }
+            if(isset($_COOKIE["typeGetAll"])) {
+                $type = $_COOKIE["typeGetAll"];
+                if($type == "All")
+                    $type = null;
+            }
+
+            $view->getAllAdmin($data, $date, $type);
+            \Tools\Session::clear('message');
+            \Tools\Session::clear('error');
         }
         else
             $this->redirect('');

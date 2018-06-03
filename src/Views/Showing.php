@@ -83,10 +83,6 @@ class Showing extends View {
             $this->set('showings', $data['showings']);
         }
 
-
-
-
-
         if($type == null){
             $type = 'All';
         }
