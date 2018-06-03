@@ -164,7 +164,7 @@ class Reservation extends Model {
         return $data;
     }
 
-    public function getAll($date = null, $firstName = null, $lastName = null, $idShowing = null){
+    public function getAll($date = null, $firstName = null, $lastName = null){
         $data = array();
         if($this->pdo === null){
             $data['error'] = \Config\Database\DBErrorName::$connection;
@@ -190,6 +190,14 @@ class Reservation extends Model {
             $date2 = date_create($date);
             date_time_set($date2, 23, 59 ,59);
             $date2 = date_format($date2 , 'Y-m-d H:i:s');
+        }
+
+        if($firstName !== null){
+            $firstName = '%'.$firstName.'%';
+        }
+
+        if($lastName !== null){
+            $lastName = '%'.$lastName.'%';
         }
 
         try {
@@ -221,21 +229,27 @@ class Reservation extends Model {
                 ON `'.\Config\Database\DBConfig::$tableLanguageVersion.'`.`'.\Config\Database\DBConfig\LanguageVersion::$IdLanguageVersion.'` =
                     `'.\Config\Database\DBConfig::$tableShowing.'`.`'.\Config\Database\DBConfig\Showing::$IdLanguageVersion.'`  
             ';
-            /*if(!is_null($firstName) || !is_null($lastName)){
-                if(!is_null($firstName) && !is_null($lastName)){
-                    $query +='WHERE `'.\Config\Database\DBConfig::$tableUser.'`.`'.\Config\Database\DBConfig\User::$FirstName.'` = :firstName
-                              AND `'.\Config\Database\DBConfig::$tableUser.'`.`'.\Config\Database\DBConfig\User::$LastName.'` = :lastName';
-                }
-            }*/
-            if($date === null)
+            if($date === null && $firstName === null)
                 $query .= '
                     WHERE `'.\Config\Database\DBConfig::$tableShowing.'`.`'.\Config\Database\DBConfig\Showing::$DateTime.'` > NOW()
                 ';
-            else{
+            else if ($date !== null && $firstName === null){
                 $query .= '
                     WHERE `'.\Config\Database\DBConfig::$tableShowing.'`.`'.\Config\Database\DBConfig\Showing::$DateTime .'` 
                           BETWEEN :date1 AND :date2
                 ';
+            }
+            else if ($date === null && $firstName !== null){
+                $query .= "
+                    WHERE `".\Config\Database\DBConfig::$tableShowing."`.`".\Config\Database\DBConfig\Showing::$DateTime."` > NOW()
+                    AND (`".\Config\Database\DBConfig::$tableUser."`.`".\Config\Database\DBConfig\User::$FirstName."` LIKE :firstName)
+                ";
+            }
+            else if ($date !== null && $firstName !== null){
+                $query .= "
+                    WHERE (`".\Config\Database\DBConfig::$tableShowing."`.`".\Config\Database\DBConfig\Showing::$DateTime."` BETWEEN :date1 AND :date2)
+                    AND (`".\Config\Database\DBConfig::$tableUser."`.`".\Config\Database\DBConfig\User::$FirstName."` LIKE :firstName)
+                ";
             }
             $query .= '
                 ORDER BY `'.\Config\Database\DBConfig::$tableShowing.'`.`'.\Config\Database\DBConfig\Showing::$DateTime.'` ASC,
@@ -246,6 +260,12 @@ class Reservation extends Model {
             if($date !== null){
                 $stmt->bindValue(':date1' , $date1 , PDO::PARAM_STR);
                 $stmt->bindValue(':date2' , $date2 , PDO::PARAM_STR);
+            }
+            if($firstName !== null){
+                $stmt->bindValue(':firstName' , $firstName , PDO::PARAM_STR);
+            }
+            if($firstName !== null){
+                $stmt->bindValue(':lastName' , $lastName , PDO::PARAM_STR);
             }
             $stmt->execute();
             $reservations = $stmt->fetchAll();
@@ -270,7 +290,7 @@ class Reservation extends Model {
             }
         }
         catch(\PDOException $e){
-            $data['error'] = \Config\Database\DBErrorName::$query." ".$query;
+            $data['error'] = \Config\Database\DBErrorName::$query." ".$query." ".$firstName;
         }
         return $data;
     }

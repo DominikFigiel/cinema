@@ -125,14 +125,14 @@ class Reservation extends View {
         $this->render('adminReservationsAdd');
     }
 
-    public function searchAdmin($data = null, $date = null){
+    public function searchAdmin($data = null, $date = null, $firstName = null){
         if(isset($data['message']))
             $this->set('message' , $data['message']);
         if(isset($data['error']))
             $this->set('error' , $data['error']);
 
         $model = $this->getModel('Reservation');
-        $data = $model->getAll($date);
+        $data = $model->getAll($date, $firstName);
         if(isset($data['message']))
             $this->set('message' , $data['message']);
         if(isset($data['error']))
@@ -149,6 +149,9 @@ class Reservation extends View {
         else {
             $this->set('setDate', null);
         }
+
+        if($firstName !== null)
+            $this->set('firstName', $firstName);
 
         $calendar = array();
         $date = date('Y-m-d h:i:s', time());

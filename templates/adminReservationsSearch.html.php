@@ -20,6 +20,16 @@
         {/if}
     </div>
     <hr/>
+    <!-- Dane użytkownika -->
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            <p class="lead">Dane użytkownika</p>
+            <input type="text" value="{if isset($firstName) && $firstName !== null}{$firstName}{/if}" name="firstName" id="firstName" placeholder="Imię"/>
+            <input type="text" value="" name="lastName" id="lastName" placeholder="Nazwisko"/>
+            <button onclick="searchReservation('firstName', 'lastName')" class="btn btn-outline-primary">Szukaj</button>
+            <hr/>
+        </div>
+    </div>
     {if isset($reservations)}
     {foreach from=$reservations item=$reservation key=$k}
     <div class="row">

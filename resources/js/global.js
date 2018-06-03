@@ -90,3 +90,17 @@ function setCookieDubbing(cname) {
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
     location.reload();
 }
+
+function searchReservation(firstName, lastName) {
+    firstName = document.getElementById(firstName).value;
+    lastName = document.getElementById(lastName).value;
+    //if(firstName !== "")
+        setCookie('firstName', firstName);
+    //else
+        //deleteAllCookieFor(firstName);
+    //if(lastName !== "")
+        setCookie('lastName', lastName);
+    //else
+        //deleteAllCookieFor(lastName);
+    location.reload();
+}
