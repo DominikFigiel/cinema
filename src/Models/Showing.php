@@ -13,7 +13,6 @@ class Showing extends Model {
         if($date == null)
             $date = date('Y-m-d H:i:s', time());
         if($date != null){
-            //Jeśli data nie jest datą, tylko liczbą, to pobieramy dzisiejszą datę i dodajemy liczbę jako dni
             if(is_numeric($date)){
                 if(count($date) > 5 && $admin == false)
                     $date = 5;
@@ -21,18 +20,13 @@ class Showing extends Model {
                     $date = 0;
                 $date = date('Y-m-d H:i:s', strtotime( date('Y-m-d H:i:s', time()). ' + '.$date.' days'));
             }
-
-            //Ustawienie pierwszej daty
             $date1 = date_create($date);
             date_time_set($date1, 00, 00, 00);
             $date1 = date_format($date1 , 'Y-m-d H:i:s');
-
-            //Ustawienie drugiej daty
             $date2 = date_create($date);
             date_time_set($date2, 23, 59 ,59);
             $date2 = date_format($date2 , 'Y-m-d H:i:s');
         }
-        //$type = '3D';
         $data = array();
         $data['showings'] = array();
         try{

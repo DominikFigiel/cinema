@@ -74,11 +74,6 @@ class Reservation extends Controller {
             //For reservation places
             setcookie('places' , null, time()+(60*60*1000), "/");
 
-            $data = array();
-            if (\Tools\Session::is('message'))
-                $data['message'] = \Tools\Session::get('message');
-            if (\Tools\Session::is('error'))
-                $data['error'] = \Tools\Session::get('error');
             $view = $this->getView('Reservation');
 
             $data = null;
@@ -107,6 +102,42 @@ class Reservation extends Controller {
             }
 
             $view->getAllAdmin($data, $date, $type);
+            \Tools\Session::clear('message');
+            \Tools\Session::clear('error');
+        }
+        else
+            $this->redirect('');
+    }
+
+    public function searchAdmin(){
+        if(\Tools\Access::islogin()) {
+
+            //For reservation places
+            setcookie('places' , null, time()+(60*60*1000), "/");
+
+            $data = array();
+            if (\Tools\Session::is('message'))
+                $data['message'] = \Tools\Session::get('message');
+            if (\Tools\Session::is('error'))
+                $data['error'] = \Tools\Session::get('error');
+
+            $date = null;
+            if(isset($_COOKIE["dateGetAll"]) && !is_null($_COOKIE["dateGetAll"]) && $_COOKIE["dateGetAll"] !== '') {
+                if(is_numeric($_COOKIE["dateGetAll"])){
+                    $date = date('Y-m-d h:i:s', strtotime( date('Y-m-d h:i:s', time()). ' + '.$_COOKIE["dateGetAll"].' days'));
+                }
+                else {
+                    $date1 = date_create($date);
+                    $date2 = date_create($_COOKIE["dateGetAll"]);
+                    date_date_set($date1, $date2->format('Y'), $date2->format('m'), $date2->format('d'));
+                    $date = $date1;
+                    $date = date_format($date, "Y-m-d H:i:s");
+                }
+            }
+
+            $view = $this->getView('Reservation');
+            $view->searchAdmin($data, $date);
+
             \Tools\Session::clear('message');
             \Tools\Session::clear('error');
         }

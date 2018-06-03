@@ -2,7 +2,12 @@
 {block name="content"}
 <div class="container">
     <h1 class="h4 text-center">Zarządzanie seansami</h1>
-    <a class="btn btn-success" href="http://{$smarty.server.HTTP_HOST}{$subdir}Zarządzanie/Seanse/Dodaj">Dodaj seans</a>
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            <a class="btn btn-success" href="http://{$smarty.server.HTTP_HOST}{$subdir}Zarządzanie/Seanse/Dodaj">Dodaj seans</a>
+            <hr/>
+        </div>
+    </div>
     <!-- Kalendarz -->
     <div class="row">
         <div class="col-lg-12 text-center">

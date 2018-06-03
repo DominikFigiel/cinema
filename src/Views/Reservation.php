@@ -120,7 +120,45 @@ class Reservation extends View {
         }
         $this->set('calendar' , $calendar);
 
-        $this->render('adminReservations');
+        $this->set('reservation', true);
+
+        $this->render('adminReservationsAdd');
+    }
+
+    public function searchAdmin($data = null, $date = null){
+        if(isset($data['message']))
+            $this->set('message' , $data['message']);
+        if(isset($data['error']))
+            $this->set('error' , $data['error']);
+
+        $model = $this->getModel('Reservation');
+        $data = $model->getAll($date);
+        if(isset($data['message']))
+            $this->set('message' , $data['message']);
+        if(isset($data['error']))
+            $this->set('error' , $data['error']);
+        if(isset($data['reservations']))
+            $this->set('reservations' , $data['reservations']);
+
+        if($date != null) {
+            if(is_numeric($date))
+                $this->set('setDate', date('Y-m-d h:i:s', strtotime(date('Y-m-d h:i:s', time()). ' + '.$date.' days')));
+            else
+                $this->set('setDate', $date);
+        }
+        else {
+            $this->set('setDate', null);
+        }
+
+        $calendar = array();
+        $date = date('Y-m-d h:i:s', time());
+        for($i = 0; $i < 7; $i++){
+            $calendar[$i] = date('Y-m-d h:i:s', strtotime($date. ' + '.$i.' days'));
+        }
+        $this->set('calendar' , $calendar);
+
+        $this->set('reservation', false);
+        $this->render('adminReservationsSearch');
     }
 
 }

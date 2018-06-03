@@ -164,13 +164,34 @@ class Reservation extends Model {
         return $data;
     }
 
-    public function getAll($idShowing = null, $firstName = null, $lastName = null){
+    public function getAll($date = null, $firstName = null, $lastName = null, $idShowing = null){
         $data = array();
         if($this->pdo === null){
             $data['error'] = \Config\Database\DBErrorName::$connection;
             return $data;
         }
         $data['reservations'] = array();
+
+        $date1 = null;
+        $date2 = null;
+        if($date != null){
+            if(is_numeric($date)){
+                if(count($date) > 5)
+                    $date = 5;
+                elseif (count($date) < 0)
+                    $date = 0;
+                $date = date('Y-m-d H:i:s', strtotime( date('Y-m-d H:i:s', time()). ' + '.$date.' days'));
+            }
+
+            $date1 = date_create($date);
+            date_time_set($date1, 00, 00, 00);
+            $date1 = date_format($date1 , 'Y-m-d H:i:s');
+
+            $date2 = date_create($date);
+            date_time_set($date2, 23, 59 ,59);
+            $date2 = date_format($date2 , 'Y-m-d H:i:s');
+        }
+
         try {
             $query = '
                 SELECT * 
@@ -178,22 +199,78 @@ class Reservation extends Model {
                 INNER JOIN `'.\Config\Database\DBConfig::$tableUser.'`
                 ON `'.\Config\Database\DBConfig::$tableReservation.'`.`'.\Config\Database\DBConfig\Reservation::$IdUser.'` =
                     `'.\Config\Database\DBConfig::$tableUser.'`.`'.\Config\Database\DBConfig\User::$IdUser.'`
+                INNER JOIN `'.\Config\Database\DBConfig::$tableShowing.'`
+                ON `'.\Config\Database\DBConfig::$tableShowing.'`.`'.\Config\Database\DBConfig\Showing::$IdShowing.'` =
+                    `'.\Config\Database\DBConfig::$tableReservation.'`.`'.\Config\Database\DBConfig\Reservation::$IdShowing.'`
+                INNER JOIN `'.\Config\Database\DBConfig::$tableReservationPlace.'`
+                ON `'.\Config\Database\DBConfig::$tableReservationPlace.'`.`'.\Config\Database\DBConfig\ReservationPlace::$IdReservation.'` =
+                    `'.\Config\Database\DBConfig::$tableReservation.'`.`'.\Config\Database\DBConfig\Reservation::$IdReservation.'`
+                INNER JOIN `'.\Config\Database\DBConfig::$tablePlace.'`
+                ON `'.\Config\Database\DBConfig::$tableReservationPlace.'`.`'.\Config\Database\DBConfig\ReservationPlace::$IdPlace.'` =
+                    `'.\Config\Database\DBConfig::$tablePlace.'`.`'.\Config\Database\DBConfig\Place::$IdPlace.'`
+                INNER JOIN `'.\Config\Database\DBConfig::$tableMovieType.'`
+                ON `'.\Config\Database\DBConfig::$tableMovieType.'`.`'.\Config\Database\DBConfig\MovieType::$IdMovieType.'` =
+                    `'.\Config\Database\DBConfig::$tableShowing.'`.`'.\Config\Database\DBConfig\Showing::$IdMovieType.'`
+                INNER JOIN `'.\Config\Database\DBConfig::$tableMovie.'`
+                ON `'.\Config\Database\DBConfig::$tableMovie.'`.`'.\Config\Database\DBConfig\Movie::$IdMovie.'` =
+                    `'.\Config\Database\DBConfig::$tableMovieType.'`.`'.\Config\Database\DBConfig\MovieType::$IdMovie.'`
+                INNER JOIN `'.\Config\Database\DBConfig::$tableType.'`
+                ON `'.\Config\Database\DBConfig::$tableType.'`.`'.\Config\Database\DBConfig\Type::$IdType.'` =
+                    `'.\Config\Database\DBConfig::$tableMovieType.'`.`'.\Config\Database\DBConfig\MovieType::$IdType.'`
+                INNER JOIN `'.\Config\Database\DBConfig::$tableLanguageVersion.'`
+                ON `'.\Config\Database\DBConfig::$tableLanguageVersion.'`.`'.\Config\Database\DBConfig\LanguageVersion::$IdLanguageVersion.'` =
+                    `'.\Config\Database\DBConfig::$tableShowing.'`.`'.\Config\Database\DBConfig\Showing::$IdLanguageVersion.'`  
             ';
-            if(!is_null($firstName) || !is_null($lastName)){
+            /*if(!is_null($firstName) || !is_null($lastName)){
                 if(!is_null($firstName) && !is_null($lastName)){
                     $query +='WHERE `'.\Config\Database\DBConfig::$tableUser.'`.`'.\Config\Database\DBConfig\User::$FirstName.'` = :firstName
                               AND `'.\Config\Database\DBConfig::$tableUser.'`.`'.\Config\Database\DBConfig\User::$LastName.'` = :lastName';
                 }
+            }*/
+            if($date === null)
+                $query .= '
+                    WHERE `'.\Config\Database\DBConfig::$tableShowing.'`.`'.\Config\Database\DBConfig\Showing::$DateTime.'` > NOW()
+                ';
+            else{
+                $query .= '
+                    WHERE `'.\Config\Database\DBConfig::$tableShowing.'`.`'.\Config\Database\DBConfig\Showing::$DateTime .'` 
+                          BETWEEN :date1 AND :date2
+                ';
             }
-            $query += '';
-            $query += 'ORDER BY `'.\Config\Database\DBConfig::$tableReservation.'`.`'.\Config\Database\DBConfig\Reservation::$IdShowing.'` ASC';
+            $query .= '
+                ORDER BY `'.\Config\Database\DBConfig::$tableShowing.'`.`'.\Config\Database\DBConfig\Showing::$DateTime.'` ASC,
+                          `' . \Config\Database\DBConfig::$tablePlace . '`.`' . \Config\Database\DBConfig\Place::$Row . '` ASC,
+                          `' . \Config\Database\DBConfig::$tablePlace . '`.`' . \Config\Database\DBConfig\Place::$Column . '` ASC
+            ';
             $stmt = $this->pdo->prepare($query);
+            if($date !== null){
+                $stmt->bindValue(':date1' , $date1 , PDO::PARAM_STR);
+                $stmt->bindValue(':date2' , $date2 , PDO::PARAM_STR);
+            }
             $stmt->execute();
-            $data['reservationForShowing'] =  $stmt->fetchAll();
+            $reservations = $stmt->fetchAll();
             $stmt->closeCursor();
+            $data['reservations'] = array();
+            if($reservations && !empty($reservations)) {
+                foreach ($reservations as $reservation) {
+                    if(!isset($data['reservations'][$reservation[\Config\Database\DBConfig\Showing::$IdShowing]])) {
+                        $data['reservations'][$reservation[\Config\Database\DBConfig\Showing::$IdShowing]]['data'] = $reservation;
+                    }
+                    if(!isset($data['reservations'][$reservation[\Config\Database\DBConfig\Showing::$IdShowing]]['reservationData'][$reservation[\Config\Database\DBConfig\User::$IdUser]]['userData'])){
+                        $data['reservations'][$reservation[\Config\Database\DBConfig\Showing::$IdShowing]]['reservationData'][$reservation[\Config\Database\DBConfig\User::$IdUser]]['userData']['firstName'] = $reservation[\Config\Database\DBConfig\User::$FirstName];
+                        $data['reservations'][$reservation[\Config\Database\DBConfig\Showing::$IdShowing]]['reservationData'][$reservation[\Config\Database\DBConfig\User::$IdUser]]['userData']['lastName'] = $reservation[\Config\Database\DBConfig\User::$LastName];
+                        $data['reservations'][$reservation[\Config\Database\DBConfig\Showing::$IdShowing]]['reservationData'][$reservation[\Config\Database\DBConfig\User::$IdUser]]['userData']['email'] = $reservation[\Config\Database\DBConfig\User::$Email];
+                        $data['reservations'][$reservation[\Config\Database\DBConfig\Showing::$IdShowing]]['reservationData'][$reservation[\Config\Database\DBConfig\User::$IdUser]]['userData']['mobilePhone'] = $reservation[\Config\Database\DBConfig\User::$MobilePhone];
+                    }
+                    if(!isset($data['reservations'][$reservation[\Config\Database\DBConfig\Showing::$IdShowing]]['reservationData'][$reservation[\Config\Database\DBConfig\User::$IdUser]]['reservations'][$reservation[\Config\Database\DBConfig\Place::$IdPlace]])){
+                        $data['reservations'][$reservation[\Config\Database\DBConfig\Showing::$IdShowing]]['reservationData'][$reservation[\Config\Database\DBConfig\User::$IdUser]]['reservations'][$reservation[\Config\Database\DBConfig\Place::$IdPlace]]['column'] = $reservation[\Config\Database\DBConfig\Place::$Column];
+                        $data['reservations'][$reservation[\Config\Database\DBConfig\Showing::$IdShowing]]['reservationData'][$reservation[\Config\Database\DBConfig\User::$IdUser]]['reservations'][$reservation[\Config\Database\DBConfig\Place::$IdPlace]]['row'] = $reservation[\Config\Database\DBConfig\Place::$Row];
+                    }
+                }
+            }
         }
         catch(\PDOException $e){
-            $data['error'] = \Config\Database\DBErrorName::$query;
+            $data['error'] = \Config\Database\DBErrorName::$query." ".$query;
         }
         return $data;
     }
