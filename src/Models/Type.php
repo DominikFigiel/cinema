@@ -88,4 +88,38 @@ class Type extends Model {
         return $data;
     }
 
+    public function addTypeForMovie($idMovie, $idType){
+        if($this->pdo === null){
+            $data['error'] = \Config\Database\DBErrorName::$connection;
+            return $data;
+        }
+        if(is_null($idMovie) || is_null($idType)){
+            $data['error'] = \Config\Database\DBErrorName::$empty;
+            return $data;
+        }
+        $data = array();
+        try{
+            $query = '           
+                INSERT INTO '.\Config\Database\DBConfig::$tableMovieType.' 
+                ('.\Config\Database\DBConfig\MovieType::$IdMovie.', '.\Config\Database\DBConfig\MovieType::$IdType.')
+                VALUES (:idMovie, :idType)
+            ';
+            $stmt = $this->pdo->prepare($query);
+            $stmt->bindValue(':idMovie' , $idMovie , PDO::PARAM_INT);
+            $stmt->bindValue(':idType' , $idType , PDO::PARAM_INT);
+            $result = $stmt->execute();
+            if($result === true){
+                $data['message'] = "Udało sie dodać.";
+            }
+            else{
+                $data['error'] = "Nie udało się dodać.";
+            }
+            $stmt->closeCursor();
+        }
+        catch(\PDOException $e){
+            $data['error'] = \Config\Database\DBErrorName::$query;
+        }
+        return $data;
+    }
+
 }
