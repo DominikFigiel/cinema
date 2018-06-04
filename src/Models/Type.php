@@ -61,4 +61,31 @@ class Type extends Model {
         return $data;
     }
 
+    public function setTypeForMovie($idMovie, $idTypes){
+        $data = array();
+        if(is_null($idMovie) || is_null($idTypes)){
+            $data['error'] = \Config\Database\DBErrorName::$empty;
+            return $data;
+        }
+        if(is_numeric($idTypes)){
+            $type = $this->addTypeForMovie($idMovie, $idTypes);
+            if(isset($type['error']))
+                $data['error'] = $type['error'];
+            if(isset($type['message']))
+                $data['message'] = $type['message'];
+        }
+        elseif (is_array($idTypes)){
+            foreach ($idTypes as $idType){
+                $type = $this->addTypeForMovie($idMovie, $idType);
+                if(isset($type['error'])) {
+                    $data['error'] = $type['error'];
+                    return $data;
+                }
+                if(isset($type['message']))
+                    $data['message'] = $type['message'];
+            }
+        }
+        return $data;
+    }
+
 }
