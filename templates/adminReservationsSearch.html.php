@@ -60,6 +60,7 @@
                     <th>Email</th>
                     <th>Telefon</th>
                     <th>Wybrane miejsca <span class="text-info text-right">Rząd/kolumna</span></th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -69,8 +70,8 @@
                     <td>{$user['userData']['lastName']}</td>
                     <td>{$user['userData']['email']}</td>
                     <td>{$user['userData']['mobilePhone']}</td>
-                    <td>{foreach from=$user['reservations'] item=$res key=$resK}<button disabled class="btn-primary">{$res['row']}/{$res['column']}</button> {/foreach}
-                    </td>
+                    <td>{foreach from=$user['reservations'] item=$res key=$resK}<button disabled class="btn-primary">{$res['row']}/{$res['column']}</button> {/foreach}</td>
+                    <td><a href="http://{$smarty.server.HTTP_HOST}{$subdir}Zarządzanie/Rezerwacje/Usun/{$userK}/" class="btn btn-danger">Usuń</a></td>
                 </tr>
                 {/foreach}
             </tbody>

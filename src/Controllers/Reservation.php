@@ -162,4 +162,19 @@ class Reservation extends Controller {
             $this->redirect('');
     }
 
+    public function deleteReservation($idUser){
+        if(\Tools\Access::islogin()) {
+            $model = $this->getModel('Reservation');
+            $reservation = $model->deleteReservationForUser($idUser);
+            if(isset($reservation['error']))
+                \Tools\Session::set('error', $reservation['error']);
+            if(isset($reservation['message']))
+                \Tools\Session::set('message', $reservation['message']);
+
+            $this->redirect('Zarządzanie/Rezerwacje/Szukaj/');
+        }
+        else
+            $this->redirect('');
+    }
+
 }

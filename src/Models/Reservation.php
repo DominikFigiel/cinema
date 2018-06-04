@@ -301,7 +301,45 @@ class Reservation extends Model {
             }
         }
         catch(\PDOException $e){
-            $data['error'] = \Config\Database\DBErrorName::$query." ".$query." ".$firstName;
+            $data['error'] = \Config\Database\DBErrorName::$query;
+        }
+        return $data;
+    }
+
+    public function deleteReservationForUser($idUSer){
+        $data = array();
+        if($this->pdo === null){
+            $data['error'] = \Config\Database\DBErrorName::$connection;
+            return $data;
+        }
+        if(is_null($idUSer)){
+            $data['error'] = \Config\Database\DBErrorName::$empty;
+            return $data;
+        }
+        try {
+            $query ="
+                DELETE `".\Config\Database\DBConfig::$tableReservation."`, `".\Config\Database\DBConfig::$tableReservationPlace."`
+                FROM `".\Config\Database\DBConfig::$tableReservation."`
+                INNER JOIN `".\Config\Database\DBConfig::$tableReservationPlace."`
+                ON `".\Config\Database\DBConfig::$tableReservation."`.`".\Config\Database\DBConfig\Reservation::$IdReservation."` =
+                   `".\Config\Database\DBConfig::$tableReservationPlace."`.`".\Config\Database\DBConfig\ReservationPlace::$IdReservation."` 
+                WHERE `".\Config\Database\DBConfig::$tableReservation."`.`".\Config\Database\DBConfig\Reservation::$IdUser."` = :idUser
+                AND `".\Config\Database\DBConfig::$tableReservationPlace."`.`".\Config\Database\DBConfig\ReservationPlace::$IdReservation."` =
+                    `".\Config\Database\DBConfig::$tableReservation."`.`".\Config\Database\DBConfig\Reservation::$IdReservation."`
+            ";
+            $stmt = $this->pdo->prepare($query);
+            $stmt->bindValue(':idUser' , $idUSer , PDO::PARAM_STR);
+            $result = $stmt->execute();
+            $stmt->closeCursor();
+            if ($result) {
+                $data['message'] = "Usunięto rezerwacje poprawnie.";
+            }
+            else {
+                $data['error'] = "Nie udało się poprawnie usunąć rezerwacji.";
+            }
+        }
+        catch(\PDOException $e){
+            $data['error'] = \Config\Database\DBErrorName::$query." ".$query." ".$idUSer;
         }
         return $data;
     }
