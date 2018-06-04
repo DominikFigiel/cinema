@@ -704,6 +704,16 @@ $countries[] = 'Hiszpania';
 $countries[] = 'Niemcy';
 $countries[] = 'Wielka Brytania';
 $countries[] = 'Rosja';
+$countries[] = 'Czechy';
+$countries[] = 'Słowacja';
+$countries[] = 'Ukraina';
+$countries[] = 'Norwegia';
+$countries[] = 'Austria';
+$countries[] = 'Australia';
+$countries[] = 'Nowa Zelandia';
+$countries[] = 'Brazylia';
+$countries[] = 'Argentyna';
+$countries[] = 'Meksyk';
 
 try
 {
@@ -2003,73 +2013,73 @@ $Showings = array();
 $Showings[] = array(
     'IdMovieType' => '1',
     'IdCinemaHall' => '1',
-    'DateTime' => '2018-04-26 20:00:00',
+    'DateTime' => '2018-06-07 20:00:00',
     'Dubbing' => '1',
     'IdLanguageVersion' => '1');
 $Showings[] = array(
     'IdMovieType' => '1',
     'IdCinemaHall' => '1',
-    'DateTime' => '2018-04-26 19:00:00',
+    'DateTime' => '2018-06-07 19:00:00',
     'Dubbing' => '1',
     'IdLanguageVersion' => '1');
 $Showings[] = array(
     'IdMovieType' => '2',
     'IdCinemaHall' => '1',
-    'DateTime' => '2018-04-26 21:00:00',
+    'DateTime' => '2018-06-07 21:00:00',
     'Dubbing' => '1',
     'IdLanguageVersion' => '2');
 $Showings[] = array(
     'IdMovieType' => '3',
     'IdCinemaHall' => '1',
-    'DateTime' => '2018-04-26 20:00:00',
+    'DateTime' => '2018-06-07 20:00:00',
     'Dubbing' => '1',
     'IdLanguageVersion' => '1');
 $Showings[] = array(
     'IdMovieType' => '3',
     'IdCinemaHall' => '1',
-    'DateTime' => '2018-04-26 22:00:00',
+    'DateTime' => '2018-06-07 22:00:00',
     'Dubbing' => '1',
     'IdLanguageVersion' => '1');
 $Showings[] = array(
     'IdMovieType' => '4',
     'IdCinemaHall' => '1',
-    'DateTime' => '2018-04-26 19:00:00',
+    'DateTime' => '2018-06-07 19:00:00',
     'Dubbing' => '1',
     'IdLanguageVersion' => '2');
 $Showings[] = array(
     'IdMovieType' => '5',
     'IdCinemaHall' => '1',
-    'DateTime' => '2018-04-26 18:00:00',
+    'DateTime' => '2018-06-07 18:00:00',
     'Dubbing' => '1',
     'IdLanguageVersion' => '1');
 $Showings[] = array(
     'IdMovieType' => '6',
     'IdCinemaHall' => '1',
-    'DateTime' => '2018-04-26 20:00:00',
+    'DateTime' => '2018-06-07 20:00:00',
     'Dubbing' => '1',
     'IdLanguageVersion' => '2');
 $Showings[] = array(
     'IdMovieType' => '6',
     'IdCinemaHall' => '1',
-    'DateTime' => '2018-04-26 19:00:00',
+    'DateTime' => '2018-06-07 19:00:00',
     'Dubbing' => '0',
     'IdLanguageVersion' => '2');
 $Showings[] = array(
     'IdMovieType' => '5',
     'IdCinemaHall' => '1',
-    'DateTime' => '2018-04-26 18:00:00',
+    'DateTime' => '2018-06-07 18:00:00',
     'Dubbing' => '0',
     'IdLanguageVersion' => '1');
 $Showings[] = array(
     'IdMovieType' => '6',
     'IdCinemaHall' => '1',
-    'DateTime' => '2018-04-26 20:00:00',
+    'DateTime' => '2018-06-07 20:00:00',
     'Dubbing' => '0',
     'IdLanguageVersion' => '2');
 $Showings[] = array(
     'IdMovieType' => '6',
     'IdCinemaHall' => '1',
-    'DateTime' => '2018-04-26 19:00:00',
+    'DateTime' => '2018-06-07 19:00:00',
     'Dubbing' => '0',
     'IdLanguageVersion' => '2');
 
@@ -2077,37 +2087,37 @@ $Showings[] = array(
 $Showings[] = array(
     'IdMovieType' => '5',
     'IdCinemaHall' => '1',
-    'DateTime' => '2018-04-27 18:00:00',
+    'DateTime' => '2018-06-08 18:00:00',
     'Dubbing' => '1',
     'IdLanguageVersion' => '1');
 $Showings[] = array(
     'IdMovieType' => '3',
     'IdCinemaHall' => '1',
-    'DateTime' => '2018-04-27 20:00:00',
+    'DateTime' => '2018-06-08 20:00:00',
     'Dubbing' => '1',
     'IdLanguageVersion' => '2');
 $Showings[] = array(
     'IdMovieType' => '2',
     'IdCinemaHall' => '1',
-    'DateTime' => '2018-04-27 19:00:00',
+    'DateTime' => '2018-06-08 19:00:00',
     'Dubbing' => '0',
     'IdLanguageVersion' => '2');
 $Showings[] = array(
     'IdMovieType' => '8',
     'IdCinemaHall' => '1',
-    'DateTime' => '2018-04-27 18:00:00',
+    'DateTime' => '2018-06-08 18:00:00',
     'Dubbing' => '0',
     'IdLanguageVersion' => '1');
 $Showings[] = array(
     'IdMovieType' => '10',
     'IdCinemaHall' => '1',
-    'DateTime' => '2018-04-27 20:00:00',
+    'DateTime' => '2018-06-08 20:00:00',
     'Dubbing' => '0',
     'IdLanguageVersion' => '2');
 $Showings[] = array(
     'IdMovieType' => '7',
     'IdCinemaHall' => '1',
-    'DateTime' => '2018-04-27 19:00:00',
+    'DateTime' => '2018-06-08 19:00:00',
     'Dubbing' => '0',
     'IdLanguageVersion' => '2');
 // Wstawianie
@@ -2129,6 +2139,12 @@ catch(PDOException $e)
     echo \Config\Database\DBErrorName::$noadd;
 }
 
+// Copy covers
+array_map('unlink', glob("resources/images/covers/*"));
+$files = glob('resources/images/covers/*');
+for($i = 1; $i <= 8; $i++){
+    copy('install/resources/images/covers/'.$i.'.jpg', 'resources/images/covers/'.$i.'.jpg');
+}
 
 echo "<b>Instalacja aplikacji zakończona!</b>"
 ?>
