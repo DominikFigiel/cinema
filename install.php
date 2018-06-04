@@ -591,30 +591,10 @@ catch(PDOException $e)
 //Table Admin
 $admins = array();
 $admins[] = array(
-    'login' => 'Marcin',
+    'login' => 'Admin',
     'password' => 'Admin1',
-    'firstName' => 'Marcin',
-    'lastName' => 'Rubach');
-$admins[] = array(
-    'login' => 'Martin',
-    'password' => 'Admin1',
-    'firstName' => 'Martin',
-    'lastName' => 'Haładyn');
-$admins[] = array(
-    'login' => 'Michał',
-    'password' => 'Admin1',
-    'firstName' => 'Michał',
-    'lastName' => 'Andrzejewski');
-$admins[] = array(
-    'login' => 'Dominik',
-    'password' => 'Admin1',
-    'firstName' => 'Dominik',
-    'lastName' => 'Figiel');
-$admins[] = array(
-    'login' => 'Krystian',
-    'password' => 'Admin1',
-    'firstName' => 'Krystian',
-    'lastName' => 'Janczak');
+    'firstName' => 'Admin',
+    'lastName' => 'Admin');
 
 try
 {
@@ -637,14 +617,46 @@ catch(PDOException $e)
 // Table Genre
 $genres = array();
 $genres[] = 'akcja';
+$genres[] = 'animowany';
+$genres[] = 'baśń';
 $genres[] = 'biograficzny';
+$genres[] = 'czarna komedia';
 $genres[] = 'dramat';
+$genres[] = 'dreszczowiec';
+$genres[] = 'dokumentalny';
+$genres[] = 'edukacyjny';
+$genres[] = 'erotyczny';
+$genres[] = 'fabularny';
+$genres[] = 'familijny';
 $genres[] = 'fantastyczny';
+$genres[] = 'fikcja';
+$genres[] = 'gangsterski';
+$genres[] = 'grozy';
+$genres[] = 'historyczny';
 $genres[] = 'horror';
 $genres[] = 'komedia';
+$genres[] = 'kryminalny';
 $genres[] = 'musical';
+$genres[] = 'naukowy';
 $genres[] = 'romantyczny';
+$genres[] = 'polityczny';
+$genres[] = 'postapokaliptyczny';
+$genres[] = 'przygodowy';
+$genres[] = 'przyrodniczy';
+$genres[] = 'psychologiczny';
+$genres[] = 'religijny';
+$genres[] = 'rockowy';
+$genres[] = 'obyczajowy';
+$genres[] = 'samurajski';
 $genres[] = 'sci-fiction';
+$genres[] = 'sensacyjny';
+$genres[] = 'sportowy';
+$genres[] = 'szalona komedia';
+$genres[] = 'sztuki walki';
+$genres[] = 'szpiegowski';
+$genres[] = 'western';
+$genres[] = 'więzienny';
+$genres[] = 'wojenny';
 
 try
 {
