@@ -3,6 +3,32 @@ namespace Models;
 use \PDO;
 class Type extends Model {
 
+    public function getAll(){
+        if($this->pdo === null){
+            $data['error'] = \Config\Database\DBErrorName::$connection;
+            return $data;
+        }
+        $data = array();
+        $data['types'] = array();
+        try{
+            $query = '           
+                SELECT*
+                FROM '.\Config\Database\DBConfig::$tableType.' 
+                ORDER BY '.\Config\Database\DBConfig::$tableType.'.'.\Config\Database\DBConfig\Type::$Type.' ASC
+            ';
+            $stmt = $this->pdo->prepare($query);
+            $result = $stmt->execute();
+            $types = $stmt->fetchAll();
+            if(count($types) > 0)
+                $data['types'] = $types;
+            $stmt->closeCursor();
+        }
+        catch(\PDOException $e){
+            $data['error'] = \Config\Database\DBErrorName::$query;
+        }
+        return $data;
+    }
+
     public function deleteTypesForMovie($idMovie){
         if($this->pdo === null){
             $data['error'] = \Config\Database\DBErrorName::$connection;
