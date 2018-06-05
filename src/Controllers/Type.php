@@ -2,7 +2,7 @@
 namespace Controllers;
 
 class Type extends Controller {
-
+//
     public function getMovieWithoutTypes(){
         if(\Tools\Access::islogin()) {
             $data = array();
