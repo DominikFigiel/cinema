@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="53f4fc4a-7158-4b6d-a4ed-2230f276c3c9" name="Default" comment="">
+    <list default="true" id="53f4fc4a-7158-4b6d-a4ed-2230f276c3c9" name="Default" comment="Updating views">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Models/Production.php" afterPath="$PROJECT_DIR$/src/Models/Production.php" />
     </list>
     <ignored path="$PROJECT_DIR$/vendor/kint-php/kint/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -15,43 +14,12 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Movie.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Models/Movie.php">
+      <file leaf-file-name="Movie.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/Views/Movie.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="529">
-              <caret line="723" column="1" lean-forward="false" selection-start-line="723" selection-start-column="1" selection-end-line="723" selection-end-column="1" />
-              <folding>
-                <element signature="e#24#33#0#PHP" expanded="true" />
-                <marker date="1528300042093" expanded="true" signature="429:487" ph="SELECT * FRO... ${\Config\Database\DBConfig::$tableMovie}" />
-                <marker date="1528300042093" expanded="true" signature="1244:3628" ph="SELECT * FRO... ${\Config\Database\DBConfig::$tableMovie}" />
-                <marker date="1528300042093" expanded="true" signature="2714:3401" ph="SELECT * FRO... ${\Config\Database\DBConfig::$tableShowing}" />
-                <marker date="1528300042093" expanded="true" signature="6315:6449" ph="SELECT * FRO... ${\Config\Database\DBConfig::$tableMovie}" />
-                <marker date="1528300042093" expanded="true" signature="7413:8214" ph="SELECT * FRO... ${\Config\Database\DBConfig::$tableMovie}" />
-                <marker date="1528300042093" expanded="true" signature="9186:9956" ph="SELECT * FRO... ${\Config\Database\DBConfig::$tableMovie}" />
-                <marker date="1528300042093" expanded="true" signature="10938:11870" ph="SELECT * FRO... ${\Config\Database\DBConfig::$tableMovie}" />
-                <marker date="1528300042093" expanded="true" signature="12796:14203" ph="SELECT * FRO... ${\Config\Database\DBConfig::$tableMovie}" />
-                <marker date="1528300042093" expanded="true" signature="16762:18614" ph="SELECT * FRO... ${\Config\Database\DBConfig::$tableMovie}" />
-                <marker date="1528300042093" expanded="true" signature="18208:18592" ph="SELECT * FRO... ${\Config\Database\DBConfig::$tableMovieType}" />
-                <marker date="1528300042093" expanded="true" signature="21175:23027" ph="SELECT * FRO... ${\Config\Database\DBConfig::$tableMovie}" />
-                <marker date="1528300042093" expanded="true" signature="22621:23005" ph="SELECT * FRO... ${\Config\Database\DBConfig::$tableMovieType}" />
-                <marker date="1528300042093" expanded="true" signature="30542:31333" ph="INSERT INTO ${\Config\Database\DBConfig::$tableMovie}... " />
-                <marker date="1528300042093" expanded="true" signature="37988:38165" ph="DELETE FROM " />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Production.php" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/Models/Production.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="529">
-              <caret line="228" column="1" lean-forward="false" selection-start-line="228" selection-start-column="1" selection-end-line="228" selection-end-column="1" />
-              <folding>
-                <marker date="1528300425244" expanded="true" signature="359:422" ph="SELECT * FRO... ${\Config\Database\DBConfig::$tableProduction}" />
-                <marker date="1528300425244" expanded="true" signature="1312:1458" ph="INSERT INTO ${\Config\Database\DBConfig::$tableProduction}... " />
-                <marker date="1528300425244" expanded="true" signature="2586:2903" ph="INSERT INTO ${\Config\Database\DBConfig::$tableMovieProduction}... " />
-                <marker date="1528300425244" expanded="true" signature="3952:4159" ph="DELETE FROM " />
-              </folding>
+              <caret line="125" column="1" lean-forward="false" selection-start-line="125" selection-start-column="1" selection-end-line="125" selection-end-column="1" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -75,6 +43,7 @@
         <option value="$PROJECT_DIR$/src/Controllers/Type.php" />
         <option value="$PROJECT_DIR$/src/Models/Movie.php" />
         <option value="$PROJECT_DIR$/src/Models/Production.php" />
+        <option value="$PROJECT_DIR$/src/Views/Movie.php" />
       </list>
     </option>
   </component>
@@ -135,6 +104,12 @@
               <item name="src" type="2a2b976b:PhpTreeStructureProvider$1" />
               <item name="Models" type="2a2b976b:PhpTreeStructureProvider$1" />
             </path>
+            <path>
+              <item name="cinema" type="b2602c69:ProjectViewProjectNode" />
+              <item name="cinema" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="src" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="Views" type="2a2b976b:PhpTreeStructureProvider$1" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -170,7 +145,7 @@
       <updated>1528137403563</updated>
       <workItem from="1528137405013" duration="1977000" />
       <workItem from="1528297276163" duration="920000" />
-      <workItem from="1528300147649" duration="282000" />
+      <workItem from="1528300147649" duration="359000" />
     </task>
     <task id="LOCAL-00001" summary="Adding 'getAll' method to the 'Type' model.">
       <created>1528137525124</created>
@@ -221,15 +196,21 @@
       <option name="project" value="LOCAL" />
       <updated>1528300370225</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Updating models">
+      <created>1528300439385</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1528300439385</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="3179000" />
+    <option name="totallyTimeSpent" value="3256000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.51865673" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -238,7 +219,7 @@
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32934782" sideWeight="0.4978678" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32934782" sideWeight="0.4978678" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -264,7 +245,8 @@
     <MESSAGE value="Adding changes to templates" />
     <MESSAGE value="Updating .htaccess" />
     <MESSAGE value="Updating controllers" />
-    <option name="LAST_COMMIT_MESSAGE" value="Updating controllers" />
+    <MESSAGE value="Updating models" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updating models" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -399,6 +381,19 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/Models/Production.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="529">
+          <caret line="228" column="1" lean-forward="false" selection-start-line="228" selection-start-column="1" selection-end-line="228" selection-end-column="1" />
+          <folding>
+            <marker date="1528300425244" expanded="true" signature="359:422" ph="SELECT * FRO... ${\Config\Database\DBConfig::$tableProduction}" />
+            <marker date="1528300425244" expanded="true" signature="1312:1458" ph="INSERT INTO ${\Config\Database\DBConfig::$tableProduction}... " />
+            <marker date="1528300425244" expanded="true" signature="2586:2903" ph="INSERT INTO ${\Config\Database\DBConfig::$tableMovieProduction}... " />
+            <marker date="1528300425244" expanded="true" signature="3952:4159" ph="DELETE FROM " />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/Models/Movie.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="529">
@@ -423,16 +418,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Models/Production.php">
+    <entry file="file://$PROJECT_DIR$/src/Views/Movie.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="529">
-          <caret line="228" column="1" lean-forward="false" selection-start-line="228" selection-start-column="1" selection-end-line="228" selection-end-column="1" />
-          <folding>
-            <marker date="1528300425244" expanded="true" signature="359:422" ph="SELECT * FRO... ${\Config\Database\DBConfig::$tableProduction}" />
-            <marker date="1528300425244" expanded="true" signature="1312:1458" ph="INSERT INTO ${\Config\Database\DBConfig::$tableProduction}... " />
-            <marker date="1528300425244" expanded="true" signature="2586:2903" ph="INSERT INTO ${\Config\Database\DBConfig::$tableMovieProduction}... " />
-            <marker date="1528300425244" expanded="true" signature="3952:4159" ph="DELETE FROM " />
-          </folding>
+          <caret line="125" column="1" lean-forward="false" selection-start-line="125" selection-start-column="1" selection-end-line="125" selection-end-column="1" />
+          <folding />
         </state>
       </provider>
     </entry>
