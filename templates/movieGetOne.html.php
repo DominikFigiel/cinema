@@ -18,7 +18,7 @@
             <img src="http://{$smarty.server.HTTP_HOST}{$subdir}resources/images/covers/{$movie[\Config\Database\DBConfig\Movie::$Cover]}.jpg" class="img-fluid" alt="Responsive image">
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-12 pb-5 mt-3 mt-md-0">
-            <p><strong>Gatunek:</strong> {foreach $genres as $genre}{$genre[\Config\Database\DBConfig\Genre::$GenreName]} {/foreach}</p>
+            <p><strong>Gatunek:</strong> {if $genres}{foreach from=$genres key=$k item=$genre}{$genre[\Config\Database\DBConfig\Genre::$GenreName]} {if $k < $genres|count-1}, {else}{/if}{/foreach}{else} Brak informacji{/if}</p>
             <p><strong>Od lat:</strong> {$movie[\Config\Database\DBConfig\Movie::$Age]}</p>
             <p><strong>Czas trwania:</strong> {$movie[\Config\Database\DBConfig\Movie::$DurationTime]} minut</p>
             <p><strong>Produkcja:</strong> {if $productions}{foreach from=$productions key=$k item=$production}{$production[\Config\Database\DBConfig\Production::$Country]} {if $k < $productions|count-1}, {else}{/if}{/foreach}{else} Brak informacji{/if}</p>
@@ -32,7 +32,7 @@
 
     <!-- Aktualny repertuar - link -->
     <div class="text-center pb-4">
-        <a href="http://{$smarty.server.HTTP_HOST}{$subdir}Movie"><button type="button" class="btn btn-primary btn-lg">Zobacz aktualny repertuar</button></a>
+        <a href="http://{$smarty.server.HTTP_HOST}{$subdir}"><button type="button" class="btn btn-primary btn-lg">Zobacz aktualny repertuar</button></a>
     </div>
 
 </div>

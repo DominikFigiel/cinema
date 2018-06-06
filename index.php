@@ -11,10 +11,15 @@ Config\Database\DBConnection::setDBConnection(
 
 if(isset($_GET['controller']))
     $controller = $_GET['controller'];
+else if(\Tools\Access::islogin())
+    $controller = "AdminPanel";
 else
-    $controller = 'Movie';
+    $controller = 'Showing';
+
 if(isset($_GET['action']))
     $action = $_GET['action'];
+else if(\Tools\Access::islogin())
+    $action = "adminPanel";
 else
     $action = 'getAll';
 
@@ -25,7 +30,6 @@ else
 
 $controller = 'Controllers\\'.$controller;
 
-//tworzymy kontroler
 $myController = new $controller();
 $myController->$action($id);
 

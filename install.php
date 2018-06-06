@@ -21,6 +21,50 @@ try {
     exit(1);
 }
 
+//Table Admin
+$query = 'DROP TABLE IF EXISTS `'.DB::$tableAdmin.'`';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$delete_table.DB::$tableAdmin;
+}
+
+//Table ReservationPlace
+$query = 'DROP TABLE IF EXISTS `'.DB::$tableReservationPlace.'`';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$delete_table.DB::$tableReservationPlace;
+}
+
+//Table Reservation
+$query = 'DROP TABLE IF EXISTS `'.DB::$tableReservation.'`';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$delete_table.DB::$tableReservation;
+}
+
+//Table User
+$query = 'DROP TABLE IF EXISTS `'.DB::$tableUser.'`';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$delete_table.DB::$tableUser;
+}
+
 //Table Pricing
 $query = 'DROP TABLE IF EXISTS `'.DB::$tablePricing.'`';
 try
@@ -153,6 +197,17 @@ catch(PDOException $e)
     echo \Config\Database\DBErrorName::$delete_table.DB::$tableProduction;
 }
 
+// Table CinemaHallPlace
+$query = 'DROP TABLE IF EXISTS `'.DB::$tableCinemaHallPlace.'`';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$delete_table.DB::$tableCinemaHallPlace;
+}
+
 // Table CinemaHall
 $query = 'DROP TABLE IF EXISTS `'.DB::$tableCinemaHall.'`';
 try
@@ -164,6 +219,17 @@ catch(PDOException $e)
     echo \Config\Database\DBErrorName::$delete_table.DB::$tableCinemaHall;
 }
 
+// Table Place
+$query = 'DROP TABLE IF EXISTS `'.DB::$tablePlace.'`';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$delete_table.DB::$tablePlace;
+}
+
 // Table LanguageVersion
 $query = 'DROP TABLE IF EXISTS `'.DB::$tableLanguageVersion.'`';
 try
@@ -173,6 +239,23 @@ try
 catch(PDOException $e)
 {
     echo \Config\Database\DBErrorName::$delete_table.DB::$tableLanguageVersion;
+}
+
+// Create table Admin
+$query = 'CREATE TABLE IF NOT EXISTS `'.DB::$tableAdmin.'` (
+        `'.DB\Admin::$idAdmin.'` INT NOT NULL AUTO_INCREMENT,
+        `'.DB\Admin::$login.'` VARCHAR(100) NOT NULL UNIQUE,
+        `'.DB\Admin::$password.'` VARCHAR(100) NOT NULL,
+        `'.DB\Admin::$firstName.'` VARCHAR(100) NOT NULL,
+        `'.DB\Admin::$lastName.'` VARCHAR(100) NOT NULL,
+        PRIMARY KEY ('.DB\Admin::$idAdmin.')) ENGINE=InnoDB;';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$create_table.DB::$tableAdmin;
 }
 
 // Create table Genre
@@ -358,6 +441,40 @@ catch(PDOException $e)
     echo \Config\Database\DBErrorName::$create_table.DB::$tableCinemaHall;
 }
 
+// Create table Place
+$query = 'CREATE TABLE IF NOT EXISTS `'.DB::$tablePlace.'` (
+                                `'.DB\Place::$IdPlace.'` INT NOT NULL AUTO_INCREMENT,
+                                `'.DB\Place::$Column.'` INT NOT NULL,
+                                `'.DB\Place::$Row.'` INT NOT NULL,
+                                PRIMARY KEY ('.DB\Place::$IdPlace.')
+                                ) ENGINE=InnoDB;';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$create_table.DB::$tablePlace;
+}
+
+// Create table CinemaHallPlace
+$query = 'CREATE TABLE IF NOT EXISTS `'.DB::$tableCinemaHallPlace.'` (
+                                `'.DB\CinemaHallPlace::$IdCinemaHallPlace.'` INT NOT NULL AUTO_INCREMENT,
+                                `'.DB\CinemaHallPlace::$IdCinemaHall.'` INT NOT NULL,
+                                `'.DB\CinemaHallPlace::$IdPlace.'` INT NOT NULL,
+                                PRIMARY KEY ('.DB\CinemaHallPlace::$IdCinemaHallPlace.'),
+                                FOREIGN KEY ('.DB\CinemaHallPlace::$IdCinemaHall.') REFERENCES '.DB::$tableCinemaHall.'('.DB\CinemaHall::$IdCinemaHall.') ON DELETE CASCADE,
+                                FOREIGN KEY ('.DB\CinemaHallPlace::$IdPlace.') REFERENCES '.DB::$tablePlace.'('.DB\Place::$IdPlace.') ON DELETE CASCADE
+                                ) ENGINE=InnoDB;';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$create_table.DB::$tableCinemaHallPlace;
+}
+
 // Create table LanguageVersion
 $query = 'CREATE TABLE IF NOT EXISTS `'.DB::$tableLanguageVersion.'` (
                                 `'.DB\LanguageVersion::$IdLanguageVersion.'` INT NOT NULL AUTO_INCREMENT,
@@ -397,7 +514,7 @@ $query = 'CREATE TABLE IF NOT EXISTS `'.DB::$tableShowing.'` (
                                 `'.DB\Showing::$IdMovieType.'` INT NOT NULL,
                                 `'.DB\Showing::$IdCinemaHall.'` INT NOT NULL,
                                 `'.DB\Showing::$DateTime.'` DATETIME NOT NULL,
-                                `'.DB\Showing::$Dubbing.'` BIT NOT NULL,
+                                `'.DB\Showing::$Dubbing.'` BOOLEAN NOT NULL,
                                 `'.DB\Showing::$IdLanguageVersion.'` INT NOT NULL,
                                 PRIMARY KEY ('.DB\Showing::$IdShowing.'),
                                 FOREIGN KEY ('.DB\Showing::$IdMovieType.') REFERENCES '.DB::$tableMovieType.'('.DB\MovieType::$IdMovieType.') ON DELETE CASCADE,
@@ -413,19 +530,133 @@ catch(PDOException $e)
     echo \Config\Database\DBErrorName::$create_table.DB::$tableShowing;
 }
 
+// Create table User
+$query = 'CREATE TABLE IF NOT EXISTS `'.DB::$tableUser.'` (
+                                `'.DB\User::$IdUser.'` INT NOT NULL AUTO_INCREMENT,
+                                `'.DB\User::$FirstName.'` VARCHAR(200) NOT NULL,
+                                `'.DB\User::$LastName.'` VARCHAR(200) NOT NULL,
+                                `'.DB\User::$Email.'` VARCHAR(200) NOT NULL,
+                                `'.DB\User::$MobilePhone.'` VARCHAR(12) NOT NULL,
+                                PRIMARY KEY ('.DB\User::$IdUser.')
+                                ) ENGINE=InnoDB;';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$create_table.DB::$tableUser;
+}
+
+// Create table Reservation
+$query = 'CREATE TABLE IF NOT EXISTS `'.DB::$tableReservation.'` (
+                                `'.DB\Reservation::$IdReservation.'` INT NOT NULL AUTO_INCREMENT,
+                                `'.DB\Reservation::$IdUser.'` INT NOT NULL,
+                                `'.DB\Reservation::$IdShowing.'` INT NOT NULL,
+                                PRIMARY KEY ('.DB\Reservation::$IdReservation.'),
+                                FOREIGN KEY ('.DB\Reservation::$IdUser.') REFERENCES '.DB::$tableUser.'('.DB\User::$IdUser.') ON DELETE CASCADE,
+                                FOREIGN KEY ('.DB\Reservation::$IdShowing.') REFERENCES '.DB::$tableShowing.'('.DB\Showing::$IdShowing.') ON DELETE CASCADE
+                                ) ENGINE=InnoDB;';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$create_table.DB::$tableReservation;
+}
+
+// Create table ReservationPlace
+$query = 'CREATE TABLE IF NOT EXISTS `'.DB::$tableReservationPlace.'` (
+                                `'.DB\ReservationPlace::$IdReservationPlace.'` INT NOT NULL AUTO_INCREMENT,
+                                `'.DB\ReservationPlace::$IdReservation.'` INT NOT NULL,
+                                `'.DB\ReservationPlace::$IdPlace.'` INT NOT NULL,
+                                PRIMARY KEY ('.DB\ReservationPlace::$IdReservationPlace.'),
+                                FOREIGN KEY ('.DB\ReservationPlace::$IdReservation.') REFERENCES '.DB::$tableReservation.'('.DB\Reservation::$IdReservation.') ON DELETE CASCADE,
+                                FOREIGN KEY ('.DB\ReservationPlace::$IdPlace.') REFERENCES '.DB::$tablePlace.'('.DB\Place::$IdPlace.') ON DELETE CASCADE
+                                ) ENGINE=InnoDB;';
+try
+{
+    $pdo->exec($query);
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$create_table.DB::$tableReservationPlace;
+}
+
+
+
+
+
+//Table Admin
+$admins = array();
+$admins[] = array(
+    'login' => 'Admin',
+    'password' => 'Admin1',
+    'firstName' => 'Admin',
+    'lastName' => 'Admin');
+
+try
+{
+    $stmt = $pdo -> prepare('INSERT INTO `'.DB::$tableAdmin.'` (`'.DB\Admin::$login.'`, `'.DB\Admin::$password.'`, `'.DB\Admin::$firstName.'`, `'.DB\Admin::$lastName.'`) VALUES(:login, :password, :firstName, :lastName)');
+    foreach($admins as $admin)
+    {
+        $stmt -> bindValue(':login', $admin['login'], PDO::PARAM_STR);
+        $stmt -> bindValue(':password', $admin['password'], PDO::PARAM_STR);
+        $stmt -> bindValue(':firstName', $admin['firstName'], PDO::PARAM_STR);
+        $stmt -> bindValue(':lastName', $admin['lastName'], PDO::PARAM_STR);
+        $stmt -> execute();
+    }
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$noadd;
+}
 
 
 // Table Genre
 $genres = array();
 $genres[] = 'akcja';
+$genres[] = 'animowany';
+$genres[] = 'baśń';
 $genres[] = 'biograficzny';
+$genres[] = 'czarna komedia';
 $genres[] = 'dramat';
+$genres[] = 'dreszczowiec';
+$genres[] = 'dokumentalny';
+$genres[] = 'edukacyjny';
+$genres[] = 'erotyczny';
+$genres[] = 'fabularny';
+$genres[] = 'familijny';
 $genres[] = 'fantastyczny';
+$genres[] = 'fikcja';
+$genres[] = 'gangsterski';
+$genres[] = 'grozy';
+$genres[] = 'historyczny';
 $genres[] = 'horror';
 $genres[] = 'komedia';
+$genres[] = 'kryminalny';
 $genres[] = 'musical';
+$genres[] = 'naukowy';
 $genres[] = 'romantyczny';
+$genres[] = 'polityczny';
+$genres[] = 'postapokaliptyczny';
+$genres[] = 'przygodowy';
+$genres[] = 'przyrodniczy';
+$genres[] = 'psychologiczny';
+$genres[] = 'religijny';
+$genres[] = 'rockowy';
+$genres[] = 'obyczajowy';
+$genres[] = 'samurajski';
 $genres[] = 'sci-fiction';
+$genres[] = 'sensacyjny';
+$genres[] = 'sportowy';
+$genres[] = 'szalona komedia';
+$genres[] = 'sztuki walki';
+$genres[] = 'szpiegowski';
+$genres[] = 'western';
+$genres[] = 'więzienny';
+$genres[] = 'wojenny';
 
 try
 {
@@ -473,6 +704,16 @@ $countries[] = 'Hiszpania';
 $countries[] = 'Niemcy';
 $countries[] = 'Wielka Brytania';
 $countries[] = 'Rosja';
+$countries[] = 'Czechy';
+$countries[] = 'Słowacja';
+$countries[] = 'Ukraina';
+$countries[] = 'Norwegia';
+$countries[] = 'Austria';
+$countries[] = 'Australia';
+$countries[] = 'Nowa Zelandia';
+$countries[] = 'Brazylia';
+$countries[] = 'Argentyna';
+$countries[] = 'Meksyk';
 
 try
 {
@@ -860,6 +1101,656 @@ catch(PDOException $e)
     echo \Config\Database\DBErrorName::$noadd;
 }
 
+//Table Place
+$Places = array();
+$Places[] = array(
+    'Column' => 1,
+    'Row' => 1);
+$Places[] = array(
+    'Column' => 2,
+    'Row' => 1);
+$Places[] = array(
+    'Column' => 3,
+    'Row' => 1);
+$Places[] = array(
+    'Column' => 4,
+    'Row' => 1);
+$Places[] = array(
+    'Column' => 5,
+    'Row' => 1);
+$Places[] = array(
+    'Column' => 6,
+    'Row' => 1);
+$Places[] = array(
+    'Column' => 7,
+    'Row' => 1);
+$Places[] = array(
+    'Column' => 8,
+    'Row' => 1);
+$Places[] = array(
+    'Column' => 9,
+    'Row' => 1);
+$Places[] = array(
+    'Column' => 10,
+    'Row' => 1);
+
+$Places[] = array(
+    'Column' => 1,
+    'Row' => 2);
+$Places[] = array(
+    'Column' => 2,
+    'Row' => 2);
+$Places[] = array(
+    'Column' => 3,
+    'Row' => 2);
+$Places[] = array(
+    'Column' => 4,
+    'Row' => 2);
+$Places[] = array(
+    'Column' => 5,
+    'Row' => 2);
+$Places[] = array(
+    'Column' => 6,
+    'Row' => 2);
+$Places[] = array(
+    'Column' => 7,
+    'Row' => 2);
+$Places[] = array(
+    'Column' => 8,
+    'Row' => 2);
+$Places[] = array(
+    'Column' => 9,
+    'Row' => 2);
+$Places[] = array(
+    'Column' => 10,
+    'Row' => 2);
+
+$Places[] = array(
+    'Column' => 1,
+    'Row' => 3);
+$Places[] = array(
+    'Column' => 2,
+    'Row' => 3);
+$Places[] = array(
+    'Column' => 3,
+    'Row' => 3);
+$Places[] = array(
+    'Column' => 4,
+    'Row' => 3);
+$Places[] = array(
+    'Column' => 5,
+    'Row' => 3);
+$Places[] = array(
+    'Column' => 6,
+    'Row' => 3);
+$Places[] = array(
+    'Column' => 7,
+    'Row' => 3);
+$Places[] = array(
+    'Column' => 8,
+    'Row' => 3);
+$Places[] = array(
+    'Column' => 9,
+    'Row' => 3);
+$Places[] = array(
+    'Column' => 10,
+    'Row' => 3);
+
+$Places[] = array(
+    'Column' => 1,
+    'Row' => 4);
+$Places[] = array(
+    'Column' => 2,
+    'Row' => 4);
+$Places[] = array(
+    'Column' => 3,
+    'Row' => 4);
+$Places[] = array(
+    'Column' => 4,
+    'Row' => 4);
+$Places[] = array(
+    'Column' => 5,
+    'Row' => 4);
+$Places[] = array(
+    'Column' => 6,
+    'Row' => 4);
+$Places[] = array(
+    'Column' => 7,
+    'Row' => 4);
+$Places[] = array(
+    'Column' => 8,
+    'Row' => 4);
+$Places[] = array(
+    'Column' => 9,
+    'Row' => 4);
+$Places[] = array(
+    'Column' => 10,
+    'Row' => 4);
+
+$Places[] = array(
+    'Column' => 1,
+    'Row' => 5);
+$Places[] = array(
+    'Column' => 2,
+    'Row' => 5);
+$Places[] = array(
+    'Column' => 3,
+    'Row' => 5);
+$Places[] = array(
+    'Column' => 4,
+    'Row' => 5);
+$Places[] = array(
+    'Column' => 5,
+    'Row' => 5);
+$Places[] = array(
+    'Column' => 6,
+    'Row' => 5);
+$Places[] = array(
+    'Column' => 7,
+    'Row' => 5);
+$Places[] = array(
+    'Column' => 8,
+    'Row' => 5);
+$Places[] = array(
+    'Column' => 9,
+    'Row' => 5);
+$Places[] = array(
+    'Column' => 10,
+    'Row' => 5);
+
+$Places[] = array(
+    'Column' => 1,
+    'Row' => 6);
+$Places[] = array(
+    'Column' => 2,
+    'Row' => 6);
+$Places[] = array(
+    'Column' => 3,
+    'Row' => 6);
+$Places[] = array(
+    'Column' => 4,
+    'Row' => 6);
+$Places[] = array(
+    'Column' => 5,
+    'Row' => 6);
+$Places[] = array(
+    'Column' => 6,
+    'Row' => 6);
+$Places[] = array(
+    'Column' => 7,
+    'Row' => 6);
+$Places[] = array(
+    'Column' => 8,
+    'Row' => 6);
+$Places[] = array(
+    'Column' => 9,
+    'Row' => 6);
+$Places[] = array(
+    'Column' => 10,
+    'Row' => 6);
+
+$Places[] = array(
+    'Column' => 1,
+    'Row' => 7);
+$Places[] = array(
+    'Column' => 2,
+    'Row' => 7);
+$Places[] = array(
+    'Column' => 3,
+    'Row' => 7);
+$Places[] = array(
+    'Column' => 4,
+    'Row' => 7);
+$Places[] = array(
+    'Column' => 5,
+    'Row' => 7);
+$Places[] = array(
+    'Column' => 6,
+    'Row' => 7);
+$Places[] = array(
+    'Column' => 7,
+    'Row' => 7);
+$Places[] = array(
+    'Column' => 8,
+    'Row' => 7);
+$Places[] = array(
+    'Column' => 9,
+    'Row' => 7);
+$Places[] = array(
+    'Column' => 10,
+    'Row' => 7);
+
+$Places[] = array(
+    'Column' => 1,
+    'Row' => 8);
+$Places[] = array(
+    'Column' => 2,
+    'Row' => 8);
+$Places[] = array(
+    'Column' => 3,
+    'Row' => 8);
+$Places[] = array(
+    'Column' => 4,
+    'Row' => 8);
+$Places[] = array(
+    'Column' => 5,
+    'Row' => 8);
+$Places[] = array(
+    'Column' => 6,
+    'Row' => 8);
+$Places[] = array(
+    'Column' => 7,
+    'Row' => 8);
+$Places[] = array(
+    'Column' => 8,
+    'Row' => 8);
+$Places[] = array(
+    'Column' => 9,
+    'Row' => 8);
+$Places[] = array(
+    'Column' => 10,
+    'Row' => 8);
+
+$Places[] = array(
+    'Column' => 1,
+    'Row' => 9);
+$Places[] = array(
+    'Column' => 2,
+    'Row' => 9);
+$Places[] = array(
+    'Column' => 3,
+    'Row' => 9);
+$Places[] = array(
+    'Column' => 4,
+    'Row' => 9);
+$Places[] = array(
+    'Column' => 5,
+    'Row' => 9);
+$Places[] = array(
+    'Column' => 6,
+    'Row' => 9);
+$Places[] = array(
+    'Column' => 7,
+    'Row' => 9);
+$Places[] = array(
+    'Column' => 8,
+    'Row' => 9);
+$Places[] = array(
+    'Column' => 9,
+    'Row' => 9);
+$Places[] = array(
+    'Column' => 10,
+    'Row' => 9);
+
+$Places[] = array(
+    'Column' => 1,
+    'Row' => 10);
+$Places[] = array(
+    'Column' => 2,
+    'Row' => 10);
+$Places[] = array(
+    'Column' => 3,
+    'Row' => 10);
+$Places[] = array(
+    'Column' => 4,
+    'Row' => 10);
+$Places[] = array(
+    'Column' => 5,
+    'Row' => 10);
+$Places[] = array(
+    'Column' => 6,
+    'Row' => 10);
+$Places[] = array(
+    'Column' => 7,
+    'Row' => 10);
+$Places[] = array(
+    'Column' => 8,
+    'Row' => 10);
+$Places[] = array(
+    'Column' => 9,
+    'Row' => 10);
+$Places[] = array(
+    'Column' => 10,
+    'Row' => 10);
+// Wstawianie
+try
+{
+    $stmt = $pdo -> prepare('INSERT INTO `'.DB::$tablePlace.'` (`'.DB\Place::$Row.'`, `'.DB\Place::$Column.'`) VALUES(:row, :column)');
+    foreach($Places as $place)
+    {
+        $stmt -> bindValue(':row', $place['Row'], PDO::PARAM_INT);
+        $stmt -> bindValue(':column', $place['Column'], PDO::PARAM_INT);
+        $stmt -> execute();
+    }
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$noadd;
+}
+
+//Table CinemaHallPlace
+$CinemaHallPlaces = array();
+
+//CinemaHall 1
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 1);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 2);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 3);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 4);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 5);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 6);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 7);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 8);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 9);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 10);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 11);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 12);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 13);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 14);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 15);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 16);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 17);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 18);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 19);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 20);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 21);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 22);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 23);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 24);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 25);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 26);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 27);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 28);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 29);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 30);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 31);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 32);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 33);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 34);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 35);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 36);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 37);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 38);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 39);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 40);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 41);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 42);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 43);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 44);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 45);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 46);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 47);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 48);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 49);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 1,
+    'idPlace' => 50);
+
+//CinemaHall 2
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 1);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 2);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 3);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 4);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 5);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 6);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 7);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 8);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 9);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 10);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 11);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 12);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 13);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 14);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 15);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 16);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 17);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 18);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 19);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 20);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 21);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 22);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 23);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 24);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 25);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 26);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 27);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 28);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 29);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 30);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 31);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 32);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 33);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 34);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 35);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 36);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 37);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 38);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 39);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 40);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 41);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 42);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 43);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 44);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 45);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 46);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 47);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 48);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 49);
+$CinemaHallPlaces[] = array(
+    'idCinemaHall' => 2,
+    'idPlace' => 50);
+
+// Wstawianie
+try
+{
+    $stmt = $pdo -> prepare('INSERT INTO `'.DB::$tableCinemaHallPlace.'` (`'.DB\CinemaHallPlace::$IdCinemaHall.'`, `'.DB\CinemaHallPlace::$IdPlace.'`) VALUES(:idCinemaHall, :idPlace)');
+    foreach($CinemaHallPlaces as $cinemaHallPlace)
+    {
+        $stmt -> bindValue(':idCinemaHall', $cinemaHallPlace['idCinemaHall'], PDO::PARAM_INT);
+        $stmt -> bindValue(':idPlace', $cinemaHallPlace['idPlace'], PDO::PARAM_INT);
+        $stmt -> execute();
+    }
+}
+catch(PDOException $e)
+{
+    echo \Config\Database\DBErrorName::$noadd;
+}
+
 //Table LanguageVersion
 $LanguageVersions = array();
 $LanguageVersions[] = array(
@@ -1098,9 +1989,9 @@ $MovieTypes[] = array(
 $MovieTypes[] = array(
     'IdMovie' => '8',
     'IdType' => '1');
-$MovieTypes[] = array(
+/*$MovieTypes[] = array(
     'IdMovie' => '8',
-    'IdType' => '2');
+    'IdType' => '2');*/
 // Wstawianie
 try
 {
@@ -1122,9 +2013,113 @@ $Showings = array();
 $Showings[] = array(
     'IdMovieType' => '1',
     'IdCinemaHall' => '1',
-    'DateTime' => '2018-04-18 20:00:00',
+    'DateTime' => '2018-06-07 20:00:00',
     'Dubbing' => '1',
     'IdLanguageVersion' => '1');
+$Showings[] = array(
+    'IdMovieType' => '1',
+    'IdCinemaHall' => '1',
+    'DateTime' => '2018-06-07 19:00:00',
+    'Dubbing' => '1',
+    'IdLanguageVersion' => '1');
+$Showings[] = array(
+    'IdMovieType' => '2',
+    'IdCinemaHall' => '1',
+    'DateTime' => '2018-06-07 21:00:00',
+    'Dubbing' => '1',
+    'IdLanguageVersion' => '2');
+$Showings[] = array(
+    'IdMovieType' => '3',
+    'IdCinemaHall' => '1',
+    'DateTime' => '2018-06-07 20:00:00',
+    'Dubbing' => '1',
+    'IdLanguageVersion' => '1');
+$Showings[] = array(
+    'IdMovieType' => '3',
+    'IdCinemaHall' => '1',
+    'DateTime' => '2018-06-07 22:00:00',
+    'Dubbing' => '1',
+    'IdLanguageVersion' => '1');
+$Showings[] = array(
+    'IdMovieType' => '4',
+    'IdCinemaHall' => '1',
+    'DateTime' => '2018-06-07 19:00:00',
+    'Dubbing' => '1',
+    'IdLanguageVersion' => '2');
+$Showings[] = array(
+    'IdMovieType' => '5',
+    'IdCinemaHall' => '1',
+    'DateTime' => '2018-06-07 18:00:00',
+    'Dubbing' => '1',
+    'IdLanguageVersion' => '1');
+$Showings[] = array(
+    'IdMovieType' => '6',
+    'IdCinemaHall' => '1',
+    'DateTime' => '2018-06-07 20:00:00',
+    'Dubbing' => '1',
+    'IdLanguageVersion' => '2');
+$Showings[] = array(
+    'IdMovieType' => '6',
+    'IdCinemaHall' => '1',
+    'DateTime' => '2018-06-07 19:00:00',
+    'Dubbing' => '0',
+    'IdLanguageVersion' => '2');
+$Showings[] = array(
+    'IdMovieType' => '5',
+    'IdCinemaHall' => '1',
+    'DateTime' => '2018-06-07 18:00:00',
+    'Dubbing' => '0',
+    'IdLanguageVersion' => '1');
+$Showings[] = array(
+    'IdMovieType' => '6',
+    'IdCinemaHall' => '1',
+    'DateTime' => '2018-06-07 20:00:00',
+    'Dubbing' => '0',
+    'IdLanguageVersion' => '2');
+$Showings[] = array(
+    'IdMovieType' => '6',
+    'IdCinemaHall' => '1',
+    'DateTime' => '2018-06-07 19:00:00',
+    'Dubbing' => '0',
+    'IdLanguageVersion' => '2');
+
+
+$Showings[] = array(
+    'IdMovieType' => '5',
+    'IdCinemaHall' => '1',
+    'DateTime' => '2018-06-08 18:00:00',
+    'Dubbing' => '1',
+    'IdLanguageVersion' => '1');
+$Showings[] = array(
+    'IdMovieType' => '3',
+    'IdCinemaHall' => '1',
+    'DateTime' => '2018-06-08 20:00:00',
+    'Dubbing' => '1',
+    'IdLanguageVersion' => '2');
+$Showings[] = array(
+    'IdMovieType' => '2',
+    'IdCinemaHall' => '1',
+    'DateTime' => '2018-06-08 19:00:00',
+    'Dubbing' => '0',
+    'IdLanguageVersion' => '2');
+$Showings[] = array(
+    'IdMovieType' => '8',
+    'IdCinemaHall' => '1',
+    'DateTime' => '2018-06-08 18:00:00',
+    'Dubbing' => '0',
+    'IdLanguageVersion' => '1');
+$Showings[] = array(
+    'IdMovieType' => '10',
+    'IdCinemaHall' => '1',
+    'DateTime' => '2018-06-08 20:00:00',
+    'Dubbing' => '0',
+    'IdLanguageVersion' => '2');
+$Showings[] = array(
+    'IdMovieType' => '7',
+    'IdCinemaHall' => '1',
+    'DateTime' => '2018-06-08 19:00:00',
+    'Dubbing' => '0',
+    'IdLanguageVersion' => '2');
 // Wstawianie
 try
 {
@@ -1144,6 +2139,12 @@ catch(PDOException $e)
     echo \Config\Database\DBErrorName::$noadd;
 }
 
+// Copy covers
+array_map('unlink', glob("resources/images/covers/*"));
+$files = glob('resources/images/covers/*');
+for($i = 1; $i <= 8; $i++){
+    copy('install/resources/images/covers/'.$i.'.jpg', 'resources/images/covers/'.$i.'.jpg');
+}
 
 echo "<b>Instalacja aplikacji zakończona!</b>"
 ?>
