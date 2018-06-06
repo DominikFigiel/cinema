@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="53f4fc4a-7158-4b6d-a4ed-2230f276c3c9" name="Default" comment="Adding 'addTypeForMovie' method to the 'Type' model.">
+    <list default="true" id="53f4fc4a-7158-4b6d-a4ed-2230f276c3c9" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.htaccess" afterPath="$PROJECT_DIR$/.htaccess" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/adminMovieAdd.html.php" afterPath="$PROJECT_DIR$/templates/adminMovieAdd.html.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/adminMovieEdit.html.php" afterPath="$PROJECT_DIR$/templates/adminMovieEdit.html.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/adminMovies.html.php" afterPath="$PROJECT_DIR$/templates/adminMovies.html.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/adminPanel.html.php" afterPath="$PROJECT_DIR$/templates/adminPanel.html.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/showingGetAll.html.php" afterPath="$PROJECT_DIR$/templates/showingGetAll.html.php" />
     </list>
     <ignored path="$PROJECT_DIR$/vendor/kint-php/kint/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -19,31 +15,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="adminMovies.html.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/adminMovies.html.php">
+      <file leaf-file-name=".htaccess" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.htaccess">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="335">
-              <caret line="33" column="18" lean-forward="true" selection-start-line="33" selection-start-column="18" selection-end-line="33" selection-end-column="18" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="adminPanel.html.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/adminPanel.html.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="320">
-              <caret line="16" column="8" lean-forward="false" selection-start-line="16" selection-start-column="8" selection-end-line="16" selection-end-column="8" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="showingGetAll.html.php" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/templates/showingGetAll.html.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="529">
-              <caret line="71" column="8" lean-forward="false" selection-start-line="71" selection-start-column="8" selection-end-line="71" selection-end-column="8" />
+            <state relative-caret-position="552">
+              <caret line="55" column="83" lean-forward="false" selection-start-line="55" selection-start-column="83" selection-end-line="55" selection-end-column="83" />
               <folding />
             </state>
           </provider>
@@ -64,6 +40,7 @@
         <option value="$PROJECT_DIR$/templates/adminMovies.html.php" />
         <option value="$PROJECT_DIR$/templates/adminPanel.html.php" />
         <option value="$PROJECT_DIR$/templates/showingGetAll.html.php" />
+        <option value="$PROJECT_DIR$/.htaccess" />
       </list>
     </option>
   </component>
@@ -158,7 +135,7 @@
       <updated>1528137403563</updated>
       <workItem from="1528137405013" duration="1977000" />
       <workItem from="1528297276163" duration="920000" />
-      <workItem from="1528300147649" duration="105000" />
+      <workItem from="1528300147649" duration="160000" />
     </task>
     <task id="LOCAL-00001" summary="Adding 'getAll' method to the 'Type' model.">
       <created>1528137525124</created>
@@ -188,11 +165,18 @@
       <option name="project" value="LOCAL" />
       <updated>1528138782695</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Adding changes to templates">
+      <created>1528300285630</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1528300285630</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="3002000" />
+    <option name="totallyTimeSpent" value="3057000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -228,7 +212,8 @@
     <MESSAGE value="Adding 'setTypeForMovie' method to the 'Type' model." />
     <MESSAGE value="Adding changes to the 'Movie' model." />
     <MESSAGE value="Adding 'addTypeForMovie' method to the 'Type' model." />
-    <option name="LAST_COMMIT_MESSAGE" value="Adding 'addTypeForMovie' method to the 'Type' model." />
+    <MESSAGE value="Adding changes to templates" />
+    <option name="LAST_COMMIT_MESSAGE" value="Adding changes to templates" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -359,6 +344,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="529">
           <caret line="71" column="8" lean-forward="false" selection-start-line="71" selection-start-column="8" selection-end-line="71" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.htaccess">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="552">
+          <caret line="55" column="83" lean-forward="false" selection-start-line="55" selection-start-column="83" selection-end-line="55" selection-end-column="83" />
           <folding />
         </state>
       </provider>
