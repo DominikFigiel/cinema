@@ -44,8 +44,8 @@ class Reservation extends Controller {
                 $this->redirect('');
             $model = $this->getModel('Reservation');
             $reservation = $model->reservation($_POST['idShowing'], $_POST['firstName'],
-                $_POST['lastName'], $_POST['email'],
-                $_POST['mobilePhone'], $_COOKIE['places']);
+                                                $_POST['lastName'], $_POST['email'],
+                                                $_POST['mobilePhone'], $_COOKIE['places']);
             setcookie('places' , null, time()+(60*60*1000), "/");
             if (!\Tools\Access::islogin())
                 $this->redirect('');

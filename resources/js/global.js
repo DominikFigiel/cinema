@@ -1,3 +1,13 @@
+var places = [];
+function addPlace (value) {
+    places.push(value);
+    console.log(places.length);
+}
+
+function clearPlaces () {
+    places = [];
+}
+
 function setCookie(cname,cvalue) {
     var d = new Date();
     d.setTime(d.getTime() + (60*60*1000));
@@ -13,6 +23,19 @@ function addCookieFor(cname, cvalue) {
     else
         value = value + "," + cvalue;
     setCookie(cname, value);
+}
+
+function deleteAllCookieFor(cname){
+    setCookie(cname, "");
+    location.reload();
+}
+
+function addAllPlacesCookieFor(cname){
+    deleteAllCookieFor(cname);
+    for(var i = 0; i < places.length; i++){
+        addCookieFor(cname, places[i]);
+    }
+    location.reload();
 }
 
 function deleteCookieFor(cname, cvalue) {
@@ -66,4 +89,23 @@ function setCookieDubbing(cname) {
         cvalue = 0;
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
     location.reload();
+}
+
+function searchReservation(firstName, lastName, email, mobilePhone) {
+    firstName = document.getElementById(firstName).value;
+    lastName = document.getElementById(lastName).value;
+    email = document.getElementById(email).value;
+    mobilePhone = document.getElementById(mobilePhone).value;
+    setCookie('firstName', firstName);
+    setCookie('lastName', lastName);
+    setCookie('email', email);
+    setCookie('mobilePhone', mobilePhone);
+    location.reload();
+}
+
+function clearSearchReservation() {
+    setCookie('firstName', '');
+    setCookie('lastName', '');
+    setCookie('email', '');
+    setCookie('mobilePhone', '');
 }

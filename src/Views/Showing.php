@@ -19,7 +19,7 @@ class Showing extends View {
                 $this->set('setDate', $date);
         }
         else {
-            $this->set('setDate', date('Y-m-d h:i:s', strtotime(date('Y-m-d h:i:s', time()). ' + 2 days')));
+            $this->set('setDate', date('Y-m-d h:i:s', strtotime(date('Y-m-d h:i:s', time()). ' + 0 days')));
         }
 
         $model = $this->getModel('Showing');
@@ -83,10 +83,6 @@ class Showing extends View {
             $this->set('showings', $data['showings']);
         }
 
-
-
-
-
         if($type == null){
             $type = 'All';
         }
@@ -140,7 +136,7 @@ class Showing extends View {
 
 
         //Pobranie filmów
-        $movies = $model->getMovies();
+        $movies = $model->getMoviesForAdd();
         $this->set('movies' , $movies['movies']);
         //Ustawienie domyślnego filmu
         if(count($movies['movies']) > 0)
@@ -210,6 +206,13 @@ class Showing extends View {
         \Tools\Session::set('date' , $date);
         \Tools\Session::set('dubbing' , $dubbing);
 
+        //Sprawdzenie, czy są filmy bez typu
+        $model = $this->getModel('Movie');
+        $check = $model->checkIfExistsMovieWithoutType();
+        if(isset($check['check']))
+            $this->set("check", $check['check']);
+        else
+            $this->set("check", false);
 
         $this->render('adminShowingAdd');
     }

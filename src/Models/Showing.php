@@ -2,6 +2,7 @@
 namespace Models;
 use \PDO;
 use \Models\Reservation;
+use \Models\CinemaHallPlaces;
 class Showing extends Model {
 
     public function getAll($date = null , $type = null , $admin = false, $cinemaHall = null){
@@ -12,7 +13,6 @@ class Showing extends Model {
         if($date == null)
             $date = date('Y-m-d H:i:s', time());
         if($date != null){
-            //Jeśli data nie jest datą, tylko liczbą, to pobieramy dzisiejszą datę i dodajemy liczbę jako dni
             if(is_numeric($date)){
                 if(count($date) > 5 && $admin == false)
                     $date = 5;
@@ -20,18 +20,13 @@ class Showing extends Model {
                     $date = 0;
                 $date = date('Y-m-d H:i:s', strtotime( date('Y-m-d H:i:s', time()). ' + '.$date.' days'));
             }
-
-            //Ustawienie pierwszej daty
             $date1 = date_create($date);
             date_time_set($date1, 00, 00, 00);
             $date1 = date_format($date1 , 'Y-m-d H:i:s');
-
-            //Ustawienie drugiej daty
             $date2 = date_create($date);
             date_time_set($date2, 23, 59 ,59);
             $date2 = date_format($date2 , 'Y-m-d H:i:s');
         }
-        //$type = '3D';
         $data = array();
         $data['showings'] = array();
         try{
@@ -118,17 +113,25 @@ class Showing extends Model {
             $showings = $stmt->fetchAll();
             $stmt->closeCursor();
 
+            $isBusy = new CinemaHallPlaces();
+
             $data['showings'] = array();
             if($showings && !empty($showings)) {
                 foreach ($showings as $showing){
                     if(!isset($data['showings'][$showing[\Config\Database\DBConfig\Movie::$IdMovie]][$showing[\Config\Database\DBConfig\Type::$Type]][$showing[\Config\Database\DBConfig\Showing::$Dubbing]]))
                         $data['showings'][$showing[\Config\Database\DBConfig\Movie::$IdMovie]][$showing[\Config\Database\DBConfig\Type::$Type]][$showing[\Config\Database\DBConfig\Showing::$Dubbing]] = $showing;
-                    $data['showings'][$showing[\Config\Database\DBConfig\Movie::$IdMovie]][$showing[\Config\Database\DBConfig\Type::$Type]][$showing[\Config\Database\DBConfig\Showing::$Dubbing]]['hours'][] = $showing[\Config\Database\DBConfig\Showing::$DateTime];
+                    $data['showings'][$showing[\Config\Database\DBConfig\Movie::$IdMovie]][$showing[\Config\Database\DBConfig\Type::$Type]][$showing[\Config\Database\DBConfig\Showing::$Dubbing]]['hours'][$showing[\Config\Database\DBConfig\Showing::$IdShowing]]['hour'] = $showing[\Config\Database\DBConfig\Showing::$DateTime];
+                    $boolean = $isBusy->isAllBusy($showing[\Config\Database\DBConfig\Showing::$IdShowing]);
+                    if(!isset($boolean['error']))
+                        $data['showings'][$showing[\Config\Database\DBConfig\Movie::$IdMovie]][$showing[\Config\Database\DBConfig\Type::$Type]][$showing[\Config\Database\DBConfig\Showing::$Dubbing]]['hours'][$showing[\Config\Database\DBConfig\Showing::$IdShowing]]['busy'] = $boolean['isAllBusy'];
+                    else{
+                        $data['showings'][$showing[\Config\Database\DBConfig\Movie::$IdMovie]][$showing[\Config\Database\DBConfig\Type::$Type]][$showing[\Config\Database\DBConfig\Showing::$Dubbing]]['hours'][$showing[\Config\Database\DBConfig\Showing::$IdShowing]]['busy'] = null;
+                    }
                 }
             }
         }
         catch(\PDOException $e){
-            $data['error'] = \Config\Database\DBErrorName::$query."\n".$query;
+            $data['error'] = \Config\Database\DBErrorName::$query;
         }
         return $data;
     }
@@ -313,6 +316,35 @@ class Showing extends Model {
             $query = '
                     SELECT * 
                     FROM `'.\Config\Database\DBConfig::$tableMovie.'`
+                    ORDER BY `'.\Config\Database\DBConfig::$tableMovie.'`.`'.\Config\Database\DBConfig\Movie::$Title.'` ASC
+            ';
+            $stmt = $this->pdo->prepare($query);
+            $stmt->execute();
+            $movies = $stmt->fetchAll();
+            $data['movies'] = $movies;
+            $stmt->closeCursor();
+        }
+        catch(\PDOException $e){
+            $data['error'] = \Config\Database\DBErrorName::$query;
+        }
+        return $data;
+    }
+
+    public function getMoviesForAdd(){
+        if($this->pdo === null){
+            $data['error'] = \Config\Database\DBErrorName::$connection;
+            return $data;
+        }
+        $data = array();
+        $data['movies'] = array();
+        try{
+            $query = '
+                    SELECT * 
+                    FROM `'.\Config\Database\DBConfig::$tableMovie.'`
+                    WHERE EXISTS (SELECT *
+                                  FROM `'.\Config\Database\DBConfig::$tableMovieType.'`
+                                  WHERE `'.\Config\Database\DBConfig::$tableMovieType.'`.`'.\Config\Database\DBConfig\MovieType::$IdMovie.'` = 
+                                            `'.\Config\Database\DBConfig::$tableMovie.'`.`'.\Config\Database\DBConfig\Movie::$IdMovie.'`)
                     ORDER BY `'.\Config\Database\DBConfig::$tableMovie.'`.`'.\Config\Database\DBConfig\Movie::$Title.'` ASC
             ';
             $stmt = $this->pdo->prepare($query);

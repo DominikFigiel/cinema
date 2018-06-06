@@ -68,7 +68,7 @@ class Production extends Model {
         $data = array();
         //var_dump($idProduction);
         //if(!is_numeric($idProduction))
-        //$idProduction = intval($idProduction);
+            //$idProduction = intval($idProduction);
         try{
             $query = '           
                 INSERT INTO '.\Config\Database\DBConfig::$tableMovieProduction.' ('.\Config\Database\DBConfig\MovieProduction::$IdMovie.',

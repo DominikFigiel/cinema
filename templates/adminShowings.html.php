@@ -2,7 +2,12 @@
 {block name="content"}
 <div class="container">
     <h1 class="h4 text-center">Zarządzanie seansami</h1>
-    <a class="btn btn-success" href="http://{$smarty.server.HTTP_HOST}{$subdir}Zarządzanie/Seanse/Dodaj">Dodaj seans</a>
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            <a class="btn btn-success" href="http://{$smarty.server.HTTP_HOST}{$subdir}Zarządzanie/Seanse/Dodaj">Dodaj seans</a>
+            <hr/>
+        </div>
+    </div>
     <!-- Kalendarz -->
     <div class="row">
         <div class="col-lg-12 text-center">
@@ -65,11 +70,11 @@
         </div>
         <div class="col-lg-4 col-md-4 col-sm-12 col-12 mt-sm-3 mt-sm-3 mt-md-0">
             <div class="text-center text-md-left">
-                {foreach $movie['hours'] as $hour}
+                {foreach from = $movie['hours'] item = $hour key = $k}
                 <div class="row">
-                    <div class="btn btn-outline-info m-1 mt-3 mt-md-1 text-primary">{$hour|date_format:'%H:%M'}</div>
-                    <a class="btn btn-outline-info m-1 mt-3 mt-md-1 text-info" href="http://{$smarty.server.HTTP_HOST}{$subdir}Zarządzanie/Seanse/Edytuj/{$movie[\Config\Database\DBConfig\Showing::$IdShowing]}">Edytuj</a>
-                    <a class="btn btn-outline-danger m-1 mt-3 mt-md-1 text-danger" data-toggle="modal" data-href="http://{$smarty.server.HTTP_HOST}{$subdir}Zarządzanie/Seanse/" value="{$movie[\Config\Database\DBConfig\Showing::$IdShowing]}" data-target="#modal_delete">Usuń</a>
+                    <div class="btn btn-outline-info m-1 mt-3 mt-md-1 text-primary">{$hour['hour']|date_format:'%H:%M'}</div>
+                    <a class="btn btn-outline-info m-1 mt-3 mt-md-1 text-info" href="http://{$smarty.server.HTTP_HOST}{$subdir}Zarządzanie/Seanse/Edytuj/{$k}">Edytuj</a>
+                    <a class="btn btn-outline-danger m-1 mt-3 mt-md-1 text-danger" data-toggle="modal" data-href="http://{$smarty.server.HTTP_HOST}{$subdir}Zarządzanie/Seanse/" value="{$k}" data-target="#modal_delete">Usuń</a>
                 </div>
                 {/foreach}
             </div>
