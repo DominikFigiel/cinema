@@ -1,8 +1,6 @@
 <?php
 namespace Controllers;
-
 class Type extends Controller {
-//
     public function getMovieWithoutTypes(){
         if(\Tools\Access::islogin()) {
             $data = array();
@@ -18,7 +16,6 @@ class Type extends Controller {
         else
             $this->redirect('');
     }
-
     public function setTypeForMovie($idMovie){
         if(\Tools\Access::islogin()) {
             $model = $this->getModel('Type');
@@ -29,7 +26,6 @@ class Type extends Controller {
             if(isset($data['error'])){
                 \Tools\Session::set('error', $data['error']);
             }
-
             $model = $this->getModel('Movie');
             $check = $model->checkIfExistsMovieWithoutType();
             if(isset($check['check']) && $check['check'] !== true)
@@ -40,5 +36,4 @@ class Type extends Controller {
         else
             $this->redirect('');
     }
-
 }
