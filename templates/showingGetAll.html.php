@@ -50,8 +50,16 @@
         </div>
         <div class="col-lg-4 col-md-4 col-sm-12 col-12 mt-sm-3 mt-sm-3 mt-md-0">
             <div class="text-center text-md-left">
-                {foreach $movie['hours'] as $hour}
-                <a href="http://{$smarty.server.HTTP_HOST}{$subdir}Rezerwacja/Miejsce/Seans/{$movie[\Config\Database\DBConfig\Showing::$IdShowing]}" title="Zarezerwuj bilet" class="btn btn-outline-primary m-1 mt-3 mt-md-1">{$hour|date_format:'%H:%M'}</a>
+                {foreach from = $movie['hours'] item = $hour key = $k}
+                {if $hour['hour']|date_format:'%Y-%m-%d %H:%M' <= $smarty.now|date_format:'%Y-%m-%d %H:%M'}
+                <button class="btn disabled btn-outline-dark m-1 mt-3 mt-md-1">{$hour['hour']|date_format:'%H:%M'}</button>
+                {else if isset($hour['busy']) && $hour['busy'] === null}
+                <button class="btn disabled btn-outline-danger m-1 mt-3 mt-md-1">{$hour['hour']|date_format:'%H:%M'}</button>
+                {else if isset($hour['busy']) && $hour['busy'] !== true}
+                <a href="http://{$smarty.server.HTTP_HOST}{$subdir}Rezerwacja/Miejsce/Seans/{$k}" title="Zarezerwuj bilet" class="btn btn-outline-primary m-1 mt-3 mt-md-1">{$hour['hour']|date_format:'%H:%M'}</a>
+                {else}
+                <button class="btn disabled btn-outline-primary m-1 mt-3 mt-md-1" title="Wszystkie miejsca zarezerwowane">{$hour['hour']|date_format:'%H:%M'}</button>
+                {/if}
                 {/foreach}
             </div>
         </div>
@@ -60,18 +68,5 @@
     {/foreach}
     {/foreach}
     {/foreach}
-<<<<<<< HEAD
-
-    <!-- Pamiętać usunąć -->
-    {if isset($error)}
-    <div>
-        <h4 class="h4">{$error}</h4>
-    </div>
-    {/if}
-
-    <a href="http://{$smarty.server.HTTP_HOST}{$subdir}Film/Dodaj" title="Zarezerwuj bilet" class="btn btn-outline-primary m-1 mt-3 mt-md-1">Add</a>
-
-=======
->>>>>>> master
 </div>
 {/block}
