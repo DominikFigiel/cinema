@@ -6,7 +6,6 @@ use \Models\Production;
 use \Models\Actor;
 use \Models\Type;
 class Movie extends Model {
-
     public function getAll(){
         if($this->pdo === null){
             $data['error'] = \Config\Database\DBErrorName::$connection;
@@ -22,7 +21,6 @@ class Movie extends Model {
             $stmt = $this->pdo->query($query);
             $movies = $stmt->fetchAll();
             $stmt->closeCursor();
-
             if($movies && !empty($movies))
                 $data['movies'] = $movies;
         }
@@ -31,7 +29,6 @@ class Movie extends Model {
         }
         return $data;
     }
-
     public function getAllWithoutShowing(){
         if($this->pdo === null){
             $data['error'] = \Config\Database\DBErrorName::$connection;
@@ -74,7 +71,6 @@ class Movie extends Model {
             $stmt = $this->pdo->query($query);
             $movies = $stmt->fetchAll();
             $stmt->closeCursor();
-
             if($movies && !empty($movies)) {
                 $data['movies'] = array();
                 foreach ($movies as $movie){
@@ -96,7 +92,6 @@ class Movie extends Model {
         }
         return $data;
     }
-
     public function getOne($id){
         if($this->pdo === null){
             $data['error'] = \Config\Database\DBErrorName::$connection;
@@ -126,7 +121,6 @@ class Movie extends Model {
         }
         return $data;
     }
-
     public function getGenreForMovie($id){
         if($this->pdo === null){
             $data['error'] = \Config\Database\DBErrorName::$connection;
@@ -162,7 +156,6 @@ class Movie extends Model {
         }
         return $data;
     }
-
     public function getActorForMovie($id){
         if($this->pdo === null){
             $data['error'] = \Config\Database\DBErrorName::$connection;
@@ -198,7 +191,6 @@ class Movie extends Model {
         }
         return $data;
     }
-
     public function getProductionForMovie($id){
         if($this->pdo === null){
             $data['error'] = \Config\Database\DBErrorName::$connection;
@@ -235,9 +227,7 @@ class Movie extends Model {
         }
         return $data;
     }
-
     //-------------------- Admin functions ------------------------------------
-
     public function adminGetAll(){
         if($this->pdo === null){
             $data['error'] = \Config\Database\DBErrorName::$connection;
@@ -268,7 +258,6 @@ class Movie extends Model {
             $stmt = $this->pdo->query($query);
             $movies = $stmt->fetchAll();
             $stmt->closeCursor();
-
             if($movies && !empty($movies)) {
                 $data['movies'] = array();
                 foreach ($movies as $movie){
@@ -290,7 +279,6 @@ class Movie extends Model {
         }
         return $data;
     }
-
     public function adminGetMovieWithoutType(){
         if($this->pdo === null){
             $data['error'] = \Config\Database\DBErrorName::$connection;
@@ -326,7 +314,6 @@ class Movie extends Model {
             $stmt = $this->pdo->query($query);
             $movies = $stmt->fetchAll();
             $stmt->closeCursor();
-
             if($movies && !empty($movies)) {
                 $data['movies'] = array();
                 foreach ($movies as $movie){
@@ -348,7 +335,6 @@ class Movie extends Model {
         }
         return $data;
     }
-
     public function checkIfExistsMovieWithoutType(){
         if($this->pdo === null){
             $data['error'] = \Config\Database\DBErrorName::$connection;
@@ -394,7 +380,6 @@ class Movie extends Model {
         }
         return $data;
     }
-
     public function addMovie($title, $releaseDate, $age, $durationTime, $description, $idGenres, $idProductions, $cover = null){
         if($this->pdo === null){
             $data['error'] = \Config\Database\DBErrorName::$connection;
@@ -414,7 +399,6 @@ class Movie extends Model {
         if(isset($movie['message'])) {
             $data['message'] = $movie['message'];
         }
-
         if(isset($movie['idMovie'])) {
             $data['idMovie'] = $movie['idMovie'];
             $productions = new \Models\Production();
@@ -426,7 +410,6 @@ class Movie extends Model {
             if(isset($productions['message'])) {
                 $data['message'] = $productions['message'];
             }
-
             $genres = new \Models\Genre();
             $genres = $genres->addGenresForMovie($movie['idMovie'], $idGenres);
             if (isset($genres['error'])) {
@@ -437,10 +420,8 @@ class Movie extends Model {
                 $data['message'] = $genres['message'];
             }
         }
-
         return $data;
     }
-
     public function deleteMovie($idMovie){
         if($this->pdo === null){
             $data['error'] = \Config\Database\DBErrorName::$connection;
@@ -451,7 +432,6 @@ class Movie extends Model {
             return $data;
         }
         $data = array();
-
         $type = new \Models\Type();
         $type = $type->deleteTypesForMovie($idMovie);
         if(isset($type['error'])) {
@@ -460,7 +440,6 @@ class Movie extends Model {
         }
         if(isset($type['messages']))
             $data['messages'] = $type['messages'];
-
         $actor = new \Models\Actor();
         $actor = $actor->deleteActorsForMovie($idMovie);
         if(isset($actor['error'])) {
@@ -469,7 +448,6 @@ class Movie extends Model {
         }
         if(isset($actor['messages']))
             $data['messages'] = $actor['messages'];
-
         $production = new \Models\Production();
         $production = $production->deleteProductionsForMovie($idMovie);
         if(isset($production['error'])) {
@@ -478,7 +456,6 @@ class Movie extends Model {
         }
         if(isset($production['messages']))
             $data['messages'] = $production['messages'];
-
         $genre = new \Models\Genre();
         $genre = $genre->deleteGenresForMovie($idMovie);
         if(isset($genre['error'])) {
@@ -487,7 +464,6 @@ class Movie extends Model {
         }
         if(isset($genre['messages']))
             $data['messages'] = $genre['messages'];
-
         $movie = $this->deleteOnlyMovie($idMovie);
         if(isset($movie['error'])) {
             $data['error'] = $movie['error'];
@@ -495,17 +471,14 @@ class Movie extends Model {
         }
         if(isset($movie['messages']))
             $data['messages'] = $movie['messages'];
-
         $deleteCover = $this->deleteCoverForMovie(((string)$idMovie).".jpg");
         if(isset($deleteCover['message'])){
             $data['message'] = $deleteCover['message'];
         }
         if(isset($deleteCover['error']))
             $data['error'] = $deleteCover['error'];
-
         return $data;
     }
-
     public function editMovie($idMovie, $title, $releaseDate, $age, $durationTime, $idGenres, $idProductions, $description, $cover = null){
         $data = array();
         if(is_null($idMovie) || is_null($title) || is_null($releaseDate) || is_null($age) || is_null($durationTime)
@@ -518,7 +491,6 @@ class Movie extends Model {
             $data['message'] = $onlyMovie['message'];
         if(isset($onlyMovie['error']))
             $data['error'] = $onlyMovie['error']."Tutaj 5";
-
         $production = new \Models\Production();
         $productions = $production->deleteProductionsForMovie($idMovie);
         if(isset($productions['error'])) {
@@ -527,7 +499,6 @@ class Movie extends Model {
         }
         if(isset($productions['messages']))
             $data['messages'] = $productions['messages'];
-
         $productions = $production->addProductionsForMovie($idMovie , $idProductions);
         if (isset($productions['error'])) {
             $data['error'] = $productions['error']."Tutaj 3";
@@ -536,7 +507,6 @@ class Movie extends Model {
         if(isset($productionss['message'])) {
             $data['message'] = $productions['message'];
         }
-
         $genre = new \Models\Genre();
         $genres = $genre->deleteGenresForMovie($idMovie);
         if(isset($genres['error'])) {
@@ -545,7 +515,6 @@ class Movie extends Model {
         }
         if(isset($genres['messages']))
             $data['messages'] = $genres['messages'];
-
         $genres = $genre->addGenresForMovie($idMovie, $idGenres);
         if (isset($genres['error'])) {
             $data['error'] = $genres['error']."Tutaj";
@@ -554,10 +523,8 @@ class Movie extends Model {
         if(isset($genres['message'])) {
             $data['message'] = $genres['message'];
         }
-
         return $data;
     }
-
     private function addOnlyMovie($title, $releaseDate, $age, $durationTime, $description, $cover = null){
         if($this->pdo === null){
             $data['error'] = \Config\Database\DBErrorName::$connection;
@@ -579,7 +546,6 @@ class Movie extends Model {
                                                                         '.\Config\Database\DBConfig\Movie::$Description.')
                 VALUES (:title, :releaseDate, :age, :durationTime, :cover, :description)
             ';
-
             $stmt = $this->pdo->prepare($query);
             $stmt->bindValue(':title' , $title , PDO::PARAM_STR);
             $stmt->bindValue(':releaseDate' , $releaseDate , PDO::PARAM_STR);
@@ -591,7 +557,6 @@ class Movie extends Model {
             if($result === true){
                 $data['message'] = "Udało sie dodać film.";
                 $data['idMovie'] = $this->pdo->lastInsertId();
-
                 $imagePath = "resources/images/covers/";
                 if($cover != null) {
                     $info = pathinfo($cover['imageName']);
@@ -622,7 +587,6 @@ class Movie extends Model {
         }
         return $data;
     }
-
     private function editOnlyMovieForId($idMovie, $title, $releaseDate, $age, $durationTime, $description, $cover = null){
         if($this->pdo === null){
             $data['error'] = \Config\Database\DBErrorName::$connection;
@@ -676,7 +640,6 @@ class Movie extends Model {
         }
         return $data;
     }
-
     private function updateCoverNameOnMovie($idMovie, $coverName){
         if($this->pdo === null){
             $data['error'] = \Config\Database\DBErrorName::$connection;
@@ -709,7 +672,6 @@ class Movie extends Model {
         }
         return $data;
     }
-
     private function deleteOnlyMovie($idMovie){
         if($this->pdo === null){
             $data['error'] = \Config\Database\DBErrorName::$connection;
@@ -742,7 +704,6 @@ class Movie extends Model {
         }
         return $data;
     }
-
     private function deleteCoverForMovie($name){
         if(is_null($name)){
             $data['error'] = \Config\Database\DBErrorName::$empty;

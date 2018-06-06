@@ -2,7 +2,6 @@
 namespace Models;
 use \PDO;
 class Production extends Model {
-
     public function getAll(){
         if($this->pdo === null){
             $data['error'] = \Config\Database\DBErrorName::$connection;
@@ -18,7 +17,6 @@ class Production extends Model {
             $stmt = $this->pdo->query($query);
             $productions = $stmt->fetchAll();
             $stmt->closeCursor();
-
             if($productions && !empty($productions))
                 $data['productions'] = $productions;
         }
@@ -27,7 +25,6 @@ class Production extends Model {
         }
         return $data;
     }
-
     public function addProduction($name){
         if($this->pdo === null){
             $data['error'] = \Config\Database\DBErrorName::$connection;
@@ -59,7 +56,6 @@ class Production extends Model {
         }
         return $data;
     }
-
     public function addProductionForMovie($idMovie, $idProduction){
         if($this->pdo === null){
             $data['error'] = \Config\Database\DBErrorName::$connection;
@@ -96,7 +92,6 @@ class Production extends Model {
         }
         return $data;
     }
-
     public function deleteProductionsForMovie($idMovie){
         if($this->pdo === null){
             $data['error'] = \Config\Database\DBErrorName::$connection;
@@ -128,7 +123,6 @@ class Production extends Model {
         }
         return $data;
     }
-
     public function addProductionsForMovie($idMovie, $idProductions){
         $data = array();
         if(is_null($idMovie) || is_null($idProductions)){
@@ -142,7 +136,6 @@ class Production extends Model {
                     $data['error'] = $productionForMovie['error'];
                     return $data;
                 }
-
             }
         }
         else{
@@ -152,7 +145,6 @@ class Production extends Model {
         }
         return $data;
     }
-
     public function editProductionForMovie($idMovieProduction, $idProduction){
         $data = array();
         if($this->pdo === null){
@@ -186,14 +178,12 @@ class Production extends Model {
         }
         return $data;
     }
-
     public function editProductionsForMovie($idMovie, $idProductions){
         $data = array();
         if(is_null($idMovie) || is_null($idProductions)){
             $data['error'] = \Config\Database\DBErrorName::$empty;
             return $data;
         }
-
         $ids = $this->getProductionsMovieIdForMovieId($idMovie);
         if (is_array($idProductions)){
             if (count($idProductions) <= count($ids)){
@@ -203,12 +193,9 @@ class Production extends Model {
             }
         }
         elseif (is_numeric($idProductions)){
-
         }
-
         return $data;
     }
-
     private function getProductionsMovieIdForMovieId($idMovie){
         $data = array();
         if($this->pdo === null){
@@ -239,5 +226,4 @@ class Production extends Model {
         }
         return $data;
     }
-
 }
